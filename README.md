@@ -1,7 +1,11 @@
-# swift-srt
 
+# Swift SRT
+
+  
 
 Secure Reliable Transport (SRT) is now a first-class citizen in Apple's ecosystem! This Swift package is implemented using NWFramerProtocol and Apple’s native networking framework. Designed for modern standards, it excels in live streaming, video on demand, and two-way communication applications by providing reactive "hints" to automate peak quality based on network conditions. 
+
+Easily integrate high-quality, low-latency streaming capabilities into SwiftUI applications and leverage the latest advancements in Apple’s networking and multimedia frameworks.  
 
 Key features include:
 
@@ -14,8 +18,6 @@ Key features include:
 - Support for both delegate pattern and Combine publishers
 
 - DocC
-
-With swift-srt, developers can seamlessly integrate high-quality, low-latency streaming capabilities into their Swift applications, leveraging the latest advancements in Apple’s networking and multimedia frameworks.  
 
 This open-source project is public-domain. The design emphasizes simplicity and utility, following the principles of Occam's Razor.
 
@@ -107,7 +109,7 @@ If the handshakes fails the connection is closed and after a short delay the han
 
   
 
-### Encryption
+## Encryption
 
   
 
@@ -119,15 +121,15 @@ In two-way communication scenarios, each endpoint uses its own Key Encrypting Ke
 
   
 
-### Sockets and Auto-Performance Tuning
+## Sockets and Auto-Performance Tuning
 
   
 
-Each socket uniquely identified by its own SocketID and maintains its own cryptographic keys, so each stream is isolated and secure. Sockets are responsible for tracking their own metrics that enables fine-grained monitoring and optimization of data transmission. Sockets also manage ACKs, NACKs, KeepAlive and other SRT details to maintain the data flow, retransmission and metrics.
+Each socket is uniquely identified by its own SocketID and maintains its own cryptographic keys, so each stream is isolated and secure. Sockets are responsible for tracking their own metrics that enables fine-grained monitoring and optimization of data transmission. Sockets also manage ACKs, NACKs, KeepAlive and other SRT details to maintain the data flow, retransmission and metrics.
 
   
 
-### Metrics
+## Metrics
 
   
 
@@ -135,7 +137,7 @@ Metrics are a key part of SRT and monitor the performance of data transmission a
 
   
 
-#### Performance Metrics
+### Performance Metrics
 
   
 
@@ -147,7 +149,7 @@ Metrics are a key part of SRT and monitor the performance of data transmission a
 
   
 
-#### Quality Metrics
+### Quality Metrics
 
   
 
@@ -157,7 +159,7 @@ Metrics are a key part of SRT and monitor the performance of data transmission a
 
   
 
-#### Reliability Metrics
+### Reliability Metrics
 
   
 
@@ -167,7 +169,7 @@ Metrics are a key part of SRT and monitor the performance of data transmission a
 
   
 
-#### Connection Metrics
+### Connection Metrics
 
   
 
@@ -181,11 +183,11 @@ Each socket in tracks metrics independently for detailed monitoring and performa
 
   
 
-### Common Uses, Flavors, and Hints
+## Common Uses, Flavors, and Hints
 
   
 
-#### Common Uses
+### Common Uses
 
   
 
@@ -205,7 +207,7 @@ SRT is versatile and can be used for various types of data transmission:
 
   
 
-#### Flavors
+### Flavors
 
   
 
@@ -223,7 +225,7 @@ SRT supports a range of configuration options, or "flavors," to optimize streami
 
   
 
-#### Hints
+### Hints
 
   
 
@@ -245,7 +247,7 @@ Hints in the swift-srt package provide insights beyond the standard SRT specific
 
   
 
-### How to Use
+## How to Use
 
   
 
@@ -253,7 +255,7 @@ Hints in the swift-srt package provide real-time, data-driven insights to optimi
 
   
 
-#### 5K Screen Sharing
+### 5K Screen Sharing
 
 Apple's VideoToolbox for high-quality screen sharing:
 
@@ -263,7 +265,7 @@ Apple's VideoToolbox for high-quality screen sharing:
 
   
 
-#### 96-bit Audio Streaming
+### 96-bit Audio Streaming
 
 Deliver high-fidelity audio for music or communication:
 
@@ -273,7 +275,7 @@ Deliver high-fidelity audio for music or communication:
 
   
 
-#### HDR 60-fps 10-bit Video
+### HDR 60-fps 10-bit Video
 
 Stream live video with stunning detail and smooth playback:
 
