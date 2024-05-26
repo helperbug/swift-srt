@@ -123,7 +123,7 @@ In two-way communication scenarios, each endpoint uses its own Key Encrypting Ke
 
   
 
-Each socket is uniquely identified by its own SocketID and maintains its own cryptographic keys, so each stream is isolated and secure. Sockets are responsible for tracking their own metrics that enables fine-grained monitoring and optimization of data transmission. Sockets also manage ACKs, NACKs, KeepAlive and other SRT details to maintain the data flow, retransmission and metrics.
+Each socket uniquely identified by its own SocketID and maintains its own cryptographic keys, so each stream is isolated and secure. Sockets are responsible for tracking their own metrics that enables fine-grained monitoring and optimization of data transmission. Sockets also manage ACKs, NACKs, KeepAlive and other SRT details to maintain the data flow, retransmission and metrics.
 
   
 
