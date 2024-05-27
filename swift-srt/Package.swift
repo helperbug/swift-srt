@@ -18,7 +18,10 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "swift-srt"),
+            name: "swift-srt",
+            resources: [
+                .process("Documentation/Resources/doclogo.png")
+            ]),
         .testTarget(
             name: "swift-srtTests",
             dependencies: ["swift-srt"]),

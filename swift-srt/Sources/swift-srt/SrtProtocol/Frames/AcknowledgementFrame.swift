@@ -30,6 +30,10 @@ import Foundation
 /// A Small ACK includes the fields up to and including the Available Buffer Size field. The Type-specific Information field should be set to 0.
 /// The sender only acknowledges the receipt of Full ACK packets (see Section 3.2.8).
 /// The Light ACK and Small ACK packets are used in cases when the receiver should acknowledge received data packets more often than every 10 ms. This is usually needed at high data rates. It is up to the receiver to decide the condition and the type of ACK packet to send (Light or Small). The recommendation is to send a Light ACK for every 64 packets received.
+///
+/// ![Acknowledgement](acknowledgement-frame)
+///
+
 public struct AcknowledgementFrame: ByteFrame {
     public let data: Data
 

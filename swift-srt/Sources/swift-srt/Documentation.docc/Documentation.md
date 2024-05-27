@@ -7,6 +7,8 @@ Secure Reliable Transport (SRT) is now a first-class citizen in Apple's ecosyste
 
 Easily integrate high-quality, low-latency streaming capabilities into SwiftUI applications and leverage the latest advancements in Apple’s networking and multimedia frameworks.  
 
+![doclogo](doclogo.png)
+
 Key features include:
 
 - Seamless integration with Swift and Apple's frameworks
@@ -23,7 +25,7 @@ This open-source project is public-domain. The design emphasizes simplicity and 
 
   
 
-# Connection
+## Connection
 
   
 
@@ -31,7 +33,7 @@ The SRT Connection is implemented as a UDP NWConnection with a custom NWFramer. 
 
   
 
-## ListenerSession
+### ListenerSession
 
   
 
@@ -39,7 +41,7 @@ The `ListenerSession` manages and accepts incoming connection requests. It is de
 
   
 
-## CallerSession
+### CallerSession
 
   
 
@@ -47,7 +49,7 @@ The `CallerSession` initiates connections to a listener. It is suitable for clie
 
   
 
-## Rendezvous
+### Rendezvous
 
   
 

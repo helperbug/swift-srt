@@ -28,7 +28,6 @@ import Foundation
 /// The sender notifies the receiver that it must not wait for retransmission of this message. Note that a Message Drop Request control packet is not sent if the Too Late Packet Drop mechanism (Section 4.6) causes the sender to drop a message, as in this case the receiver is expected to drop it anyway.
 /// A Message Drop Request contains the message number and corresponding range of packet sequence numbers which form the whole message. If the sender does not already have in its buffer the specific packet or packets for which retransmission was requested, then it is unable to restore the message number. In this case the Message Number field must be set to zero, and the receiver should drop packets in the provided packet sequence number range.
 ///
-/// ![Message Drop Request Map](Resources/MessageDropRequestMap.png)
 
 public struct MessageDropRequestFrame: ByteFrame {
     
