@@ -1,8 +1,24 @@
 //
 //  ListenerContext.swift
+//  swift-srt
 //
+//  Created by Ben Waidhofer on 6/1/2024.
 //
-//  Created by Ben Waidhofer on 4/30/24.
+//  This source file is part of the swift-srt open source project
+//
+//  Licensed under the MIT License. You may obtain a copy of the License at
+//  https://opensource.org/licenses/MIT
+//
+//  Portions of this project are based on the SRT protocol specification.
+//  SRT is licensed under the Mozilla Public License, v. 2.0.
+//  You may obtain a copy of the License at
+//  https://github.com/Haivision/srt/blob/master/LICENSE
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 //
 
 import Combine
@@ -39,8 +55,8 @@ public class ListenerContext {
         self._endpoint = endpoint
         self._port = port
         self.state = ListenerNoneState()
+
         self.state.auto(self)
-        
     }
     
     @discardableResult
@@ -59,6 +75,7 @@ public class ListenerContext {
         }
         
         self.state = newState
+        self._listenerState.send(newState.name)
         
         return newState
         
@@ -90,29 +107,8 @@ extension ListenerContext {
 
     func onStateChanged(_ state: NWListener.State) {
 
-        switch state {
+        self.state.onStateChanged(self, state: state)
 
-        case .ready:
-
-            print("Listener is ready and accepting connections.")
-
-        case .failed(let error):
-
-            print("Listener failed with error: \(error)")
-
-        case .waiting(let error):
-
-            print("Listener is waiting to retry due to error: \(error)")
-
-        case .cancelled:
-
-            print("Listener has been cancelled.")
-
-        default:
-
-            break
-
-        }
     }
     
 }
@@ -145,7 +141,13 @@ extension ListenerContext: SrtListenerProtocol {
                 
             }
             
-            self.state.primary(self)
+            _connections.send([:])
+            
+            if let listener {
+                
+                listener.cancel()
+                
+            }
 
         }
 
