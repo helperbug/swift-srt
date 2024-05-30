@@ -23,6 +23,9 @@ public protocol SrtSocketProtocol {
     /// Hints are reported once each second along with the metrics
     var onHintsReceived: ([SrtSocketHints]) -> Void { get }
     
+    /// Logs are meant for development time
+    var onLogReceived: (String) -> Void { get }
+    
     /// Metrics are available at the same time as KeepAlive.
     var onMetricsReceived: ([SrtSocketMetrics]) -> Void { get }
     

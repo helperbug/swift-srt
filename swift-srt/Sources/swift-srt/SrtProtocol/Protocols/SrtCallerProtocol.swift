@@ -1,5 +1,5 @@
 //
-//  SrtConnectionProtocol.swift
+//  SrtCallerProtocol.swift
 //  swift-srt
 //
 //  Created by Ben Waidhofer on 5/25/2024.
@@ -23,15 +23,13 @@
 
 
 import Foundation
-import Network
 
-public protocol SrtConnectionProtocol: Hashable {
+public protocol SrtCallerProtocol {
 
     var onStateChanged: (Bool) -> Void { get }
-    var ipAddress: IPAddress { get }
-    var port: UInt16 { get }
-    
-    init(host: IPv4Address, port: UInt16)
+
+    init(host: IPAddress, port: UInt16)
+    func makeSocket(encrypted: Bool) -> SrtSocketProtocol
     func close() -> Void
 
 }

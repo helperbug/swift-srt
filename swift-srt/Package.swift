@@ -13,17 +13,14 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "swift-srt",
-            targets: ["swift-srt"]),
+            name: "SwiftSrt",
+            targets: ["SwiftSrt"]),
     ],
     targets: [
         .target(
-            name: "swift-srt",
-            resources: [
-                .process("Documentation/Resources/doclogo.png")
-            ]),
+            name: "SwiftSrt"),
         .testTarget(
-            name: "swift-srtTests",
-            dependencies: ["swift-srt"]),
+            name: "SwiftSrtTests",
+            dependencies: ["SwiftSrt"]),
     ]
 )

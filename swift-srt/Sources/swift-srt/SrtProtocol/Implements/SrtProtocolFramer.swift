@@ -42,41 +42,6 @@ class SrtProtocolFramer: NWProtocolFramerImplementation {
         return .ready
     }
     
-    /*
-     func handleInput(framer: NWProtocolFramer.Instance) -> Int {
-     while true {
-     var decodedSrtHeader: SrtPacketHeader? = nil
-     
-     let headerSize = SrtPacketHeader.encodedSize
-     
-     let parsed = framer.parseInput(minimumIncompleteLength: headerSize, maximumLength: 2048) {
-     (buffer, isComplete) -> Int in
-     
-     guard let buffer = buffer else {
-     return headerSize
-     }
-     
-     let count = buffer.count
-     if count < headerSize {
-     return headerSize
-     }
-     
-     // Convert UnsafeMutableRawBufferPointer to UnsafeRawBufferPointer
-     let rawBuffer = UnsafeRawBufferPointer(buffer)
-     decodedSrtHeader = SrtPacketHeader(rawBuffer)
-     return headerSize
-     }
-     
-     guard parsed else {
-     return headerSize
-     }
-     
-     // Process the decoded SRT header if needed here
-     }
-     }
-     
-     */
-    
     func handleInput(framer: NWProtocolFramer.Instance) -> Int {
         while true {
             var decodedSrtHeader: SrtPacketHeader? = nil
@@ -130,9 +95,13 @@ class SrtProtocolFramer: NWProtocolFramerImplementation {
         framer.writeOutput(data: srtPacket.data)
         
         do {
+
             try framer.writeOutputNoCopy(length: messageLength)
+
         } catch {
+
             print("Error writing output no copy: \(error)")
+
         }
     }
 }

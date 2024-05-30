@@ -1,5 +1,5 @@
 //
-//  SrtConnectionProtocol.swift
+//  SrtListenerProtocol.swift
 //  swift-srt
 //
 //  Created by Ben Waidhofer on 5/25/2024.
@@ -21,17 +21,17 @@
 //  limitations under the License.
 //
 
-
+import Combine
 import Foundation
 import Network
 
-public protocol SrtConnectionProtocol: Hashable {
+public protocol SrtListenerProtocol {
 
-    var onStateChanged: (Bool) -> Void { get }
-    var ipAddress: IPAddress { get }
-    var port: UInt16 { get }
+    var endpoint: IPv4Address { get }
+    var port: NWEndpoint.Port { get }
+    var listenerState: CurrentValueSubject<ListenerStates, Never> { get }
+    var connections: CurrentValueSubject<[String: ConnectionContext], Never> { get }
     
-    init(host: IPv4Address, port: UInt16)
     func close() -> Void
 
 }
