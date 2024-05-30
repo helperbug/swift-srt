@@ -65,4 +65,23 @@ public enum ConnectionStates {
             return "multiply.circle.fill"
         }
     }
+    
+    var state: ConnectionState {
+        
+        switch self {
+        case .setup:
+            return ConnectionSetupState()
+        case .waiting:
+            return ConnectionWaitingState()
+        case .preparing:
+            return ConnectionPreparingState()
+        case .ready:
+            return ConnectionReadyState()
+        case .failed:
+            return ConnectionFailedState()
+        case .cancelled:
+            return ConnectionCancelledState()
+        }
+        
+    }
 }

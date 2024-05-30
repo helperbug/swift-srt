@@ -79,18 +79,8 @@ public class ConnectionContext {
     
     func onStateChanged(_ state: NWConnection.State) {
 
-        print("Connection changed to \(state)")
-        
-        if case .failed(let error) = state {
-
-            remove(key)
-            print(error.localizedDescription)
-
-        } else {
-            
-            self.state.onStateChanged(self, state: state)
-            
-        }
+        print("State Changed: \(state)")
+        self.state.onStateChanged(self, state: state)
 
     }
     
@@ -123,13 +113,23 @@ public class ConnectionContext {
         
     }
     
-    func receive(header: SrtPacket) {
-        
+    func receive(packet: SrtPacket) {
+        print("Receiving packet \(packet)")
     }
     
     func shutdown(message: String) {
         
     }
+    
+    @discardableResult
+    func set(newState: ConnectionStates) -> Self {
+
+        self.state = newState.state
+
+        return self
+
+    }
+    
 }
 
 extension ConnectionContext: Hashable {
@@ -143,4 +143,53 @@ extension ConnectionContext: Hashable {
     public static func == (lhs: ConnectionContext, rhs: ConnectionContext) -> Bool {
         return lhs.serverIp == rhs.serverIp && lhs.serverPort == rhs.serverPort && lhs.host == rhs.host && lhs.portNumber == rhs.portNumber
     }
+}
+
+extension ConnectionContext {
+    
+    func receiveNextMessage() {
+        self.connection.receiveMessage { (data, context, isComplete, error) in
+ 
+            /// first check for errors
+            if let error {
+                /// deal with error
+                print(error)
+                return
+            }
+            
+            /// make sure there is a context
+            guard let context else {
+                // Should never happen
+                print("no context")
+                return
+            }
+            
+            /// make sure the incoming message can be framed srt
+            let srtFramer = context.protocolMetadata(definition: SrtProtocolFramer.definition)
+            guard let srtFrame = srtFramer as? NWProtocolFramer.Message else {
+                print("network protocol framer could not downcast SRT message")
+                return
+            }
+           
+            /// make sure there is data
+            guard data != nil else {
+                // Should never happen
+                self.receiveNextMessage()
+                return
+            }
+            
+            guard let srtPacket = srtFrame.srtPacket else {
+                // Should never happen
+                self.receiveNextMessage()
+                return
+            }
+            
+            self.receive(packet: srtPacket)
+
+            // on to the next message
+            self.receiveNextMessage()
+            
+        }
+    }
+    
 }

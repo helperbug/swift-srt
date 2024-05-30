@@ -59,7 +59,7 @@ struct ListenerNoneState: ListenerState {
             
             listener.newConnectionHandler = context.newConnectionHandler
             listener.stateUpdateHandler = context.onStateChanged(_ :)
-            listener.service = NWListener.Service(name: "SrtListener", type: "_service._udp")
+            // listener.service = NWListener.Service(name: "SrtListener", type: "_service._udp")
 
             context.listener = listener
             listener.start(queue: .global(qos: .utility))

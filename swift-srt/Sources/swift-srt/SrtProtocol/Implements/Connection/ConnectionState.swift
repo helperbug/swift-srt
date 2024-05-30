@@ -25,11 +25,17 @@ extension ConnectionState {
         fatalError(name.label)
     }
 
-    func auto(_ context: ConnectionContext) {}
+    func auto(_ context: ConnectionContext) {
+        fatalError(name.label)
+    }
 
-    func fail(_ context: ConnectionContext) {}
+    func fail(_ context: ConnectionContext) {
+        fatalError(name.label)
+    }
     
-    func send(_ connection: NWConnection, _ data: Data) {}
+    func send(_ connection: NWConnection, _ data: Data) {
+        fatalError(name.label)
+    }
 }
 
 
@@ -66,7 +72,9 @@ class ConnectionFailedState: ConnectionState {
         
     }
     func primary(_ context: ConnectionContext) {}
-    func auto(_ context: ConnectionContext) {}
+    func auto(_ context: ConnectionContext) {
+        context.remove(context.key)
+    }
     func fail(_ context: ConnectionContext) {}
 }
 
@@ -78,6 +86,8 @@ class ConnectionCancelledState: ConnectionState {
         
     }
     func primary(_ context: ConnectionContext) {}
-    func auto(_ context: ConnectionContext) {}
+    func auto(_ context: ConnectionContext) {
+        context.remove(context.key)
+    }
     func fail(_ context: ConnectionContext) {}
 }

@@ -51,11 +51,13 @@ public class ListenerContext {
         
     }
     
-    public init(endpoint: IPv4Address, port: NWEndpoint.Port) {
+    public init(endpoint: IPv4Address, port: NWEndpoint.Port, logger: LoggerContext) {
         self._endpoint = endpoint
         self._port = port
         self.state = ListenerNoneState()
 
+        logger.log(text: "Starting \(endpoint.debugDescription): \(port)")
+        
         self.state.auto(self)
     }
     

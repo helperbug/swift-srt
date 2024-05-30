@@ -9,64 +9,47 @@ import Foundation
 import Network
 
 class ConnectionReadyState: ConnectionState {
-
+    
     let name: ConnectionStates = .ready
-
+    
     func onStateChanged(_ context: ConnectionContext, state: NWConnection.State) {
         
-    }
-
-    func primary(_ context: ConnectionContext) {
+        switch state {
+            
+        case .failed(let error):
+            print("Connection failed with error: \(error)")
+            context.set(newState: .failed).state.auto(context)
+            
+        case .cancelled:
+            print("Connection is cancelled.")
+            context.set(newState: .cancelled).state.auto(context)
+            
+        default:
+            print("Unexpected change while in ready state: \(state)")
+        }
         
     }
-
-    func auto(_ context: ConnectionContext) { }
-    func fail(_ context: ConnectionContext) { }
     
-    // Receive a message, deliver it to your delegate, and continue receiving more messages.
-    func receiveNextMessage(_ context2: ConnectionContext) {
-        context2.connection.receiveMessage { (content, context, isComplete, error) in
-            /// first check for errors
-            if let error = error {
-                /// deal with error
-                print(error)
-                return
-            }
-            
-            /// make sure there is a context
-            guard let context = context else {
-                /// bad, probably an error
-                print("no context")
-                return
-            }
-            
-            /// get the protocol metadata for the llrp protocol framer
-            guard let protocolMetadata = context.protocolMetadata(definition: SrtProtocolFramer.definition) else {
-                /// this should never happen
-                print("protocol metadata is not present")
-                return
-            }
-            
-            // make sure the incoming message can be framed llrp
-            guard protocolMetadata is NWProtocolFramer.Message else {
-                print("network protocol framer could not downcast srt message")
-                return
-            }
-            
-            /// make sure there is data
-            guard content != nil else {
-                print("no data for message") // \(llrpMessage.messageType) id \(llrpMessage.messageId)")
-                // Continue to receive more messages until an error is received
-                self.receiveNextMessage(context2)
-                return
-            }
-            
-            print("routing message") // \(llrpMessage.messageType) \(llrpMessage.llrpHeader.messageId) count \(data.count)")
-            
-            // print(srtMessage.srtHeader, data)
-            
-            // Continue to receive more messages until an error is received
-            self.receiveNextMessage(context2)
-        }
+    func auto(_ context: ConnectionContext) {
+        
+        context.receiveNextMessage()
+        
     }
+    
+    func send(_ connection: NWConnection, _ data: Data) {
+        
+        let srtPacket = SrtPacket(data: data)
+        
+        // Create the framer message
+        let message = NWProtocolFramer.Message(srtPacket: srtPacket)
+        let metadata = [message]
+        let identifier = "\(self)"
+        
+        // Create the content context
+        let context = NWConnection.ContentContext(identifier: identifier, metadata: metadata)
+        
+        // Send the message data
+        connection.send(content: data, contentContext: context, isComplete: true, completion: .idempotent)
+    }
+    
 }
