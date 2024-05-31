@@ -36,31 +36,25 @@ extension ConnectionState {
     func send(_ connection: NWConnection, _ data: Data) {
         fatalError(name.label)
     }
+    
+    func onStateChanged(_ context: ConnectionContext, state: NWConnection.State) {
+        fatalError(name.label)
+    }
 }
 
 
 // MARK: Waiting State
 
 class ConnectionWaitingState: ConnectionState {
+
     let name: ConnectionStates = .waiting
-    func onStateChanged(_ context: ConnectionContext, state: NWConnection.State) {
-        
-    }
-    func primary(_ context: ConnectionContext) {}
-    func auto(_ context: ConnectionContext) {}
-    func fail(_ context: ConnectionContext) {}
+    
 }
 
 // MARK: Preparing State
 
 class ConnectionPreparingState: ConnectionState {
     let name: ConnectionStates = .preparing
-    func onStateChanged(_ context: ConnectionContext,  state: NWConnection.State) {
-        
-    }
-    func primary(_ context: ConnectionContext) {}
-    func auto(_ context: ConnectionContext) {}
-    func fail(_ context: ConnectionContext) {}
 }
 
 
@@ -68,26 +62,20 @@ class ConnectionPreparingState: ConnectionState {
 
 class ConnectionFailedState: ConnectionState {
     let name: ConnectionStates = .failed
-    func onStateChanged(_ context: ConnectionContext, state: NWConnection.State) {
-        
-    }
-    func primary(_ context: ConnectionContext) {}
+    
     func auto(_ context: ConnectionContext) {
         context.remove(context.key)
     }
-    func fail(_ context: ConnectionContext) {}
+    
 }
 
 // MARK: Cancelled State
 
 class ConnectionCancelledState: ConnectionState {
     let name: ConnectionStates = .cancelled
-    func onStateChanged(_ context: ConnectionContext, state: NWConnection.State) {
-        
-    }
-    func primary(_ context: ConnectionContext) {}
+
     func auto(_ context: ConnectionContext) {
         context.remove(context.key)
     }
-    func fail(_ context: ConnectionContext) {}
+    
 }

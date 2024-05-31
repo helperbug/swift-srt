@@ -24,7 +24,7 @@
 import Foundation
 
 extension Data {
-
+    
     var asHexArray: String {
         var rows: [String] = []
         var counter = 0
@@ -33,7 +33,7 @@ extension Data {
         for value in self {
             row += String(format: "%02X", value) + " "
             counter += 1
-
+            
             if counter == 4 {
                 row += " "
             }
@@ -47,7 +47,7 @@ extension Data {
         
         return rows.joined(separator: "\n")
     }
-
+    
     func toUInt32(from offset: inout Int) -> UInt32 {
         let size = MemoryLayout<UInt32>.size
         defer { offset += size }
@@ -59,8 +59,12 @@ extension Data {
         defer { offset += size }
         return self.subdata(in: offset..<(offset + size)).reversed().withUnsafeBytes { $0.load(as: UInt16.self) }
     }
-
+    
     subscript(range: Range<Int>) -> Data {
         return self.subdata(in: range)
+    }
+    
+    static func random(_ length: Int) -> Data {
+        return Data((0..<length).map { _ in UInt8.random(in: 0...255) })
     }
 }

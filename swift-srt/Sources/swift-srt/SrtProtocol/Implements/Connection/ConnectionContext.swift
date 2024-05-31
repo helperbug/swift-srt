@@ -32,7 +32,7 @@ public class ConnectionContext {
     let host: String
     let portNumber: UInt16
 
-    var sockets: [Int: SrtSocketProtocol] = [:]
+    var sockets: [UInt32: SrtSocketProtocol] = [:]
     
     var remove: (String) -> Void
     var state: ConnectionState = ConnectionSetupState()
@@ -73,8 +73,9 @@ public class ConnectionContext {
     }
     
     func start() {
-        connection.start(queue: .global(qos: .utility))
-        state.auto(self)
+        if self.state.name == .setup {
+            state.auto(self)
+        }
     }
     
     func onStateChanged(_ state: NWConnection.State) {
@@ -102,7 +103,7 @@ public class ConnectionContext {
             serverIp: serverIp,
             serverPort: serverPort,
             connection: connection,
-            host: "\(caller)",
+            host: "\(caller.debugDescription)",
             portNumber: port.rawValue,
             remove: remove
         )
@@ -114,7 +115,83 @@ public class ConnectionContext {
     }
     
     func receive(packet: SrtPacket) {
-        print("Receiving packet \(packet)")
+        
+        if packet.isData {
+            self.handleData(socketId: packet.destinationSocketID, frame: packet.contents)
+        } else {
+            self.handleControl(packet: packet, synCookie: updHeader.cookie)
+        }
+        
+        if let handshake = SrtHandshake(data: packet.contents) {
+            print("Handshake for SRT Socket \(handshake.srtSocketID), synCookie \(updHeader.cookie)")
+        } else {
+            print("Receiving packet \(packet)")
+        }
+    }
+    
+    private func handleData(socketId: UInt32, frame: Data) {
+        
+        guard let socket = self.sockets[socketId] else {
+            print("this should never happen, it is an error")
+            return
+        }
+        
+        socket.onFrameReceived(frame)
+        
+    }
+    
+    private func handleControl(packet: SrtPacket, synCookie: UInt32) {
+
+//        guard let controlPacket = ControlPacketFrame(packet: SrtPacket.contents) else {
+//            print("this should never happen, it is an error")
+//            return
+//        }
+//        
+//        switch controlPacket.controlType {
+//        case .handshake:
+//            guard let handshake = SrtHandshake(data: data) else {
+//                print("Invalid handshake packet")
+//                return
+//            }
+//            if handshake.isInductionRequest {
+//                let newSocket = SrtSocket(handshake: handshake, synCookie: synCookie)
+//                sockets[newSocket.id] = newSocket
+//                print("Induction request processed, new socket added with ID \(newSocket.id)")
+//            } else if handshake.handshakeType == .conclusion {
+//                print("Handshake conclusion processed for socket \(handshake.srtSocketID)")
+//            }
+//        case .shutdown:
+//            let socketId = controlPacket.socketId
+//            sockets.removeValue(forKey: socketId)
+//            if sockets.isEmpty {
+//                print("All sockets closed, cancelling connection")
+//                connection.cancel()
+//            } else {
+//                print("Socket \(socketId) shutdown, remaining sockets: \(sockets.count)")
+//            }
+//        case .keepAlive:
+//            print("KeepAlive packet received")
+//        case .acknowledgement:
+//            print("Acknowledgement packet received")
+//        case .negativeAcknowledgement:
+//            print("Negative Acknowledgement packet received")
+//        case .congestionWarning:
+//            print("Congestion Warning packet received")
+//        case .peerError:
+//            print("Peer Error packet received")
+//        case .userDefined:
+//            print("User Defined packet received")
+//        case .serverDenial:
+//            print("Server Denial packet received")
+//        case .dataDropped:
+//            print("Data Dropped packet received")
+//        case .channelStatisticsRequest:
+//            print("Channel Statistics Request packet received")
+//        case .channelStatisticsResponse:
+//            print("Channel Statistics Response packet received")
+//        case .reserved:
+//            print("Reserved packet type received")
+//        }
     }
     
     func shutdown(message: String) {
