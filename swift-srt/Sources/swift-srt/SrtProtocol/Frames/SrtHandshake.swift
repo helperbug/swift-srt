@@ -171,7 +171,13 @@ public extension SrtHandshake {
         self.extensionContents = extensionContents
     }
     
-    static func makeInductionResponse(srtSocketID: UInt32, synCookie: UInt32, peerIpAddress: Data) -> SrtHandshake {
+    static func makeInductionResponse(
+        srtSocketID: UInt32,
+        initialPacketSequenceNumber: UInt32,
+        synCookie: UInt32,
+        peerIpAddress: Data,
+        encrypted: Bool
+    ) -> SrtHandshake {
         let keyMaterial = IntegrityCheckVectorFrame.makeWrapper()
         
         let keyMaterialFrame = KeyMaterialFrame(
@@ -189,21 +195,44 @@ public extension SrtHandshake {
             wrappedKey: keyMaterial.data
         )
 
-        return SrtHandshake(
-            hsVersion: 5,
-            encryptionField: 0x0004, // AES-256
-            extensionField: 0x4A17, // SRT Magic Value
-            initialPacketSequenceNumber: 0,
-            maximumTransmissionUnitSize: 1500,
-            maximumFlowWindowSize: 8192,
-            handshakeType: .induction,
-            srtSocketID: srtSocketID,
-            synCookie: synCookie,
-            peerIPAddress: peerIpAddress,
-            extensionType: .keyMaterialResponse,
-            extensionLength: UInt16(keyMaterialFrame.data.count / 4),
-            extensionContents: keyMaterialFrame.data
-        )
+        if encrypted {
+
+            return SrtHandshake(
+                hsVersion: 5,
+                encryptionField: 0x0004, // AES-256
+                extensionField: 0x4A17, // SRT Magic Value
+                initialPacketSequenceNumber: initialPacketSequenceNumber,
+                maximumTransmissionUnitSize: 1500,
+                maximumFlowWindowSize: 8192,
+                handshakeType: .induction,
+                srtSocketID: srtSocketID,
+                synCookie: synCookie,
+                peerIPAddress: peerIpAddress,
+                extensionType: .keyMaterialResponse,
+                extensionLength: UInt16(keyMaterialFrame.data.count / 4),
+                extensionContents: keyMaterialFrame.data
+            )
+
+        } else {
+
+            return SrtHandshake(
+                hsVersion: 5,
+                encryptionField: 0x0000, // AES-256
+                extensionField: 0x4A17, // SRT Magic Value
+                initialPacketSequenceNumber: initialPacketSequenceNumber,
+                maximumTransmissionUnitSize: 1500,
+                maximumFlowWindowSize: 8192,
+                handshakeType: .induction,
+                srtSocketID: srtSocketID,
+                synCookie: synCookie,
+                peerIPAddress: peerIpAddress,
+                extensionType: .none,
+                extensionLength: 0,
+                extensionContents: Data()
+            )
+
+        }
+        
     }
     
     private static func generateSynCookie(clientIP: String, clientPort: UInt16, serverIP: String, serverPort: UInt16, mss: UInt8 = 5) -> UInt32 {
@@ -274,5 +303,5 @@ extension SrtHandshake {
             extensionContents: Data()
         )
     }
-    
+
 }

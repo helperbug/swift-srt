@@ -14,8 +14,10 @@ struct HandshakeRespondingState: HandshakeState {
     func auto(context: HandshakeContext) {
         
         let response = SrtHandshake.makeInductionResponse(srtSocketID: context.socketId,
+                                                          initialPacketSequenceNumber: context.initialPacketSequenceNumber,
                                                           synCookie: context.synCookie,
-                                                          peerIpAddress: context.peerIpAddress)
+                                                          peerIpAddress: context.peerIpAddress,
+                                                          encrypted: false)
         
     }
     

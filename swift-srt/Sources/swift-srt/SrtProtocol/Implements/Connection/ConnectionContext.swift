@@ -175,10 +175,23 @@ public class ConnectionContext {
             }
             
             if handshake.isInductionRequest {
+
                 sockets[handshake.srtSocketID] = socketContext
-                let response = SrtHandshake.makeInductionResponse(srtSocketID: handshake.srtSocketID, synCookie: self.updHeader.cookie, peerIpAddress: ipStringToData(ipString: updHeader.sourceIp)!)
-                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: 0, contents: Data())
-                let contents = response.makePacket(socketId: socketId).contents
+
+                let response = SrtHandshake.makeInductionResponse(
+                    srtSocketID: handshake.srtSocketID,
+                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
+                    synCookie: self.updHeader.cookie,
+                    peerIpAddress: ipStringToData(
+                        ipString: updHeader.sourceIp
+                    )!,
+                    encrypted: false
+                )
+
+                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: handshake.srtSocketID, contents: Data())
+
+                let contents = response.makePacket(socketId: handshake.srtSocketID).contents
+
                 send2(header: packet, contents: contents)
                 
                 
