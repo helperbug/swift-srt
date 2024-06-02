@@ -25,6 +25,9 @@ import Foundation
 
 /// Negative acknowledgment (NAK) control packets are used to signal failed data packet deliveries. The receiver notifies the sender about lost data packets by sending a NAK packet that contains a list of sequence numbers for those lost packets.
 public struct NegativeAckFrame: ByteFrame {
+    func makePacket(socketId: UInt32) -> SrtPacket {
+        return .blank
+    }
     public let data: Data
 
     /// The packet type value of a NAK control packet is "1".

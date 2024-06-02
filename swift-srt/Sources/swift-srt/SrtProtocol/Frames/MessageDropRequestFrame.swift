@@ -30,7 +30,10 @@ import Foundation
 ///
 
 public struct MessageDropRequestFrame: ByteFrame {
-    
+    func makePacket(socketId: UInt32) -> SrtPacket {
+        return .blank
+    }
+
     /// Byte representation of the frame
     public let data: Data
     

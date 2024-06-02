@@ -35,6 +35,7 @@ import Foundation
 ///
 /// The structure of the Key Material message is illustrated in Figure 11.
 public struct KeyMaterialFrame: ByteFrame {
+
     public let data: Data
 
     /// Future
@@ -185,4 +186,7 @@ public struct KeyMaterialFrame: ByteFrame {
         
         self.data = buffer
     }
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket { .blank }
+    
 }

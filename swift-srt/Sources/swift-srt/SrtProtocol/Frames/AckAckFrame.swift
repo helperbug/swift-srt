@@ -37,40 +37,40 @@ public struct AckAckFrame: ByteFrame {
     public var controlType: UInt16 {
         return data.prefix(2).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian & 0x7FFF
     }
-
+    
     public var reserved: UInt16 {
         return data.subdata(in: 2..<4).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian
     }
-
+    
     public var acknowledgementNumber: UInt32 {
         return data.subdata(in: 4..<8).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian
     }
-
+    
     public var timestamp: UInt32 {
         return data.subdata(in: 8..<12).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian
     }
-
+    
     public var destinationSocketID: UInt32 {
         return data.subdata(in: 12..<16).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian
     }
-
+    
     /// Constructor used by the receive network path
     public init?(_ bytes: Data) {
         guard bytes.count == 16 else {
             return nil
         }
-
+        
         self.data = bytes
-
+        
         guard isControl else {
             return nil
         }
-
+        
         guard controlType == 6 else {
             return nil
         }
     }
-
+    
     /// Constructor used when sending over the network
     public init(
         controlType: UInt16 = 6,
@@ -84,20 +84,29 @@ public struct AckAckFrame: ByteFrame {
         let controlTypeWithPacketType = (controlType & 0x7FFF) | 0x8000
         var controlTypeBigEndian = controlTypeWithPacketType.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &controlTypeBigEndian) { Data($0) })
-
+        
         var reservedBigEndian = reserved.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &reservedBigEndian) { Data($0) })
-
+        
         var acknowledgementNumberBigEndian = acknowledgementNumber.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &acknowledgementNumberBigEndian) { Data($0) })
-
+        
         var timestampBigEndian = timestamp.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &timestampBigEndian) { Data($0) })
-
+        
         var destinationSocketIDBigEndian = destinationSocketID.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &destinationSocketIDBigEndian) { Data($0) })
-
+        
         self.data = data
+    }
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket
+    {
+        SrtPacket(
+            field1: ControlTypes.ackack.asField,
+            socketID: socketId,
+            contents: self.data
+        )
     }
 
 }

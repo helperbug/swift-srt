@@ -25,7 +25,7 @@ import Foundation
 
 /// The Group Membership handshake extension is reserved for the future and is going to be used to allow multipath SRT connections.
 public struct GroupMembershipExtensionFrame: ByteFrame {
-    
+
     public let data: Data
 
     /// The identifier of a group whose members include the sender socket that is making a connection. The target socket that is interpreting GroupID SHOULD belong to the corresponding group on the target side. If such a group does not exist, the target socket MAY create it.
@@ -80,4 +80,7 @@ public struct GroupMembershipExtensionFrame: ByteFrame {
         self.data = data
 
     }
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket { .blank }
+
 }

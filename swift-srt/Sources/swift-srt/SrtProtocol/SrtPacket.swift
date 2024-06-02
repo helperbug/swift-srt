@@ -86,22 +86,24 @@ public struct SrtPacket {
 
     }
     
-    init(isData: Bool, field1: UInt32, field2: UInt32, socketID: UInt32, timestamp: UInt32, contents: Data) {
+    init(isData: Bool = false, field1: UInt32, field2: UInt32 = 0, socketID: UInt32, contents: Data) {
+        let timestamp: UInt32 = UInt32(Date().timeIntervalSince1970)
+        
         var data = Data(capacity: 16 + contents.count)
         
-        let field1WithIsData = (field1 & 0x7FFFFFFF) | (isData ? 0x80000000 : 0x00000000)
+        let field1WithIsData = (field1 & 0x7FFFFFFF) | (isData ? 0x00000000 : 0x80000000)
         var field1BigEndian = field1WithIsData.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &field1BigEndian) { Data($0) })
 
         var field2BigEndian = field2.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &field2BigEndian) { Data($0) })
         
-        var socketIdBigEndian = socketID.bigEndian
-        data.append(contentsOf: withUnsafeBytes(of: &socketIdBigEndian) { Data($0) })
-        
         var timestampBigEndian = timestamp.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &timestampBigEndian) { Data($0) })
         
+        var socketIdBigEndian = socketID.bigEndian
+        data.append(contentsOf: withUnsafeBytes(of: &socketIdBigEndian) { Data($0) })
+
         data.append(contents)
         
         self.data = data
@@ -117,7 +119,6 @@ public struct SrtPacket {
             field1: 0,
             field2: 0,
             socketID: 0,
-            timestamp: UInt32(Date().timeIntervalSince1970),
             contents: Data()
         )
     }

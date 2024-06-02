@@ -34,6 +34,7 @@ import Foundation
 
 public struct KeyMaterialExtensionMessageFrame: ByteFrame {
     
+    
     public let data: Data
     
     /// KM State: 32 bits.
@@ -45,11 +46,11 @@ public struct KeyMaterialExtensionMessageFrame: ByteFrame {
     
     /// Constructor used by the receive network path
     public init?(_ bytes: Data) {
-
+        
         guard bytes.count == 4 else { return nil }
-
+        
         self.data = bytes
-
+        
     }
     
     /// Constructor used when sending over the network
@@ -61,7 +62,9 @@ public struct KeyMaterialExtensionMessageFrame: ByteFrame {
         data.append(contentsOf: withUnsafeBytes(of: &kmStateBigEndian) { Data($0) })
         
         self.data = data
-
+        
     }
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket { .blank }
     
 }

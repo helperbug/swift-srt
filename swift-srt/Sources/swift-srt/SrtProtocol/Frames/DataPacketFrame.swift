@@ -26,6 +26,7 @@ import Foundation
 /// Data packets are used to transmit the actual content in SRT protocol
 public struct DataPacketFrame: ByteFrame {
 
+    
     /// Byte representation of the frame
     public let data: Data
 
@@ -160,4 +161,15 @@ public struct DataPacketFrame: ByteFrame {
 
         self.data = data
     }
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket
+    {
+        SrtPacket(
+            isData: true,
+            field1: ControlTypes.ackack.asField,
+            socketID: socketId,
+            contents: self.data
+        )
+    }
+
 }

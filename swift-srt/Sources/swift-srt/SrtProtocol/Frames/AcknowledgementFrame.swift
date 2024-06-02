@@ -35,6 +35,7 @@ import Foundation
 ///
 
 public struct AcknowledgementFrame: ByteFrame {
+
     public let data: Data
 
     /// The packet type value of an ACK control packet is "1".
@@ -140,4 +141,14 @@ public struct AcknowledgementFrame: ByteFrame {
 
         self.data = data
     }
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket
+    {
+        SrtPacket(
+            field1: ControlTypes.acknowledgement.asField,
+            socketID: socketId,
+            contents: self.data
+        )
+    }
+
 }

@@ -26,6 +26,7 @@ import Foundation
 /// Keep-alive control packets are sent after a certain timeout from the last time any packet (Control or Data) was sent. The purpose of this control packet is to notify the peer to keep the connection open when no data exchange is taking place.
 /// The default timeout for a keep-alive packet to be sent is 1 second.
 public struct KeepAliveFrame: ByteFrame {
+    
     public let data: Data
 
     /// The packet type value of a keep-alive control packet is "1".
@@ -91,4 +92,14 @@ public struct KeepAliveFrame: ByteFrame {
 
         self.data = data
     }
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket
+    {
+        SrtPacket(
+            field1: ControlTypes.keepAlive.asField,
+            socketID: socketId,
+            contents: self.data
+        )
+    }
+
 }

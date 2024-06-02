@@ -25,6 +25,7 @@ import Foundation
 
 /// In a Handshake Extension, the value of the Extension Field of the handshake control packet is defined as 1 for a Handshake Extension request (SRT_CMD_HSREQ in Table 5), and 2 for a Handshake Extension response (SRT_CMD_HSRSP in Table 5).
 public struct HandshakeExtensionMessage: ByteFrame {
+
     public let data: Data
 
     /// SRT library version MUST be formed as major * 0x10000 + minor * 0x100 + patch.
@@ -74,4 +75,7 @@ public struct HandshakeExtensionMessage: ByteFrame {
 
         self.data = data
     }
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket { .blank }
+    
 }

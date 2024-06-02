@@ -36,20 +36,21 @@ class ConnectionReadyState: ConnectionState {
         
     }
     
-    func send(_ connection: NWConnection, _ data: Data) {
+    func send(_ context: ConnectionContext, _ data: Data) {
+
         
-        let srtPacket = SrtPacket(data: data)
-        
-        // Create the framer message
-        let message = NWProtocolFramer.Message(srtPacket: srtPacket)
-        let metadata = [message]
-        let identifier = "\(self)"
-        
-        // Create the content context
-        let context = NWConnection.ContentContext(identifier: identifier, metadata: metadata)
-        
-        // Send the message data
-        connection.send(content: data, contentContext: context, isComplete: true, completion: .idempotent)
+//        let srtPacket = SrtPacket(data: data)
+//        
+//        // Create the framer message
+//        let message = NWProtocolFramer.Message(srtPacket: srtPacket)
+//        let metadata = [message]
+//        let identifier = "\(self)"
+//        
+//        // Create the content context
+//        let context = NWConnection.ContentContext(identifier: identifier, metadata: metadata)
+//        
+//        // Send the message data
+//        connection.send(content: data, contentContext: context, isComplete: true, completion: .idempotent)
     }
     
 }

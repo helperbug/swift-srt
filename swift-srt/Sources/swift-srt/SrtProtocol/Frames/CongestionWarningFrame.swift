@@ -102,4 +102,13 @@ public struct CongestionWarningFrame: ByteFrame {
         self.data = data
     }
 
+    public func makePacket(socketId: UInt32) -> SrtPacket
+    {
+        SrtPacket(
+            field1: ControlTypes.congestionWarning.asField,
+            socketID: socketId,
+            contents: self.data
+        )
+    }
+
 }

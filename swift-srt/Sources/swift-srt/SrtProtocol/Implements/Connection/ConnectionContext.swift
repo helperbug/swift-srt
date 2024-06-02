@@ -25,14 +25,15 @@ import Foundation
 import Network
 
 public class ConnectionContext {
-
+    
     var connection: NWConnection
     let serverIp: String
     let serverPort: UInt16
     let host: String
     let portNumber: UInt16
-
+    
     var sockets: [UInt32: SrtSocketProtocol] = [:]
+    let metrics: MetricsProtocol? = nil
     
     var remove: (String) -> Void
     var state: ConnectionState = ConnectionSetupState()
@@ -40,11 +41,11 @@ public class ConnectionContext {
     public var connectionState: ConnectionStates {
         state.name
     }
-
+    
     var key: String {
         "\(host):\(portNumber)"
     }
-
+    
     var updHeader: UdpHeader {
         UdpHeader(
             sourceIp: host,
@@ -62,14 +63,14 @@ public class ConnectionContext {
         portNumber: UInt16,
         remove: @escaping (String)->()
     ) {
-       
+        
         self.serverIp = serverIp
         self.serverPort = serverPort
         self.connection = connection
         self.host = host
         self.portNumber = portNumber
         self.remove = remove
-
+        
     }
     
     func start() {
@@ -79,26 +80,26 @@ public class ConnectionContext {
     }
     
     func onStateChanged(_ state: NWConnection.State) {
-
+        
         print("State Changed: \(state)")
         self.state.onStateChanged(self, state: state)
-
+        
     }
     
     func send(data: Data) {
-        self.state.send(self.connection, data)
+        self.state.send(self, data)
     }
     
     static func make(serverIp: String,
                      serverPort: UInt16,
                      _ connection: NWConnection,
                      remove: @escaping (String)->()
-                ) -> ConnectionContext? {
+    ) -> ConnectionContext? {
         
         guard case .hostPort(let caller, let port) = connection.endpoint else {
             return nil
         }
-
+        
         let context: ConnectionContext = .init(
             serverIp: serverIp,
             serverPort: serverPort,
@@ -107,9 +108,9 @@ public class ConnectionContext {
             portNumber: port.rawValue,
             remove: remove
         )
-
+        
         connection.stateUpdateHandler = context.onStateChanged(_ :)
-
+        
         return context
         
     }
@@ -122,11 +123,6 @@ public class ConnectionContext {
             self.handleControl(packet: packet, synCookie: updHeader.cookie)
         }
         
-        if let handshake = SrtHandshake(data: packet.contents) {
-            print("Handshake for SRT Socket \(handshake.srtSocketID), synCookie \(updHeader.cookie)")
-        } else {
-            print("Receiving packet \(packet)")
-        }
     }
     
     private func handleData(socketId: UInt32, frame: Data) {
@@ -140,58 +136,84 @@ public class ConnectionContext {
         
     }
     
-    private func handleControl(packet: SrtPacket, synCookie: UInt32) {
+    func ipStringToData(ipString: String) -> Data? {
+        let components = ipString.split(separator: ".")
+        guard components.count == 4 else { return nil }
 
-//        guard let controlPacket = ControlPacketFrame(packet: SrtPacket.contents) else {
-//            print("this should never happen, it is an error")
-//            return
-//        }
-//        
-//        switch controlPacket.controlType {
-//        case .handshake:
-//            guard let handshake = SrtHandshake(data: data) else {
-//                print("Invalid handshake packet")
-//                return
-//            }
-//            if handshake.isInductionRequest {
-//                let newSocket = SrtSocket(handshake: handshake, synCookie: synCookie)
-//                sockets[newSocket.id] = newSocket
-//                print("Induction request processed, new socket added with ID \(newSocket.id)")
-//            } else if handshake.handshakeType == .conclusion {
-//                print("Handshake conclusion processed for socket \(handshake.srtSocketID)")
-//            }
-//        case .shutdown:
-//            let socketId = controlPacket.socketId
-//            sockets.removeValue(forKey: socketId)
-//            if sockets.isEmpty {
-//                print("All sockets closed, cancelling connection")
-//                connection.cancel()
-//            } else {
-//                print("Socket \(socketId) shutdown, remaining sockets: \(sockets.count)")
-//            }
-//        case .keepAlive:
-//            print("KeepAlive packet received")
-//        case .acknowledgement:
-//            print("Acknowledgement packet received")
-//        case .negativeAcknowledgement:
-//            print("Negative Acknowledgement packet received")
-//        case .congestionWarning:
-//            print("Congestion Warning packet received")
-//        case .peerError:
-//            print("Peer Error packet received")
-//        case .userDefined:
-//            print("User Defined packet received")
-//        case .serverDenial:
-//            print("Server Denial packet received")
-//        case .dataDropped:
-//            print("Data Dropped packet received")
-//        case .channelStatisticsRequest:
-//            print("Channel Statistics Request packet received")
-//        case .channelStatisticsResponse:
-//            print("Channel Statistics Response packet received")
-//        case .reserved:
-//            print("Reserved packet type received")
-//        }
+        let ipv4Bytes = components.compactMap { UInt8($0) }.reversed()
+        guard ipv4Bytes.count == 4 else { return nil }
+
+        let paddedBytes = ipv4Bytes + [UInt8](repeating: 0, count: 12)
+        return Data(paddedBytes)
+    }
+
+    
+    private func handleControl(packet: SrtPacket, synCookie: UInt32) {
+        guard let controlPacket = ControlPacketFrame(packet.contents),
+              let controlType = ControlTypes(rawValue: controlPacket.controlType) else {
+            print("Invalid control packet")
+            return
+        }
+        
+        let socketId = packet.destinationSocketID
+        
+        var socketContext = SrtSocketContext(encrypted: true, id: socketId, onFrameReceived: { _ in},
+                                             onHintsReceived: { _ in },
+                                             onLogReceived: { _ in },
+                                             onMetricsReceived: { _ in },
+                                             onStateChanged: { _ in })
+        
+        switch controlType {
+        case .handshake:
+            guard let handshake = SrtHandshake(data: packet.contents) else {
+                print("Invalid handshake packet")
+                return
+            }
+            
+            if let data = ipStringToData(ipString: updHeader.sourceIp) {
+                print(data)
+            }
+            
+            if handshake.isInductionRequest {
+                sockets[handshake.srtSocketID] = socketContext
+                let response = SrtHandshake.makeInductionResponse(srtSocketID: handshake.srtSocketID, synCookie: self.updHeader.cookie, peerIpAddress: ipStringToData(ipString: updHeader.sourceIp)!)
+                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: 0, contents: Data())
+                let contents = response.makePacket(socketId: socketId).contents
+                send2(header: packet, contents: contents)
+                
+                
+                print("Induction request processed, new socket added with ID \(handshake.srtSocketID)")
+            } else if handshake.handshakeType == .conclusion {
+                print("Handshake conclusion processed for socket \(handshake.srtSocketID)")
+            }
+        case .keepAlive:
+            print("KeepAlive packet received")
+        case .acknowledgement:
+            print("Acknowledgement packet received")
+        case .negativeAcknowledgement:
+            print("Negative Acknowledgement packet received")
+        case .congestionWarning:
+            print("Congestion Warning packet received")
+        case .shutdown:
+            let socketId = controlPacket.destinationSocketID
+            sockets.removeValue(forKey: socketId)
+            if sockets.isEmpty {
+                print("All sockets closed, cancelling connection")
+                connection.cancel()
+            } else {
+                print("Socket \(socketId) shutdown, remaining sockets: \(sockets.count)")
+            }
+        case .ackack:
+            print("ACKACK packet received")
+        case .dropRequest:
+            print("Drop Request packet received")
+        case .peerError:
+            print("Peer Error packet received")
+        case .userDefined:
+            print("User Defined packet received")
+        case .none:
+            print("None packet type received")
+        }
     }
     
     func shutdown(message: String) {
@@ -200,11 +222,11 @@ public class ConnectionContext {
     
     @discardableResult
     func set(newState: ConnectionStates) -> Self {
-
+        
         self.state = newState.state
-
+        
         return self
-
+        
     }
     
 }
@@ -216,7 +238,7 @@ extension ConnectionContext: Hashable {
         hasher.combine(host)
         hasher.combine(portNumber)
     }
-
+    
     public static func == (lhs: ConnectionContext, rhs: ConnectionContext) -> Bool {
         return lhs.serverIp == rhs.serverIp && lhs.serverPort == rhs.serverPort && lhs.host == rhs.host && lhs.portNumber == rhs.portNumber
     }
@@ -226,7 +248,7 @@ extension ConnectionContext {
     
     func receiveNextMessage() {
         self.connection.receiveMessage { (data, context, isComplete, error) in
- 
+            
             /// first check for errors
             if let error {
                 /// deal with error
@@ -247,7 +269,7 @@ extension ConnectionContext {
                 print("network protocol framer could not downcast SRT message")
                 return
             }
-           
+            
             /// make sure there is data
             guard data != nil else {
                 // Should never happen
@@ -262,11 +284,38 @@ extension ConnectionContext {
             }
             
             self.receive(packet: srtPacket)
-
+            
             // on to the next message
             self.receiveNextMessage()
             
         }
     }
     
+    //    func send(srtPacket: SrtPacket) {
+    //        guard let header = llrpMessage.header else {
+    //            fatalError("Llrp request missing header")
+    //        }
+    //
+    //
+    //
+    //        let message = NWProtocolFramer.Message(llrpHeader: header)
+    //        let metadata = [message]
+    //        let identifier = "\(self)"
+    //
+    //        print("Message type \(message.messageType)")
+    //
+    //        let content = srtPacket.data
+    //        let context = NWConnection.ContentContext(identifier: identifier, metadata: metadata)
+    //        // Send the application content along with the message.
+    //        self.connection.send(content: content, contentContext: context, isComplete: true, completion: .idempotent)
+    //    }
+    
+    func send2(header: SrtPacket, contents: Data) {
+        let message = NWProtocolFramer.Message(srtPacket: header)
+        let metadata = [message]
+        let identifier = "\(self)"
+        
+        let context = NWConnection.ContentContext(identifier: identifier, metadata: metadata)
+        self.connection.send(content: contents, contentContext: context, isComplete: true, completion: .idempotent)
+    }
 }

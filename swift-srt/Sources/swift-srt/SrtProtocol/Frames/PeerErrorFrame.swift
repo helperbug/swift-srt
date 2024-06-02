@@ -126,4 +126,14 @@ public struct PeerErrorFrame: ByteFrame {
         self.data = data
     }
 
+    public func makePacket(socketId: UInt32) -> SrtPacket
+    {
+        SrtPacket(
+            isData: true,
+            field1: ControlTypes.peerError.asField,
+            socketID: socketId,
+            contents: self.data
+        )
+    }
+    
 }

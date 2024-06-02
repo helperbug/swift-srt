@@ -27,5 +27,5 @@ protocol ByteFrame {
     
     var data: Data { get }
     init?(_ bytes: Data)
-    
+    func makePacket(socketId: UInt32) -> SrtPacket
 }

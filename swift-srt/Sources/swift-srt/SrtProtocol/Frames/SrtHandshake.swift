@@ -44,7 +44,7 @@ public struct SrtHandshake {
     public let peerIPAddress: Data
     
     /// Used to process an integrated handshake extension.
-    public let extensionType: UInt16
+    public let extensionType: HandshakeExtensionTypes
     
     /// The length of the Extension Contents field in four-byte blocks.
     public let extensionLength: UInt16
@@ -65,11 +65,13 @@ public struct SrtHandshake {
         data.append(contentsOf: srtSocketID.bytes)
         data.append(contentsOf: synCookie.bytes)
         data.append(peerIPAddress)
+        
+        if extensionType != .none {
+            data.append(contentsOf: extensionType.rawValue.bytes)
+            data.append(contentsOf: extensionLength.bytes)
+            data.append(extensionContents)
+        }
         return data
-//        data.append(contentsOf: extensionType.bytes)
-//        data.append(contentsOf: extensionLength.bytes)
-//        data.append(extensionContents)
-//        return data
     }
 
     func toData() -> Data {
@@ -84,7 +86,7 @@ public struct SrtHandshake {
            data.append(BinaryEncoder.encode(srtSocketID))
            data.append(BinaryEncoder.encode(synCookie))
            data.append(peerIPAddress)
-           data.append(BinaryEncoder.encode(extensionType))
+        data.append(BinaryEncoder.encode(extensionType.rawValue))
            data.append(BinaryEncoder.encode(extensionLength))
            return data
        }
@@ -109,11 +111,11 @@ public struct SrtHandshake {
         offset += 16
         
         if offset + 4 <= data.count {
-            self.extensionType = data.toUInt16(from: &offset)
+            self.extensionType = HandshakeExtensionTypes(rawValue: data.toUInt16(from: &offset)) ?? .none
             self.extensionLength = data.toUInt16(from: &offset)
             self.extensionContents = data.subdata(in: offset..<data.count)
         } else {
-            self.extensionType = UInt16(0)
+            self.extensionType = .none
             self.extensionLength = UInt16(0)
             self.extensionContents = Data()
         }
@@ -150,7 +152,7 @@ public extension SrtHandshake {
         srtSocketID: UInt32,
         synCookie: UInt32,
         peerIPAddress: Data,
-        extensionType: UInt16,
+        extensionType: HandshakeExtensionTypes,
         extensionLength: UInt16,
         extensionContents: Data
     ) {
@@ -167,26 +169,6 @@ public extension SrtHandshake {
         self.extensionType = extensionType
         self.extensionLength = extensionLength
         self.extensionContents = extensionContents
-    }
-    
-    static func makeInductionResponse4(srtSocketID: UInt32, host: String, port: UInt16) -> SrtHandshake {
-        let synCookie = generateSynCookie(clientIP: host, clientPort: port, serverIP: "127.0.0.1", serverPort: 1900)
-        
-        return SrtHandshake(
-            hsVersion: 5,
-            encryptionField: 0x0005, // AES-256
-            extensionField: 0x4A17,
-            initialPacketSequenceNumber: 0,
-            maximumTransmissionUnitSize: 1500,
-            maximumFlowWindowSize: 8192,
-            handshakeType: .induction,
-            srtSocketID: srtSocketID,
-            synCookie: synCookie,
-            peerIPAddress: Data([1, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-            extensionType: 0,
-            extensionLength: 0,
-            extensionContents: Data()
-        )
     }
     
     static func makeInductionResponse(srtSocketID: UInt32, synCookie: UInt32, peerIpAddress: Data) -> SrtHandshake {
@@ -209,7 +191,7 @@ public extension SrtHandshake {
 
         return SrtHandshake(
             hsVersion: 5,
-            encryptionField: 0x0005, // AES-256
+            encryptionField: 0x0004, // AES-256
             extensionField: 0x4A17, // SRT Magic Value
             initialPacketSequenceNumber: 0,
             maximumTransmissionUnitSize: 1500,
@@ -218,7 +200,7 @@ public extension SrtHandshake {
             srtSocketID: srtSocketID,
             synCookie: synCookie,
             peerIPAddress: peerIpAddress,
-            extensionType: 2,
+            extensionType: .keyMaterialResponse,
             extensionLength: UInt16(keyMaterialFrame.data.count / 4),
             extensionContents: keyMaterialFrame.data
         )
@@ -259,6 +241,15 @@ public extension SrtHandshake {
         return result
     }
 
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket
+    {
+        SrtPacket(
+            field1: ControlTypes.handshake.asField,
+            socketID: socketId,
+            contents: self.data
+        )
+    }
 
 }
 
@@ -278,7 +269,7 @@ extension SrtHandshake {
             srtSocketID: UInt32.random(in: UInt32.min...UInt32.max),
             synCookie: 0,
             peerIPAddress: server.toData(),
-            extensionType: 0,
+            extensionType: .handshakeRequest,
             extensionLength: 0,
             extensionContents: Data()
         )

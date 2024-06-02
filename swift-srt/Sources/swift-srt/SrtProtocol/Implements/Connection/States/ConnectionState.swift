@@ -16,7 +16,7 @@ protocol ConnectionState {
     func primary(_ context: ConnectionContext) -> Void
     func auto(_ context: ConnectionContext) -> Void
     func fail(_ context: ConnectionContext) -> Void
-    func send(_ connection: NWConnection, _ data: Data) -> Void
+    func send(_ context: ConnectionContext, _ data: Data) -> Void
 }
 
 extension ConnectionState {
@@ -33,7 +33,7 @@ extension ConnectionState {
         fatalError(name.label)
     }
     
-    func send(_ connection: NWConnection, _ data: Data) {
+    func send(_ context: ConnectionContext, _ data: Data) {
         fatalError(name.label)
     }
     

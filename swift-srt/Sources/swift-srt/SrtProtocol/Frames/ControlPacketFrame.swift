@@ -1,6 +1,7 @@
 import Foundation
 
 public struct ControlPacketFrame: ByteFrame {
+
     public let data: Data
 
     /// Control Type: 15 bits
@@ -33,13 +34,26 @@ public struct ControlPacketFrame: ByteFrame {
         return data.subdata(in: 16..<data.count)
     }
 
-    public var controlPacketType: ControlTypes {
-        return ControlTypes(rawValue: controlType) ?? .none
-    }
+    public var controlPacketType: ControlTypes
     
+   
     public init?(_ bytes: Data) {
-        guard bytes.count >= 16 else { return nil }
+        guard bytes.count >= 16 else {
+            return nil
+        }
+        
+        let rawControlType = UInt16(bytes.prefix(2).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian) & 0x7FFF
+        
+        guard let controlType = ControlTypes(rawValue: rawControlType) else {
+            return nil
+        }
+
+        self.controlPacketType = controlType
+        
         self.data = bytes
+        
+        print("Socket ID: \(self.destinationSocketID)")
+        print(String(format: "%02X", self.destinationSocketID))
     }
 
     /// Constructor used when sending over the network
@@ -67,6 +81,11 @@ public struct ControlPacketFrame: ByteFrame {
 
         data.append(controlInformationField)
 
+        self.controlPacketType = ControlTypes(rawValue: controlType) ?? .none
+        
         self.data = data
     }
+    
+    public func makePacket(socketId: UInt32) -> SrtPacket { .blank }
+
 }
