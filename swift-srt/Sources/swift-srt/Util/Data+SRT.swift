@@ -47,6 +47,10 @@ extension Data {
         
         return rows.joined(separator: "\n")
     }
+
+    var asString: String? {
+        return String(data: self, encoding: .utf8)
+    }
     
     func toUInt32(from offset: inout Int) -> UInt32 {
         let size = MemoryLayout<UInt32>.size

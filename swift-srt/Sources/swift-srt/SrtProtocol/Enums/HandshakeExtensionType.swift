@@ -13,7 +13,7 @@ public enum HandshakeExtensionTypes: UInt16 {
     case handshakeResponse = 2
     case keyMaterialRequest = 3
     case keyMaterialResponse = 4
-    case sessionId = 5
+    case streamId = 5
     case congestionControl = 6
     case filterControl = 7
     case groupControl = 8

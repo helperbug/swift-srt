@@ -157,7 +157,10 @@ public class ConnectionContext {
         
         let socketId = packet.destinationSocketID
         
-        var socketContext = SrtSocketContext(encrypted: true, id: socketId, onFrameReceived: { _ in},
+        var socketContext = SrtSocketContext(encrypted: true,
+                                             id: socketId,
+                                             synCookie: synCookie,
+                                             onFrameReceived: { _ in},
                                              onHintsReceived: { _ in },
                                              onLogReceived: { _ in },
                                              onMetricsReceived: { _ in },
@@ -196,7 +199,29 @@ public class ConnectionContext {
                 
                 
                 print("Induction request processed, new socket added with ID \(handshake.srtSocketID)")
-            } else if handshake.handshakeType == .conclusion {
+            } else if handshake.handshakeType == .conclusion,
+                      let socket = sockets[handshake.srtSocketID],
+                      handshake.isConclusionRequest(synCookie: socket.synCookie) {
+                
+                let response = SrtHandshake.makeConclusionResponse(
+                    srtSocketID: handshake.srtSocketID,
+                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
+                    synCookie: self.updHeader.cookie,
+                    peerIpAddress: ipStringToData(
+                        ipString: updHeader.sourceIp
+                    )!
+                )
+
+                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: handshake.srtSocketID, contents: Data())
+
+                let contents = response.makePacket(socketId: handshake.srtSocketID).contents
+
+                handshake.extensions.forEach { handshakeExt in
+                    socket.update(type: handshakeExt.key, data: handshakeExt.value)
+                }
+
+                send2(header: packet, contents: contents)
+                
                 print("Handshake conclusion processed for socket \(handshake.srtSocketID)")
             }
         case .keepAlive:

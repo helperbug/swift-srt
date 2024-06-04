@@ -25,14 +25,14 @@ import Foundation
 
 /// The Group Membership handshake extension is reserved for the future and is going to be used to allow multipath SRT connections.
 public struct GroupMembershipExtensionFrame: ByteFrame {
-
+    
     public let data: Data
-
+    
     /// The identifier of a group whose members include the sender socket that is making a connection. The target socket that is interpreting GroupID SHOULD belong to the corresponding group on the target side. If such a group does not exist, the target socket MAY create it.
-    public var groupID: UInt32 {
+    public var groupId: UInt32 {
         data.subdata(in: 0..<4).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian
     }
-
+    
     /// Group type, as per SRT_GTYPE_ enumeration:
     /// 0: undefined group type,
     /// 1: broadcast group type,
@@ -42,27 +42,32 @@ public struct GroupMembershipExtensionFrame: ByteFrame {
     public var type: UInt8 {
         data[4]
     }
-
+    
     /// Special flags mostly reserved for the future. See Figure 10.
     public var flags: UInt8 {
         data[5]
     }
-
+    
     /// Special value with interpretation depending on the Type field value:
     /// Not used with broadcast group type,
     /// Defines the link priority for main/backup group type,
     /// Not yet defined for any other cases (reserved for future use).
     /// M (1 bit) When set, defines synchronization on message numbers, otherwise transmission is synchronized on sequence numbers.
     /*
-         0 1 2 3 4 5 6 7
-        +-+-+-+-+-+-+-+
-        |   (zero)  |M|
-        +-+-+-+-+-+-+-+
-    */
+     0 1 2 3 4 5 6 7
+     +-+-+-+-+-+-+-+
+     |   (zero)  |M|
+     +-+-+-+-+-+-+-+
+     */
     public var weight: UInt16 {
         data.subdata(in: 6..<8).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian
     }
-
+    
+    /// Indicates if the synchronization is on message numbers based on the Group Membership Extension Flags.
+    var useMessageNumber: Bool {
+        return flags & 0b00000001 != 0
+    }
+    
     /// Constructor from individual fields for Group Membership information.
     public init(groupID: UInt32, type: UInt8, flags: UInt8, weight: UInt16) {
         var data = Data()
@@ -71,16 +76,16 @@ public struct GroupMembershipExtensionFrame: ByteFrame {
         data.append(contentsOf: withUnsafeBytes(of: weight.bigEndian, Array.init))
         self.data = data
     }
-
+    
     /// Optional initializer from Data, validating the minimum required length.
     public init?(_ data: Data) {
-
+        
         guard data.count == 8 else { return nil }
-
+        
         self.data = data
-
+        
     }
     
     public func makePacket(socketId: UInt32) -> SrtPacket { .blank }
-
+    
 }

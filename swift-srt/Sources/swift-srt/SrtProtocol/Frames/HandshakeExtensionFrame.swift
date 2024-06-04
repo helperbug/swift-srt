@@ -48,13 +48,21 @@ public struct HandshakeExtensionMessage: ByteFrame {
         return data.subdata(in: 10..<12).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian
     }
 
+    public func echo() {
+        print("srtVersion: \(srtVersion)")
+        print("srtFlags: \(srtFlags)")
+        print("receiverTsbpdDelay: \(receiverTsbpdDelay)")
+        print("senderTsbpdDelay: \(senderTsbpdDelay)")
+    }
+    
     /// Constructor used by the receive network path
     public init?(_ bytes: Data) {
         
-        guard bytes.count == 12 else { return nil }
+        guard bytes.count >= 12 else { return nil }
 
         self.data = bytes
 
+        echo()
     }
 
     /// Constructor used when sending over the network
