@@ -64,7 +64,7 @@ class ConnectionFailedState: ConnectionState {
     let name: ConnectionStates = .failed
     
     func auto(_ context: ConnectionContext) {
-        context.remove(context.key)
+        context.onCanceled(context.udpHeader)
     }
     
 }
@@ -75,7 +75,7 @@ class ConnectionCancelledState: ConnectionState {
     let name: ConnectionStates = .cancelled
 
     func auto(_ context: ConnectionContext) {
-        context.remove(context.key)
+        context.onCanceled(context.udpHeader)
     }
     
 }

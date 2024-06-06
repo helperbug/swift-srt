@@ -92,7 +92,7 @@ extension ListenerContext {
         if let context = ConnectionContext.make(serverIp: _endpoint.debugDescription,
                                                 serverPort: _port.rawValue,
                                                 connection,
-                                                remove: remove) {
+                                                onCanceled: onCanceled) {
 
             connections.value[context.key] = context
             context.start()
@@ -101,7 +101,7 @@ extension ListenerContext {
 
     }
     
-    func remove(key: String) {
+    func onCanceled(key: String) {
 
         _connections.value[key] = nil
 
@@ -137,7 +137,7 @@ extension ListenerContext: SrtListenerProtocol {
 
                 DispatchQueue.global(qos: .userInteractive).async {
 
-                    connection.shutdown(message: "Endpoint closing")
+                    connection.cancel()
 
                 }
                 

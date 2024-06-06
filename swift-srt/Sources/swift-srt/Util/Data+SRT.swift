@@ -47,9 +47,39 @@ extension Data {
         
         return rows.joined(separator: "\n")
     }
+    
+    var bigEndian: Data {
+            var bigEndianData = Data()
+            var offset = 0
 
+            while offset < self.count {
+                if self.count - offset >= 4 {
+                    let value = self.subdata(in: offset..<(offset + 4)).withUnsafeBytes { $0.load(as: UInt32.self) }
+                    bigEndianData.append(contentsOf: value.bigEndian.bytes)
+                    offset += 4
+                } else if self.count - offset >= 2 {
+                    let value = self.subdata(in: offset..<(offset + 2)).withUnsafeBytes { $0.load(as: UInt16.self) }
+                    bigEndianData.append(contentsOf: value.bigEndian.bytes)
+                    offset += 2
+                } else {
+                    bigEndianData.append(self[offset])
+                    offset += 1
+                }
+            }
+
+            // Ensure null termination
+            if !bigEndianData.isEmpty && bigEndianData.last != 0 {
+                bigEndianData.append(0)
+            }
+
+            return bigEndianData
+        }
+    
     var asString: String? {
-        return String(data: self, encoding: .utf8)
+        if let string = String(data: self, encoding: .utf8) {
+            return string.trimmingCharacters(in: .controlCharacters)
+        }
+        return nil
     }
     
     func toUInt32(from offset: inout Int) -> UInt32 {
@@ -71,4 +101,5 @@ extension Data {
     static func random(_ length: Int) -> Data {
         return Data((0..<length).map { _ in UInt8.random(in: 0...255) })
     }
+    
 }

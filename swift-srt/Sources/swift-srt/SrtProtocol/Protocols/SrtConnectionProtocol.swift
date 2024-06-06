@@ -27,11 +27,16 @@ import Network
 
 public protocol SrtConnectionProtocol: Hashable {
 
-    var onStateChanged: (Bool) -> Void { get }
-    var ipAddress: IPAddress { get }
-    var port: UInt16 { get }
-    
-    init(host: IPv4Address, port: UInt16)
-    func close() -> Void
+    var key: String { get }
+    var onCanceled: (UdpHeader) -> Void { get }
+    var sockets: [UInt32: SrtSocketProtocol] { get }
+    var connectionState: ConnectionStates { get }
 
+    init(updHeader: UdpHeader,
+         connection: NWConnection,
+         onCanceled: @escaping (UdpHeader) -> Void)
+
+    func cancel() -> Void
+    func removeSocket(id: UInt32) -> Void
+    
 }

@@ -172,4 +172,17 @@ public struct DataPacketFrame: ByteFrame {
         )
     }
 
+    static var blank: DataPacketFrame {
+        DataPacketFrame(packetSequenceNumber: 0,
+                        packetPosition: 0,
+                        orderFlag: false,
+                        encryptionFlags: 0,
+                        retransmittedFlag: false,
+                        messageNumber: 0,
+                        timestamp: 0,
+                        destinationSocketID: 0,
+                        payload: .init(),
+                        authenticationTag: .init())
+    }
+    
 }

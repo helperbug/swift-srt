@@ -1,10 +1,18 @@
 import Foundation
 
 public class SrtSocketContext: SrtSocketProtocol {
+    public func shutdown() {
+        
+    }
+    
+    public var id: UUID
+    
+    public var socketID: UInt32?
+    
+    
     public func handleControl(controlPacket: SrtPacket) -> Result<SrtPacket, SocketError> {
         return .failure(.none)
     }
-    
     
     public var filterControlType: UInt32? = nil
     
@@ -53,7 +61,7 @@ public class SrtSocketContext: SrtSocketProtocol {
     
     
     public let encrypted: Bool
-    public let id: UInt32
+
     public let synCookie: UInt32
     
     public var onFrameReceived: (Data) -> Void
@@ -63,7 +71,7 @@ public class SrtSocketContext: SrtSocketProtocol {
     public var onStateChanged: (SrtSocketStates) -> Void
     
     public init(encrypted: Bool,
-                id: UInt32,
+                socketId: UInt32,
                 synCookie: UInt32,
                 onFrameReceived: @escaping (Data) -> Void,
                 onHintsReceived: @escaping ([SrtSocketHints]) -> Void,
@@ -71,8 +79,9 @@ public class SrtSocketContext: SrtSocketProtocol {
                 onMetricsReceived: @escaping ([SrtSocketMetrics]) -> Void,
                 onStateChanged: @escaping (SrtSocketStates) -> Void) {
         
+        self.id = UUID()
         self.encrypted = encrypted
-        self.id = id
+        self.socketID = socketId
         self.synCookie = synCookie
         self.onFrameReceived = onFrameReceived
         self.onHintsReceived = onHintsReceived
@@ -102,13 +111,21 @@ public class SrtSocketContext: SrtSocketProtocol {
             }
             
         case .streamId:
+            print("stream Id: \(data.asString ?? "")")
+            
             if let streamId = data.asString {
-                self.streamId = streamId
-                print("stream Id: \(streamId)")
+                // Trim the null terminator from the string if it exists
+                if let nullIndex = streamId.firstIndex(of: "\0") {
+                    let trimmedStreamId = String(streamId[..<nullIndex])
+                    self.streamId = trimmedStreamId
+                    print("trimmed stream Id: \(trimmedStreamId)")
+                } else {
+                    self.streamId = streamId
+                }
             } else {
                 print("empty stream Id")
             }
-
+            
         default:
             break
         }

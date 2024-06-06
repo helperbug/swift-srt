@@ -8,7 +8,7 @@
 import CryptoKit
 import Foundation
 
-public struct UdpHeader {
+public struct UdpHeader: Hashable {
     let sourceIp: String
     let sourcePort: UInt16
     let destinationIp: String

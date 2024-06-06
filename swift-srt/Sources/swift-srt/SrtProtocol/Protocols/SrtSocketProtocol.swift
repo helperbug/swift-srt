@@ -14,8 +14,11 @@ public protocol SrtSocketProtocol {
     /// Whether the socket uses encryption.
     var encrypted: Bool { get }
     
-    /// The socket ID used when sending data packets.
-    var id: UInt32 { get }
+    /// The socket identifier for the user interface
+    var id: UUID { get }
+    
+    /// ID of the source SRT socket.
+    var socketID: UInt32? { get }
     
     /// The synCookie that made this socket.
     var synCookie: UInt32 { get }
@@ -99,9 +102,6 @@ public protocol SrtSocketProtocol {
     /// The maximum number of data packets allowed to be "in flight".
     var maximumFlowWindowSize: UInt32? { get }
     
-    /// ID of the source SRT socket.
-    var srtSocketID: UInt32? { get }
-    
     /// Handshake Request frame. This frame includes properties such as SRT version, flags, and TSBPD delays, encoded in a structured format.
     var handshakeRequestExtensionFrame: [HandshakeExtensionTypes: Data]? { get }
     
@@ -126,6 +126,8 @@ public protocol SrtSocketProtocol {
     
     /// Update local properties from these frames
     func update(type: HandshakeExtensionTypes, data: Data) -> Void
+
+    func shutdown() -> Void
     
 }
 
