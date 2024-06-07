@@ -14,7 +14,7 @@ public struct SrtHandshake {
     // public let data: Data
     
     /// The handshake version number. Currently used values are 4 and 5. Values greater than 5 are reserved for future use.
-    public let hsVersion: UInt32
+    public let hsVersion: HandshakeVersions
     
     /// Block cipher family and key size. The default value is 0 (no encryption advertised). If neither peer advertises encryption, AES-128 is selected by default.
     public let encryptionField: UInt16
@@ -32,7 +32,7 @@ public struct SrtHandshake {
     public let maximumFlowWindowSize: UInt32
     
     /// Indicates the handshake packet type.
-    public let handshakeType: HandshakeType
+    public let handshakeType: HandshakeTypes
     
     /// ID of the source SRT socket from which a handshake packet is issued.
     public let srtSocketID: UInt32
@@ -57,7 +57,7 @@ public struct SrtHandshake {
     /// Serializes the struct to Data.
     public var data: Data {
         var data = Data()
-        data.append(contentsOf: hsVersion.bytes)
+        data.append(contentsOf: hsVersion.rawValue.bytes)
         data.append(contentsOf: encryptionField.bytes)
         data.append(contentsOf: extensionField.bytes)
         data.append(contentsOf: initialPacketSequenceNumber.bytes)
@@ -75,34 +75,34 @@ public struct SrtHandshake {
         }
         return data
     }
-
+    
     func toData() -> Data {
-           var data = Data()
-           data.append(BinaryEncoder.encode(hsVersion))
-           data.append(BinaryEncoder.encode(encryptionField))
-           data.append(BinaryEncoder.encode(extensionField))
-           data.append(BinaryEncoder.encode(initialPacketSequenceNumber))
-           data.append(BinaryEncoder.encode(maximumTransmissionUnitSize))
-           data.append(BinaryEncoder.encode(maximumFlowWindowSize))
-           data.append(contentsOf: handshakeType.rawValue.bigEndian.bytes)
-           data.append(BinaryEncoder.encode(srtSocketID))
-           data.append(BinaryEncoder.encode(synCookie))
-           data.append(peerIPAddress)
+        var data = Data()
+        data.append(BinaryEncoder.encode(hsVersion.rawValue))
+        data.append(BinaryEncoder.encode(encryptionField))
+        data.append(BinaryEncoder.encode(extensionField))
+        data.append(BinaryEncoder.encode(initialPacketSequenceNumber))
+        data.append(BinaryEncoder.encode(maximumTransmissionUnitSize))
+        data.append(BinaryEncoder.encode(maximumFlowWindowSize))
+        data.append(contentsOf: handshakeType.rawValue.bigEndian.bytes)
+        data.append(BinaryEncoder.encode(srtSocketID))
+        data.append(BinaryEncoder.encode(synCookie))
+        data.append(peerIPAddress)
         data.append(BinaryEncoder.encode(extensionType.rawValue))
-           data.append(BinaryEncoder.encode(extensionLength))
-           return data
-       }
+        data.append(BinaryEncoder.encode(extensionLength))
+        return data
+    }
     
     /// Initializes a new instance from data.
     public init?(data: Data) {
         var offset = 0
-        self.hsVersion = data.toUInt32(from: &offset)
+        self.hsVersion = HandshakeVersions(rawValue: data.toUInt32(from: &offset)) ?? .none
         self.encryptionField = data.toUInt16(from: &offset)
         self.extensionField = data.toUInt16(from: &offset)
         self.initialPacketSequenceNumber = data.toUInt32(from: &offset)
         self.maximumTransmissionUnitSize = data.toUInt32(from: &offset)
         self.maximumFlowWindowSize = data.toUInt32(from: &offset)
-        let type = HandshakeType(rawValue: data.toUInt32(from: &offset)) ?? HandshakeType.done
+        let type = HandshakeTypes(rawValue: data.toUInt32(from: &offset)) ?? .done
         self.handshakeType = type
         self.srtSocketID = data.toUInt32(from: &offset)
         self.synCookie = data.toUInt32(from: &offset)
@@ -112,18 +112,18 @@ public struct SrtHandshake {
         }
         self.peerIPAddress = data.subdata(in: offset..<(offset + 16))
         offset += 16
-
+        
         var extensions: [HandshakeExtensionTypes: Data] = [:]
-
+        
         while offset + 4 <= data.count {
             let extensionType = HandshakeExtensionTypes(rawValue: data.toUInt16(from: &offset)) ?? .none
             let extensionLength = data.toUInt16(from: &offset)
             let extensionContents = data.subdata(in: offset..<(offset + Int(extensionLength) * 4))
-
+            
             extensions[extensionType] = extensionContents
             offset += Int(extensionLength) * 4
         }
-
+        
         self.extensions = extensions
         
         if let handshakeExtensionData = extensions[.handshakeRequest] {
@@ -131,29 +131,20 @@ public struct SrtHandshake {
         } else {
             // self.handshakeExtensionMessage = nil
         }
-
-//        if offset + 4 <= data.count {
-//            self.extensionType = HandshakeExtensionTypes(rawValue: data.toUInt16(from: &offset)) ?? .none
-//            self.extensionLength = data.toUInt16(from: &offset)
-//            self.extensionContents = data.subdata(in: offset..<data.count)
-//        } else {
-            self.extensionType = .none
-            self.extensionLength = UInt16(0)
-            self.extensionContents = Data()
-//        }
-    }
-    
-    /// Enumerates the possible types of handshakes in the SRT protocol.
-    public enum HandshakeType: UInt32, CaseIterable {
-        case done = 0xFFFFFFFD
-        case agreement = 0xFFFFFFFE
-        case conclusion = 0xFFFFFFFF
-        case waveAHand = 0x00000000
-        case induction = 0x00000001
+        
+        //        if offset + 4 <= data.count {
+        //            self.extensionType = HandshakeExtensionTypes(rawValue: data.toUInt16(from: &offset)) ?? .none
+        //            self.extensionLength = data.toUInt16(from: &offset)
+        //            self.extensionContents = data.subdata(in: offset..<data.count)
+        //        } else {
+        self.extensionType = .none
+        self.extensionLength = UInt16(0)
+        self.extensionContents = Data()
+        //        }
     }
     
     var isInductionRequest: Bool {
-        hsVersion == 4 &&
+        hsVersion == .version4 &&
         encryptionField == 0 &&
         extensionField == 2 &&
         handshakeType == .induction &&
@@ -162,24 +153,25 @@ public struct SrtHandshake {
     }
     
     func isConclusionRequest(synCookie reference: UInt32) -> Bool {
-        hsVersion == 5 &&
+        hsVersion == .version5 &&
         encryptionField == 0 &&
         extensionField == 0x0005 &&
         handshakeType == .conclusion &&
         srtSocketID != 0 &&
         synCookie == reference
     }
+    
 }
 
 public extension SrtHandshake {
     init(
-        hsVersion: UInt32,
+        hsVersion: HandshakeVersions,
         encryptionField: UInt16,
         extensionField: UInt16,
         initialPacketSequenceNumber: UInt32,
         maximumTransmissionUnitSize: UInt32,
         maximumFlowWindowSize: UInt32,
-        handshakeType: HandshakeType,
+        handshakeType: HandshakeTypes,
         srtSocketID: UInt32,
         synCookie: UInt32,
         peerIPAddress: Data,
@@ -231,7 +223,7 @@ public extension SrtHandshake {
         if encrypted {
 
             return SrtHandshake(
-                hsVersion: 5,
+                hsVersion: .version5,
                 encryptionField: 0x0004, // AES-256
                 extensionField: 0x4A17, // SRT Magic Value
                 initialPacketSequenceNumber: initialPacketSequenceNumber,
@@ -249,7 +241,7 @@ public extension SrtHandshake {
         } else {
 
             return SrtHandshake(
-                hsVersion: 5,
+                hsVersion: .version5,
                 encryptionField: 0x0000, // None
                 extensionField: 0x4A17, // SRT Magic Value
                 initialPacketSequenceNumber: initialPacketSequenceNumber,
@@ -278,7 +270,7 @@ public extension SrtHandshake {
         
         
         return SrtHandshake(
-            hsVersion: 5,
+            hsVersion: .version5,
             encryptionField: 0, // No encryption
             extensionField: 1,
             initialPacketSequenceNumber: initialPacketSequenceNumber,
@@ -348,7 +340,7 @@ extension SrtHandshake {
     static func makeInductionRequest(server: IPAddress) -> SrtHandshake {
 
         return SrtHandshake(
-            hsVersion: 4,
+            hsVersion: .version4,
             encryptionField: 0,
             extensionField: 2,
             initialPacketSequenceNumber: 0,

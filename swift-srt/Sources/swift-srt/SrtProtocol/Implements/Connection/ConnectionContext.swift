@@ -213,6 +213,7 @@ extension ConnectionContext { // handlers
     }
     
     private func handleControl(packet: SrtPacket, synCookie: UInt32) {
+        
         guard let controlPacket = ControlPacketFrame(packet.contents),
               let controlType = ControlTypes(rawValue: controlPacket.controlType) else {
             print("Invalid control packet")
@@ -243,6 +244,17 @@ extension ConnectionContext { // handlers
             
             if handshake.isInductionRequest {
                 
+                var srtListener = SrtListenerContext(
+                    srtSocketID: handshake.srtSocketID,
+                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
+                    synCookie: self.udpHeader.cookie,
+                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!,
+                    encrypted: false,
+                    send: { _, _ in },
+                    onSocketCreated: { _ in }
+                )
+                
+
                 sockets[handshake.srtSocketID] = socketContext
                 
                 let response = SrtHandshake.makeInductionResponse(

@@ -16,5 +16,10 @@ public protocol HandshakeProtocol {
 
     func receive(packet: SrtPacket) -> Void
     func send(data: Data) -> Void
-    
+
+    func makeInductionRequest() -> SrtPacket
+    func makeInductionResponse() -> SrtPacket
+    func makeConclusionRequest() -> SrtPacket
+    func makeConclusionResponse() -> SrtPacket
+
 }

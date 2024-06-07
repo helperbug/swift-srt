@@ -43,10 +43,25 @@ public class HandshakeContext {
 }
 
 extension HandshakeContext: HandshakeProtocol {
+    public func makeInductionRequest() -> SrtPacket {
+        return .blank
+    }
+    
+    public func makeInductionResponse() -> SrtPacket {
+        return .blank
+    }
+    
+    public func makeConclusionRequest() -> SrtPacket {
+        return .blank
+    }
+    
+    public func makeConclusionResponse() -> SrtPacket {
+        return .blank
+    }
+    
     public func receive(packet: SrtPacket) {
         state.onPacketReceived(self, packet: packet)
     }
-    
     
     public var name: HandshakeStates { self.state.name }
     public var socketId: UInt32 { self._socketId }

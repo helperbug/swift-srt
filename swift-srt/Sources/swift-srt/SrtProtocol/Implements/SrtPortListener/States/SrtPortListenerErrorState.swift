@@ -1,5 +1,5 @@
 //
-//  ListenerStates.swift
+//  ListenerErrorState.swift
 //  swift-srt
 //
 //  Created by Ben Waidhofer on 6/1/2024.
@@ -22,20 +22,24 @@
 //
 
 import Foundation
+import Network
 
-public enum ListenerStates {
-    case none
-    case ready
-    case error
+// MARK: Error State
+
+struct SrtPortListenerErrorState: SrtPortListenerState {
     
-    public var label: String {
-        switch self {
-        case .none:
-            return "None"
-        case .error:
-            return "Error"
-        case .ready:
-            return "Ready"
+    let name: SrtPortListnerStates = .error
+    
+    func auto(_ context: SrtPortListenerContext) {
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            
+            context.set(state: .none)
+            
         }
+        
     }
+    
+    func onStateChanged(_ context: SrtPortListenerContext, state: NWListener.State) { }
+    
 }

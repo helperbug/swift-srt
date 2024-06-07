@@ -1,8 +1,8 @@
 //
-//  SrtListenerProtocol.swift
+//  ListenerStates.swift
 //  swift-srt
 //
-//  Created by Ben Waidhofer on 5/25/2024.
+//  Created by Ben Waidhofer on 6/1/2024.
 //
 //  This source file is part of the swift-srt open source project
 //
@@ -21,17 +21,21 @@
 //  limitations under the License.
 //
 
-import Combine
 import Foundation
-import Network
 
-public protocol SrtListenerProtocol {
-
-    var endpoint: IPv4Address { get }
-    var port: NWEndpoint.Port { get }
-    var listenerState: CurrentValueSubject<ListenerStates, Never> { get }
-    var connections: CurrentValueSubject<[String: ConnectionContext], Never> { get }
+public enum SrtPortListnerStates {
+    case none
+    case ready
+    case error
     
-    func close() -> Void
-
+    public var label: String {
+        switch self {
+        case .none:
+            return "None"
+        case .error:
+            return "Error"
+        case .ready:
+            return "Ready"
+        }
+    }
 }

@@ -25,15 +25,15 @@ import Combine
 import Foundation
 import Network
 
-public class ListenerContext {
+public class SrtPortListenerContext {
     
     private var _connections: CurrentValueSubject<[String: ConnectionContext], Never> = .init([:])
     private var _endpoint: IPv4Address
     private var _port: NWEndpoint.Port
-    private var _listenerState: CurrentValueSubject<ListenerStates, Never> = .init(.none)
+    private var _listenerState: CurrentValueSubject<SrtPortListnerStates, Never> = .init(.none)
 
     var listener: NWListener? = nil
-    private var state: ListenerState
+    private var state: SrtPortListenerState
 
     public var contexts: [ConnectionContext] {
         connections.value.values.sorted(by: { $0.key < $1.key })
@@ -54,7 +54,7 @@ public class ListenerContext {
     public init(endpoint: IPv4Address, port: NWEndpoint.Port, logger: LoggerContext) {
         self._endpoint = endpoint
         self._port = port
-        self.state = ListenerNoneState()
+        self.state = SrtPortListenerNoneState()
 
         logger.log(text: "Starting \(endpoint.debugDescription): \(port)")
         
@@ -62,17 +62,17 @@ public class ListenerContext {
     }
     
     @discardableResult
-    func set(state: ListenerStates) -> ListenerState {
+    func set(state: SrtPortListnerStates) -> SrtPortListenerState {
         
-        let newState: ListenerState
+        let newState: SrtPortListenerState
         
         if state == .ready {
             
-            newState = ListenerReadyState()
+            newState = SrtPortListenerReadyState()
 
         } else {
             
-            newState = ListenerNoneState()
+            newState = SrtPortListenerNoneState()
 
         }
         
@@ -85,7 +85,7 @@ public class ListenerContext {
     
 }
 
-extension ListenerContext {
+extension SrtPortListenerContext {
     
     func newConnectionHandler(connection: NWConnection) {
         
@@ -115,9 +115,9 @@ extension ListenerContext {
     
 }
 
-extension ListenerContext: SrtListenerProtocol {
+extension SrtPortListenerContext: SrtPortListener {
 
-    public var listenerState: CurrentValueSubject<ListenerStates, Never> {
+    public var listenerState: CurrentValueSubject<SrtPortListnerStates, Never> {
 
         _listenerState
 

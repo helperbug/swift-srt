@@ -1,5 +1,5 @@
 //
-//  ListenerReadyState.swift
+//  ListenerState.swift
 //  swift-srt
 //
 //  Created by Ben Waidhofer on 6/1/2024.
@@ -24,30 +24,40 @@
 import Foundation
 import Network
 
-// MARK: Ready State
+// MARK: Listener State Protocol
 
-struct ListenerReadyState: ListenerState {
+protocol SrtPortListenerState {
     
-    let name: ListenerStates = .ready
+    var name: SrtPortListnerStates { get }
     
-    func onStateChanged(_ context: ListenerContext, state: NWListener.State) {
+    func onStateChanged(_ context: SrtPortListenerContext, state: NWListener.State) -> Void
+    func primary(_ context: SrtPortListenerContext) -> Void
+    func auto(_ context: SrtPortListenerContext) -> Void
+    func fail(_ context: SrtPortListenerContext) -> Void
+    
+}
+
+// MARK: Defaults
+
+extension SrtPortListenerState {
+    
+    func primary(_ context: SrtPortListenerContext) {
         
-        switch state {
-            
-        case .cancelled:
-            
-            context.set(state: .none)
-            
-        case .failed(_):
-            
-            context.set(state: .error)
-            
-        default:
-            
-            break
-            
-        }
+        fatalError(name.label)
+        
+    }
+    
+    func auto(_ context: SrtPortListenerContext) {
+        
+        fatalError(name.label)
+        
+    }
+    
+    func fail(_ context: SrtPortListenerContext) {
+        
+        fatalError(name.label)
         
     }
     
 }
+

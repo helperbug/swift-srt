@@ -26,10 +26,10 @@ import Network
 
 // MARK: None State
 
-struct ListenerNoneState: ListenerState {
-    let name: ListenerStates = .none
+struct SrtPortListenerNoneState: SrtPortListenerState {
+    let name: SrtPortListnerStates = .none
     
-    func onStateChanged(_ context: ListenerContext, state: NWListener.State) {
+    func onStateChanged(_ context: SrtPortListenerContext, state: NWListener.State) {
         
         switch state {
             
@@ -48,7 +48,7 @@ struct ListenerNoneState: ListenerState {
         }
     }
     
-    func auto(_ context: ListenerContext) {
+    func auto(_ context: SrtPortListenerContext) {
         
         do {
             

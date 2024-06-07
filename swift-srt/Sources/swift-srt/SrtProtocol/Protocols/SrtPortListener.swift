@@ -1,8 +1,8 @@
 //
-//  ListenerState.swift
+//  SrtListenerProtocol.swift
 //  swift-srt
 //
-//  Created by Ben Waidhofer on 6/1/2024.
+//  Created by Ben Waidhofer on 5/25/2024.
 //
 //  This source file is part of the swift-srt open source project
 //
@@ -21,43 +21,17 @@
 //  limitations under the License.
 //
 
+import Combine
 import Foundation
 import Network
 
-// MARK: Listener State Protocol
+public protocol SrtPortListener {
 
-protocol ListenerState {
+    var endpoint: IPv4Address { get }
+    var port: NWEndpoint.Port { get }
+    var listenerState: CurrentValueSubject<SrtPortListnerStates, Never> { get }
+    var connections: CurrentValueSubject<[String: ConnectionContext], Never> { get }
     
-    var name: ListenerStates { get }
-    
-    func onStateChanged(_ context: ListenerContext, state: NWListener.State) -> Void
-    func primary(_ context: ListenerContext) -> Void
-    func auto(_ context: ListenerContext) -> Void
-    func fail(_ context: ListenerContext) -> Void
-    
+    func close() -> Void
+
 }
-
-// MARK: Defaults
-
-extension ListenerState {
-    
-    func primary(_ context: ListenerContext) {
-        
-        fatalError(name.label)
-        
-    }
-    
-    func auto(_ context: ListenerContext) {
-        
-        fatalError(name.label)
-        
-    }
-    
-    func fail(_ context: ListenerContext) {
-        
-        fatalError(name.label)
-        
-    }
-    
-}
-

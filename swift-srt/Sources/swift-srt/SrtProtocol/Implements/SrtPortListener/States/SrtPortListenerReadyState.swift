@@ -1,5 +1,5 @@
 //
-//  ListenerErrorState.swift
+//  ListenerReadyState.swift
 //  swift-srt
 //
 //  Created by Ben Waidhofer on 6/1/2024.
@@ -24,22 +24,30 @@
 import Foundation
 import Network
 
-// MARK: Error State
+// MARK: Ready State
 
-struct ListenerErrorState: ListenerState {
+struct SrtPortListenerReadyState: SrtPortListenerState {
     
-    let name: ListenerStates = .error
+    let name: SrtPortListnerStates = .ready
     
-    func auto(_ context: ListenerContext) {
+    func onStateChanged(_ context: SrtPortListenerContext, state: NWListener.State) {
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+        switch state {
+            
+        case .cancelled:
             
             context.set(state: .none)
+            
+        case .failed(_):
+            
+            context.set(state: .error)
+            
+        default:
+            
+            break
             
         }
         
     }
-    
-    func onStateChanged(_ context: ListenerContext, state: NWListener.State) { }
     
 }
