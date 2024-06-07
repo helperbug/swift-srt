@@ -29,7 +29,8 @@ public class ConnectionContext: SrtConnectionProtocol {
     public var onCanceled: (UdpHeader) -> Void
     public var sockets: [UInt32: SrtSocketProtocol] = [:]
     var state: ConnectionState
-    
+    private var pendingListener: SrtListenerContext? = nil
+
     let udpHeader: UdpHeader
     let connection: NWConnection
     
@@ -101,7 +102,7 @@ extension ConnectionContext {
         if packet.isData {
             self.handleData(socketId: packet.destinationSocketID, frame: packet.contents)
         } else {
-            self.handleControl(packet: packet, synCookie: udpHeader.cookie)
+            self.handleControl(packet: packet)
         }
         
     }
@@ -202,17 +203,54 @@ extension ConnectionContext: Hashable {
 extension ConnectionContext { // handlers
     
     private func handleData(socketId: UInt32, frame: Data) {
+
+        guard let defaultSocket = self.sockets.values.first else {
+            fatalError()
+        }
         
-        guard let socket = self.sockets[socketId] else {
-            print("this should never happen, it is an error")
+        guard let dataPacket = DataPacketFrame(frame) else {
+            print("bad data")
             return
         }
         
-        socket.onFrameReceived(frame)
+        if let matchedSocket = self.sockets[socketId] {
+            
+            matchedSocket.handleData(packet: dataPacket)
+            
+        } else {
+            
+            defaultSocket.handleData(packet: dataPacket)
+            
+        }
+        
+        // socket.onFrameReceived(frame)
+        
+    }
+
+    private func handleHandshake(handshake: SrtHandshake) {
+
+        if let pendingListener {
+
+            pendingListener.handleHandshake(handshake: handshake)
+
+        } else {
+
+            self.pendingListener = SrtListenerContext(
+                srtSocketID:    handshake.srtSocketID,
+                initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
+                synCookie: self.udpHeader.cookie,
+                peerIpAddress: self.udpHeader.sourceIp.ipStringToData!,
+                encrypted: false,
+                send: self.send(header:contents:),
+                onSocketCreated: { socket in
+                    self.sockets[socket.socketId] = socket
+                    self.pendingListener = nil
+                })
+        }
         
     }
     
-    private func handleControl(packet: SrtPacket, synCookie: UInt32) {
+    private func handleControl(packet: SrtPacket) {
         
         guard let controlPacket = ControlPacketFrame(packet.contents),
               let controlType = ControlTypes(rawValue: controlPacket.controlType) else {
@@ -224,7 +262,7 @@ extension ConnectionContext { // handlers
         
         var socketContext = SrtSocketContext(encrypted: true,
                                              socketId: socketId,
-                                             synCookie: synCookie,
+                                             synCookie: self.udpHeader.cookie,
                                              onFrameReceived: { _ in},
                                              onHintsReceived: { _ in },
                                              onLogReceived: { _ in },
@@ -238,65 +276,65 @@ extension ConnectionContext { // handlers
                 return
             }
             
-            if let data = udpHeader.sourceIp.ipStringToData {
-                print(data)
-            }
-            
-            if handshake.isInductionRequest {
-                
-                var srtListener = SrtListenerContext(
-                    srtSocketID: handshake.srtSocketID,
-                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
-                    synCookie: self.udpHeader.cookie,
-                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!,
-                    encrypted: false,
-                    send: { _, _ in },
-                    onSocketCreated: { _ in }
-                )
-                
-
-                sockets[handshake.srtSocketID] = socketContext
-                
-                let response = SrtHandshake.makeInductionResponse(
-                    srtSocketID: handshake.srtSocketID,
-                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
-                    synCookie: self.udpHeader.cookie,
-                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!,
-                    encrypted: false
-                )
-                
-                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: handshake.srtSocketID, contents: Data())
-                
-                let contents = response.makePacket(socketId: handshake.srtSocketID).contents
-                
-                send(header: packet, contents: contents)
-                
-                print("Induction request processed, new socket added with ID \(handshake.srtSocketID)")
-            } else if handshake.handshakeType == .conclusion,
-                      let socket = sockets[handshake.srtSocketID],
-                      handshake.isConclusionRequest(synCookie: socket.synCookie) {
-                
-                let response = SrtHandshake.makeConclusionResponse(
-                    srtSocketID: handshake.srtSocketID,
-                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
-                    synCookie: self.udpHeader.cookie,
-                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!
-                )
-                
-                var payload: Data = .init()
-                
-                handshake.extensions.forEach { handshakeExt in
-                    socket.update(type: handshakeExt.key, data: handshakeExt.value)
-                }
-                
-                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: handshake.srtSocketID, contents: Data())
-                
-                let contents = response.makePacket(socketId: handshake.srtSocketID).contents + (handshake.extensions.first(where: { $0.key == .streamId})?.value ?? Data())
-                
-                send(header: packet, contents: contents)
-                
-                print("Handshake conclusion processed for socket \(handshake.srtSocketID)")
-            }
+            self.handleHandshake(handshake: handshake)
+//            if let data = udpHeader.sourceIp.ipStringToData {
+//                print(data)
+//            }
+//            
+//            if handshake.isInductionRequest {
+//                
+//                var srtListener = SrtListenerContext(
+//                    srtSocketID: handshake.srtSocketID,
+//                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
+//                    synCookie: self.udpHeader.cookie,
+//                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!,
+//                    encrypted: false,
+//                    send: { _, _ in },
+//                    onSocketCreated: { _ in }
+//                )
+//                
+//
+//                sockets[handshake.srtSocketID] = socketContext
+//                
+//                let response = SrtHandshake.makeInductionResponse(
+//                    srtSocketID: handshake.srtSocketID,
+//                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
+//                    synCookie: self.udpHeader.cookie,
+//                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!,
+//                    encrypted: false
+//                )
+//                
+//                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: handshake.srtSocketID, contents: Data())
+//                
+//                let contents = response.makePacket(socketId: handshake.srtSocketID).contents
+//                
+//                send(header: packet, contents: contents)
+//                
+//            } else if handshake.handshakeType == .conclusion,
+//                      let socket = sockets[handshake.srtSocketID],
+//                      handshake.isConclusionRequest(synCookie: socket.synCookie) {
+//                
+//                let response = SrtHandshake.makeConclusionResponse(
+//                    srtSocketID: handshake.srtSocketID,
+//                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
+//                    synCookie: self.udpHeader.cookie,
+//                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!
+//                )
+//                
+//                var payload: Data = .init()
+//                
+//                handshake.extensions.forEach { handshakeExt in
+//                    socket.update(type: handshakeExt.key, data: handshakeExt.value)
+//                }
+//                
+//                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: handshake.srtSocketID, contents: Data())
+//                
+//                let contents = response.makePacket(socketId: handshake.srtSocketID).contents + (handshake.extensions.first(where: { $0.key == .streamId})?.value ?? Data())
+//                
+//                send(header: packet, contents: contents)
+//                
+//                print("Handshake conclusion processed for socket \(handshake.srtSocketID)")
+//            }
         case .keepAlive:
             print("KeepAlive packet received")
         case .acknowledgement:

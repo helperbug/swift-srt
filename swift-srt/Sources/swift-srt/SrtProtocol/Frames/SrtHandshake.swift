@@ -110,6 +110,7 @@ public struct SrtHandshake {
         guard offset + 16 <= data.count else {
             return nil
         }
+        
         self.peerIPAddress = data.subdata(in: offset..<(offset + 16))
         offset += 16
         

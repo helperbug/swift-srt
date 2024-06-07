@@ -55,6 +55,7 @@ public class SrtListenerContext: SrtPacketSender {
     @discardableResult
     func set(newState: SrtListenerStates) -> SrtListenerState {
         
+        print("setting listener state to \(newState.label)")
         self.state = newState.instance
         return self.state
         

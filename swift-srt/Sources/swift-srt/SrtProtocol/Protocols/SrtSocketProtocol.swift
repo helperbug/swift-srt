@@ -18,7 +18,7 @@ public protocol SrtSocketProtocol {
     var id: UUID { get }
     
     /// ID of the source SRT socket.
-    var socketID: UInt32? { get }
+    var socketId: UInt32 { get }
     
     /// The synCookie that made this socket.
     var synCookie: UInt32 { get }
@@ -44,7 +44,9 @@ public protocol SrtSocketProtocol {
     func sendFrame(data: Data) -> Void
     
     func handleControl(controlPacket: SrtPacket) -> Result<SrtPacket, SocketError>
-    
+
+    func handleData(packet: DataPacketFrame) -> Void
+
     /// SRT version formed as major * 0x10000 + minor * 0x100 + patch.
     var srtVersion: UInt32? { get }
     

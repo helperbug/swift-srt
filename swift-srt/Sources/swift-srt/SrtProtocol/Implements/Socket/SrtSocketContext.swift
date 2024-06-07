@@ -7,11 +7,16 @@ public class SrtSocketContext: SrtSocketProtocol {
     
     public var id: UUID
     
-    public var socketID: UInt32?
-    
+    public var socketId: UInt32
     
     public func handleControl(controlPacket: SrtPacket) -> Result<SrtPacket, SocketError> {
         return .failure(.none)
+    }
+    
+    public func handleData(packet: DataPacketFrame)  {
+
+        
+        
     }
     
     public var filterControlType: UInt32? = nil
@@ -81,7 +86,7 @@ public class SrtSocketContext: SrtSocketProtocol {
         
         self.id = UUID()
         self.encrypted = encrypted
-        self.socketID = socketId
+        self.socketId = socketId
         self.synCookie = synCookie
         self.onFrameReceived = onFrameReceived
         self.onHintsReceived = onHintsReceived
