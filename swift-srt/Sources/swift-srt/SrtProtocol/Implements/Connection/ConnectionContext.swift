@@ -30,6 +30,7 @@ public class ConnectionContext: SrtConnectionProtocol {
     public var sockets: [UInt32: SrtSocketProtocol] = [:]
     var state: ConnectionState
     private var pendingListener: SrtListenerContext? = nil
+    private let onDataPacket: ((DataPacketFrame) -> Void)?
 
     let udpHeader: UdpHeader
     let connection: NWConnection
@@ -44,11 +45,13 @@ public class ConnectionContext: SrtConnectionProtocol {
     
     public required init(updHeader: UdpHeader,
                          connection: NWConnection,
-                         onCanceled: @escaping (UdpHeader) -> Void) {
+                         onCanceled: @escaping (UdpHeader) -> Void,
+                         onDataPacket: ((DataPacketFrame) -> Void)? = nil) {
         
         self.connection = connection
         self.udpHeader = updHeader
         self.onCanceled = onCanceled
+        self.onDataPacket = onDataPacket
         
         state = ConnectionSetupState()
     }
@@ -155,7 +158,8 @@ extension ConnectionContext {
     static func make(serverIp: String,
                      serverPort: UInt16,
                      _ connection: NWConnection,
-                     onCanceled: @escaping (UdpHeader) -> Void
+                     onCanceled: @escaping (UdpHeader) -> Void,
+                     onDataPackat: ((DataPacketFrame) -> Void)? = nil
     ) -> ConnectionContext? {
         
         guard case .hostPort(let caller, let port) = connection.endpoint else {
@@ -180,7 +184,8 @@ extension ConnectionContext {
         let context: ConnectionContext = .init(
             updHeader: updHeader,
             connection: connection,
-            onCanceled: onCanceled
+            onCanceled: onCanceled,
+            onDataPacket: onDataPackat
         )
         
         connection.stateUpdateHandler = context.onStateChanged(_ :)
@@ -222,6 +227,10 @@ extension ConnectionContext { // handlers
             
             defaultSocket.handleData(packet: dataPacket)
             
+        }
+        
+        if let onDataPacket {
+            onDataPacket(dataPacket)
         }
         
         // socket.onFrameReceived(frame)

@@ -31,6 +31,9 @@ public class SrtPortListenerContext {
     private var _endpoint: IPv4Address
     private var _port: NWEndpoint.Port
     private var _listenerState: CurrentValueSubject<SrtPortListnerStates, Never> = .init(.none)
+    private var onDataPacket: (DataPacketFrame) -> Void
+    
+
 
     var listener: NWListener? = nil
     private var state: SrtPortListenerState
@@ -51,10 +54,16 @@ public class SrtPortListenerContext {
         
     }
     
-    public init(endpoint: IPv4Address, port: NWEndpoint.Port, logger: LoggerContext) {
+    public init(
+        endpoint: IPv4Address,
+        port: NWEndpoint.Port,
+        logger: LoggerContext,
+        onDataPacket: @escaping (DataPacketFrame) -> Void
+    ) {
         self._endpoint = endpoint
         self._port = port
         self.state = SrtPortListenerNoneState()
+        self.onDataPacket = onDataPacket
 
         logger.log(text: "Starting \(endpoint.debugDescription): \(port)")
         
@@ -92,11 +101,11 @@ extension SrtPortListenerContext {
         if let context = ConnectionContext.make(serverIp: _endpoint.debugDescription,
                                                 serverPort: _port.rawValue,
                                                 connection,
-                                                onCanceled: onCanceled) {
+                                                onCanceled: onCanceled,
+                                                onDataPackat: onDataPacket) {
 
             connections.value[context.key] = context
             context.start()
-
         }
 
     }

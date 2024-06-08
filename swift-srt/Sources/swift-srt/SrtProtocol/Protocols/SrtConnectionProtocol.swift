@@ -34,7 +34,8 @@ public protocol SrtConnectionProtocol: Hashable {
 
     init(updHeader: UdpHeader,
          connection: NWConnection,
-         onCanceled: @escaping (UdpHeader) -> Void)
+         onCanceled: @escaping (UdpHeader) -> Void,
+         onDataPacket: ((DataPacketFrame) -> Void)?)
 
     func cancel() -> Void
     func removeSocket(id: UInt32) -> Void
