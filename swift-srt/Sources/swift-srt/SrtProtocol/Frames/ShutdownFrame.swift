@@ -31,7 +31,7 @@ public struct ShutdownFrame: ByteFrame {
 
     /// The packet type value of a shutdown control packet is "1".
     public var isControl: Bool {
-        return (data[0] & 0b10000000) == 1
+        return (data[0] & 0b10000000) == 128
     }
 
     /// The control type value of a shutdown control packet is "5".
@@ -58,7 +58,7 @@ public struct ShutdownFrame: ByteFrame {
 
     /// Constructor used by the receive network path
     public init?(_ bytes: Data) {
-        guard bytes.count == 16 else {
+        guard bytes.count >= 16 else {
             return nil
         }
 

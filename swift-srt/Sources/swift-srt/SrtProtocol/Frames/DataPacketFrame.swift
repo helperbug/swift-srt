@@ -117,10 +117,10 @@ public struct DataPacketFrame: ByteFrame {
             return nil
         }
         
-        guard authenticationTag != nil,
-              bytes.count >= 32 else {
-            return nil
-        }
+//        guard authenticationTag != nil,
+//              bytes.count >= 32 else {
+//            return nil
+//        }
     }
 
     /// Constructor used when sending over the network

@@ -101,8 +101,10 @@ extension SrtPortListenerContext {
 
     }
     
-    func onCanceled(key: String) {
+    func onCanceled(header: UdpHeader) {
 
+        let key = "\(header.sourceIp):\(header.sourcePort)"
+        
         _connections.value[key] = nil
 
     }
