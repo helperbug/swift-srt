@@ -8,11 +8,11 @@
 import CryptoKit
 import Foundation
 
-public struct UdpHeader: Hashable {
-    let sourceIp: String
-    let sourcePort: UInt16
-    let destinationIp: String
-    let destinationPort: UInt16
+public struct UdpHeader {
+    public let sourceIp: String
+    public let sourcePort: UInt16
+    public let destinationIp: String
+    public let destinationPort: UInt16
     
     var cookie: UInt32 {
         makeSynCookie()
@@ -45,5 +45,18 @@ public struct UdpHeader: Hashable {
         //        let binaryString = String(result, radix: 2)
         
         return result
+    }
+    
+    static var blank: UdpHeader {
+        .init(sourceIp: "sourtIp", sourcePort: 0, destinationIp: "destinationIp", destinationPort: 0)
+    }
+}
+
+extension UdpHeader: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(sourceIp)
+        hasher.combine(sourcePort)
+        hasher.combine(destinationIp)
+        hasher.combine(destinationPort)
     }
 }

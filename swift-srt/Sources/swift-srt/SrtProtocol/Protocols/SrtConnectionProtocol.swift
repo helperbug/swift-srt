@@ -21,21 +21,24 @@
 //  limitations under the License.
 //
 
-
+import Combine
 import Foundation
 import Network
 
-public protocol SrtConnectionProtocol: Hashable {
+public protocol SrtConnectionProtocol {
 
-    var key: String { get }
+    var udpHeader: UdpHeader { get }
     var onCanceled: (UdpHeader) -> Void { get }
     var sockets: [UInt32: SrtSocketProtocol] { get }
     var connectionState: ConnectionStates { get }
+    var receiveMetrics: AnyPublisher<SrtMetricsModel, Never> { get }
+    var sendMetrics: AnyPublisher<SrtMetricsModel, Never> { get }
+    var uptime: AnyPublisher<TimeInterval, Never> { get }
 
     init(updHeader: UdpHeader,
          connection: NWConnection,
          onCanceled: @escaping (UdpHeader) -> Void,
-         onDataPacket: ((DataPacketFrame) -> Void)?)
+         onDataPacket: @escaping (DataPacketFrame) -> Void)
 
     func cancel() -> Void
     func removeSocket(id: UInt32) -> Void

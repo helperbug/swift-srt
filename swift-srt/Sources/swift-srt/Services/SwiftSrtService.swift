@@ -21,6 +21,7 @@
 //  limitations under the License.
 //
 
+import Combine
 import Foundation
 
 public protocol ConnectionService {

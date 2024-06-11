@@ -27,19 +27,21 @@ import Network
 
 public class SrtPortListenerContext {
     
-    private var _connections: CurrentValueSubject<[String: ConnectionContext], Never> = .init([:])
+    @Published private var _connections: [UdpHeader: SrtConnectionProtocol] = [:]
     private var _endpoint: IPv4Address
     private var _port: NWEndpoint.Port
-    private var _listenerState: CurrentValueSubject<SrtPortListnerStates, Never> = .init(.none)
-    private var onDataPacket: (DataPacketFrame) -> Void
+    @Published private var _listenerState: SrtPortListnerStates = .none
+    @Published private var _metrics: (UdpHeader, SrtMetricsModel) = (UdpHeader.blank, SrtMetricsModel.blank)
     
-
+    private let onConnection: (SrtConnectionProtocol) -> Void
+    private let onConnectionRemove: (UdpHeader) -> Void
+    private let onMetric: (UdpHeader, SrtMetricsModel) -> Void
 
     var listener: NWListener? = nil
     private var state: SrtPortListenerState
 
-    public var contexts: [ConnectionContext] {
-        connections.value.values.sorted(by: { $0.key < $1.key })
+    public var contexts: [SrtConnectionProtocol] {
+        _connections.values.sorted(by: { $0.udpHeader.sourcePort < $1.udpHeader.sourcePort })
     }
     
     var parameters: NWParameters {
@@ -57,17 +59,22 @@ public class SrtPortListenerContext {
     public init(
         endpoint: IPv4Address,
         port: NWEndpoint.Port,
-        logger: LoggerContext,
-        onDataPacket: @escaping (DataPacketFrame) -> Void
+        onConnection: @escaping (SrtConnectionProtocol) -> Void,
+        onConnectionRemove: @escaping (UdpHeader) -> Void,
+        onMetric: @escaping (UdpHeader, SrtMetricsModel) -> Void
     ) {
+        
         self._endpoint = endpoint
         self._port = port
+        self.onConnection = onConnection
+        self.onConnectionRemove = onConnectionRemove
+        self.onMetric = onMetric
         self.state = SrtPortListenerNoneState()
-        self.onDataPacket = onDataPacket
 
-        logger.log(text: "Starting \(endpoint.debugDescription): \(port)")
+        // logger.log(text: "Starting \(endpoint.debugDescription): \(port)")
         
         self.state.auto(self)
+
     }
     
     @discardableResult
@@ -86,7 +93,7 @@ public class SrtPortListenerContext {
         }
         
         self.state = newState
-        self._listenerState.send(newState.name)
+        self._listenerState = newState.name
         
         return newState
         
@@ -102,20 +109,43 @@ extension SrtPortListenerContext {
                                                 serverPort: _port.rawValue,
                                                 connection,
                                                 onCanceled: onCanceled,
-                                                onDataPackat: onDataPacket) {
+                                                onDataPackat: onDataPackat) {
 
-            connections.value[context.key] = context
+            _connections[context.udpHeader] = context
             context.start()
+            
+            self.onConnection(context)
         }
 
     }
     
     func onCanceled(header: UdpHeader) {
 
-        let key = "\(header.sourceIp):\(header.sourcePort)"
-        
-        _connections.value[key] = nil
+        self._connections[header] = nil
+        self.onConnectionRemove(header)
 
+    }
+
+    func onDataPackat(packet: DataPacketFrame) {
+
+        let metric: SrtMetricsModel = .init(
+            ackAckCount: 0,
+            ackCount: 0,
+            bytesCount: packet.data.count,
+            controlCount: 0,
+            dataPacketCount: 0,
+            jitter: 0,
+            latency: 0,
+            nackCount: 0,
+            roundTripTime: 0
+        )
+
+        if let entry = _connections.first {
+
+            self.onMetric(entry.key, metric)
+
+        }
+        
     }
 
     func onStateChanged(_ state: NWListener.State) {
@@ -126,25 +156,31 @@ extension SrtPortListenerContext {
     
 }
 
-extension SrtPortListenerContext: SrtPortListener {
+extension SrtPortListenerContext: SrtPortListenerProtocol {
 
-    public var listenerState: CurrentValueSubject<SrtPortListnerStates, Never> {
+    public var listenerState: AnyPublisher<SrtPortListnerStates, Never> {
 
-        _listenerState
+        $_listenerState.eraseToAnyPublisher()
 
     }
     
-    public var connections: CurrentValueSubject<[String: ConnectionContext], Never> {
+    public var connections: AnyPublisher<[UdpHeader: SrtConnectionProtocol], Never> {
 
-        _connections
+        $_connections.eraseToAnyPublisher()
 
+    }
+    
+    public var metrics: AnyPublisher<(UdpHeader, SrtMetricsModel), Never> {
+        
+        $_metrics.eraseToAnyPublisher()
+        
     }
     
     public func close() {
 
         if self.state.name == .ready {
 
-            _connections.value.values.forEach { connection in
+            _connections.values.forEach { connection in
 
                 DispatchQueue.global(qos: .userInteractive).async {
 
@@ -154,7 +190,7 @@ extension SrtPortListenerContext: SrtPortListener {
                 
             }
             
-            _connections.send([:])
+            _connections = [:]
             
             if let listener {
                 
