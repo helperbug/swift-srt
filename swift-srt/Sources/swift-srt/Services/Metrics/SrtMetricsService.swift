@@ -14,8 +14,9 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
     public let icon: String = "⏱️"
     public let source: String = "Metrics"
     
-    private var interval: TimeInterval
     private let logService: LogServiceProtocol
+    private var timer: AnyCancellable? = nil
+    private let metricsWorker: DispatchQueue = .init(label: "Metrics Worker", qos: .background)
 
     private var listenerStore: [NWEndpoint.Port: SrtMetrics] = [:]
     private var connectionStore: [UdpHeader: SrtMetrics] = [:]
@@ -53,44 +54,114 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
     public init(logService: LogServiceProtocol, interval: TimeInterval) {
         
         self.logService = logService
-        self.interval = interval
         
         _listenerMetrics = (port: .any, receive: .blank, send: .blank)
         _connectionMetrics = (header: .blank, receive: .blank, send: .blank)
         _socketMetrics = (header: .blank, socketId: 0, receive: .blank, send: .blank)
         _frameMetrics = (header: .blank, socketId: 0, frameId: 0, receive: .blank, send: .blank)
         
+        self.timer = Timer.publish(every: interval, on: .main, in: .common)
+            .autoconnect()
+            .sink { _ in
+
+                self.flushMetrics()
+
+            }
     }
     
     public func storeListenerMetric(port: NWEndpoint.Port, receive: SrtMetricsModel?, send: SrtMetricsModel?) {
         
-        self.listenerStore[port, default: .init()].delta(receive: receive, send: send)
+        metricsWorker.async {
+            
+            self.listenerStore[port, default: .init()].delta(receive: receive, send: send)
+
+        }
         
     }
 
     public func storeConnectionMetric(header: UdpHeader, receive: SrtMetricsModel?, send: SrtMetricsModel?) {
         
-        self.connectionStore[header, default: .init()].delta(receive: receive, send: send)
+        metricsWorker.async {
+            
+            self.connectionStore[header, default: .init()].delta(receive: receive, send: send)
+            
+        }
 
     }
     
     public func storeSocketMetric(header: UdpHeader, socketId: UInt32, receive: SrtMetricsModel?, send: SrtMetricsModel?) {
         
-        let socketKey = SocketKey(header: header, socketId: socketId)
-        self.socketStore[socketKey, default: .init()].delta(receive: receive, send: send)
+        metricsWorker.async {
+            
+            let socketKey = SocketKey(header: header, socketId: socketId)
+            self.socketStore[socketKey, default: .init()].delta(receive: receive, send: send)
+            
+        }
 
     }
     
     public func storeFrameMetric(header: UdpHeader, socketId: UInt32, frameId: UInt32, receive: SrtMetricsModel?, send: SrtMetricsModel?) {
         
-        let frameKey = FrameKey(header: header, socketId: socketId, frameId: frameId)
-        self.frameStore[frameKey, default: .init()].delta(receive: receive, send: send)
+        metricsWorker.async {
+            
+            let frameKey = FrameKey(header: header, socketId: socketId, frameId: frameId)
+            self.frameStore[frameKey, default: .init()].delta(receive: receive, send: send)
+            
+        }
 
     }
     
     public func log(_ message: String) {
         
         logService.log(self.icon, self.source, message)
+
+    }
+    
+    public func flushMetrics() {
+        
+        metricsWorker.async {
+            
+            let listenerStore = self.listenerStore
+            self.listenerStore = [:]
+            
+            let connectionStore = self.connectionStore
+            self.connectionStore = [:]
+            
+            let socketStore = self.socketStore
+            self.socketStore = [:]
+            
+            let frameStore = self.frameStore
+            self.frameStore = [:]
+
+            listenerStore.forEach { pair in
+                
+                let (receive, send) = pair.value.capture()
+                self._listenerMetrics = (port: pair.key, receive: receive, send: send)
+                
+            }
+
+            connectionStore.forEach { pair in
+                
+                let (receive, send) = pair.value.capture()
+                self._connectionMetrics = (header: pair.key, receive: receive, send: send)
+
+            }
+            
+            socketStore.forEach { pair in
+                
+                let (receive, send) = pair.value.capture()
+                self._socketMetrics = (header: pair.key.header, socketId: pair.key.socketId, receive: receive, send: send)
+                
+            }
+            
+            frameStore.forEach { pair in
+                
+                let (receive, send) = pair.value.capture()
+                self._socketMetrics = (header: pair.key.header, socketId: pair.key.socketId, receive: receive, send: send)
+                
+            }
+
+        }
 
     }
     
