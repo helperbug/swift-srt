@@ -9,13 +9,21 @@ import Combine
 import Foundation
 import Network
 
-public class SrtPortManagerService: SrtPortManagerProtocol {
+public class SrtPortManagerService: SrtPortManagerServiceProtocol {
+
+    public var icon: String = "⚓️"
+    public var source: String = "Port Manager"
+
+    private let logService: LogServiceProtocol
     
     @Published private var _listeners: [NWEndpoint.Port: SrtPortListenerProtocol] = [:]
-    @Published public var _connections: [UdpHeader: SrtConnectionProtocol] = [:]
-    @Published public var _metrics: (UdpHeader, SrtMetricsModel) = (.blank, .blank)
+    @Published private var _connections: [UdpHeader: SrtConnectionProtocol] = [:]
+    @Published private var _metrics: (UdpHeader, SrtMetricsModel) = (.blank, .blank)
+    @Published private var _sockets: [UdpHeader : [UInt32 : any SrtConnectionProtocol]] = [:]
 
-    public init() {
+    public init(logService: LogServiceProtocol) {
+        
+        self.logService = logService
         
     }
     
@@ -37,7 +45,18 @@ public class SrtPortManagerService: SrtPortManagerProtocol {
 
     }
 
-    public func add(endpoint: IPv4Address, port: NWEndpoint.Port) {
+    public var sockets: AnyPublisher<[UdpHeader : [UInt32 : any SrtConnectionProtocol]], Never> {
+        $_sockets.eraseToAnyPublisher()
+    }
+
+    
+    public func log(_ message: String) {
+        
+        logService.log(self.icon, self.source, message)
+        
+    }
+    
+    public func addListener(endpoint: IPv4Address, port: NWEndpoint.Port) {
         
         _listeners[port] = SrtPortListenerContext(
             endpoint: endpoint,
@@ -55,11 +74,16 @@ public class SrtPortManagerService: SrtPortManagerProtocol {
         
     }
     
-    public func shutdown() {
+    public func shutdown(port: NWEndpoint.Port? = nil) {
         
         _listeners.values.forEach { listener in
-            
-            listener.close()
+
+            if let port,
+               listener.port == port {
+                listener.close()
+            } else {
+                listener.close()
+            }
             
         }
         

@@ -28,6 +28,6 @@ public protocol ServiceProtocol {
     var icon: String { get }
     var source: String { get }
 
-    func log(_ source: String, _ message: String)
+    func log(_ message: String)
     
 }

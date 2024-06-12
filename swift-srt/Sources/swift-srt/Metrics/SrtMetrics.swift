@@ -26,6 +26,31 @@ class SrtMetrics {
     var jitter: Double = 0
     var latency: Double = 0
     var roundTripTime: Double = 0
+
+    func delta(receive: SrtMetricsModel?, send: SrtMetricsModel?) {
+        
+        if let receive {
+
+            receiveAckAckCount += receive.ackAckCount
+            receiveAckCount += receive.ackCount
+            receiveBytesCount += receive.bytesCount
+            receiveControlCount += receive.controlCount
+            receiveDataPacketCount += receive.dataPacketCount
+            receiveNackCount += receive.nackCount
+
+        }
+        
+        if let send {
+
+            sendAckAckCount += send.ackAckCount
+            sendAckCount += send.ackCount
+            sendBytesCount += send.bytesCount
+            sendControlCount += send.controlCount
+            sendDataPacketCount += send.dataPacketCount
+            sendNackCount += send.nackCount
+
+        }
+    }
     
     func capture() -> (receive: SrtMetricsModel, send: SrtMetricsModel) {
         let receiveModel = SrtMetricsModel(ackAckCount: receiveAckAckCount,
@@ -37,6 +62,7 @@ class SrtMetrics {
                                         latency: latency,
                                         nackCount: receiveNackCount,
                                         roundTripTime: roundTripTime)
+        
         let sendModel = SrtMetricsModel(ackAckCount: sendAckAckCount,
                                         ackCount: sendAckCount,
                                         bytesCount: sendBytesCount,
