@@ -67,7 +67,8 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
         _listeners[port] = SrtPortListenerContext(
             endpoint: endpoint,
             port: port,
-            service: self
+            managerService: self,
+            metricsService: metricsService
         )
         
     }

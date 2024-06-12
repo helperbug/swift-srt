@@ -73,7 +73,13 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
         
         metricsWorker.async {
             
-            self.listenerStore[port, default: .init()].delta(receive: receive, send: send)
+            if let existing = self.listenerStore[port] {
+                existing.delta(receive: receive, send: send)
+            } else {
+                var new = SrtMetrics()
+                new.delta(receive: receive, send: send)
+                self.listenerStore[port] = new
+            }
 
         }
         
@@ -83,7 +89,15 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
         
         metricsWorker.async {
             
-            self.connectionStore[header, default: .init()].delta(receive: receive, send: send)
+            if let existing = self.connectionStore[header] {
+                existing.delta(receive: receive, send: send)
+            } else {
+                var new = SrtMetrics()
+                new.delta(receive: receive, send: send)
+                self.connectionStore[header] = new
+            }
+            
+            self.storeListenerMetric(port: NWEndpoint.Port(integerLiteral: header.destinationPort), receive: receive, send: send)
             
         }
 
@@ -94,7 +108,14 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
         metricsWorker.async {
             
             let socketKey = SocketKey(header: header, socketId: socketId)
-            self.socketStore[socketKey, default: .init()].delta(receive: receive, send: send)
+            
+            if let existing = self.socketStore[socketKey] {
+                existing.delta(receive: receive, send: send)
+            } else {
+                var new = SrtMetrics()
+                new.delta(receive: receive, send: send)
+                self.socketStore[socketKey] = new
+            }
             
         }
 
@@ -105,7 +126,14 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
         metricsWorker.async {
             
             let frameKey = FrameKey(header: header, socketId: socketId, frameId: frameId)
-            self.frameStore[frameKey, default: .init()].delta(receive: receive, send: send)
+            
+            if let existing = self.frameStore[frameKey] {
+                existing.delta(receive: receive, send: send)
+            } else {
+                var new = SrtMetrics()
+                new.delta(receive: receive, send: send)
+                self.frameStore[frameKey] = new
+            }
             
         }
 

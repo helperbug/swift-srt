@@ -27,7 +27,7 @@ import Network
 
 public class SrtPortListenerContext {
     
-    @Published private var _connections: [UdpHeader: SrtConnectionProtocol] = [:]
+    // @Published private var _connections: [UdpHeader: SrtConnectionProtocol] = [:]
     private var _endpoint: IPv4Address
     private var _port: NWEndpoint.Port
     @Published private var _listenerState: SrtPortListnerStates = .none
@@ -35,10 +35,12 @@ public class SrtPortListenerContext {
     
     var listener: NWListener? = nil
     private var state: SrtPortListenerState
-    private let service: SrtPortManagerServiceProtocol
+    private let managerService: SrtPortManagerServiceProtocol
+    private let metricsService: SrtMetricsServiceProtocol
 
     public var contexts: [SrtConnectionProtocol] {
-        _connections.values.sorted(by: { $0.udpHeader.sourcePort < $1.udpHeader.sourcePort })
+        []
+        // _connections.values.sorted(by: { $0.udpHeader.sourcePort < $1.udpHeader.sourcePort })
     }
     
     var parameters: NWParameters {
@@ -56,12 +58,14 @@ public class SrtPortListenerContext {
     public init(
         endpoint: IPv4Address,
         port: NWEndpoint.Port,
-        service: SrtPortManagerServiceProtocol
+        managerService: SrtPortManagerServiceProtocol,
+        metricsService: SrtMetricsServiceProtocol
     ) {
         
         self._endpoint = endpoint
         self._port = port
-        self.service = service
+        self.managerService = managerService
+        self.metricsService = metricsService
         self.state = SrtPortListenerNoneState()
 
         self.state.auto(self)
@@ -99,19 +103,23 @@ extension SrtPortListenerContext {
         if let context = ConnectionContext.make(serverIp: _endpoint.debugDescription,
                                                 serverPort: _port.rawValue,
                                                 connection,
+                                                managerService: managerService,
+                                                metricsService: metricsService,
                                                 onCanceled: onCanceled,
                                                 onDataPackat: onDataPackat) {
 
-            _connections[context.udpHeader] = context
+            //_connections[context.udpHeader] = context
             context.start()
-            
+
+            managerService.addConnection(header: context.udpHeader, connection: context)
         }
 
     }
     
     func onCanceled(header: UdpHeader) {
 
-        self._connections[header] = nil
+        managerService.removeConnection(header: header)
+        //self._connections[header] = nil
 
     }
 
@@ -129,11 +137,11 @@ extension SrtPortListenerContext {
             roundTripTime: 0
         )
 
-        if let entry = _connections.first {
-
-            // self.onMetric(entry.key, metric)
-
-        }
+//        if let entry = _connections.first {
+//
+//            // self.onMetric(entry.key, metric)
+//
+//        }
         
     }
 
@@ -153,11 +161,11 @@ extension SrtPortListenerContext: SrtPortListenerProtocol {
 
     }
     
-    public var connections: AnyPublisher<[UdpHeader: SrtConnectionProtocol], Never> {
-
-        $_connections.eraseToAnyPublisher()
-
-    }
+//    public var connections: AnyPublisher<[UdpHeader: SrtConnectionProtocol], Never> {
+//
+//        $_connections.eraseToAnyPublisher()
+//
+//    }
     
     public var metrics: AnyPublisher<(UdpHeader, SrtMetricsModel), Never> {
         
@@ -169,17 +177,17 @@ extension SrtPortListenerContext: SrtPortListenerProtocol {
 
         if self.state.name == .ready {
 
-            _connections.values.forEach { connection in
-
-                DispatchQueue.global(qos: .userInteractive).async {
-
-                    connection.cancel()
-
-                }
-                
-            }
-            
-            _connections = [:]
+//            _connections.values.forEach { connection in
+//
+//                DispatchQueue.global(qos: .userInteractive).async {
+//
+//                    connection.cancel()
+//
+//                }
+//                
+//            }
+//            
+//            _connections = [:]
             
             if let listener {
                 

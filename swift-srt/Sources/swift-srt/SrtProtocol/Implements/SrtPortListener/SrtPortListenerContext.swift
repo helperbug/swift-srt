@@ -24,7 +24,7 @@
 import Combine
 import Foundation
 import Network
-
+/*
 public class SrtPortListenerContext2 {
     
     @Published private var _connections: [UdpHeader: SrtConnectionProtocol] = [:]
@@ -108,11 +108,21 @@ extension SrtPortListenerContext2 {
         if let context = ConnectionContext.make(serverIp: _endpoint.debugDescription,
                                                 serverPort: _port.rawValue,
                                                 connection,
+                                                managerService: managerService,
                                                 onCanceled: onCanceled,
                                                 onDataPackat: onDataPackat) {
 
             _connections[context.udpHeader] = context
             context.start()
+            
+            if let path = connection.currentPath {
+                path.availableInterfaces.forEach { interface in
+                    
+                    print("\(interface.type)")
+                    print("\(interface)")
+
+                }
+            }
             
             self.onConnection(context)
         }
@@ -216,3 +226,4 @@ extension SrtPortListenerContext2: SrtPortListenerProtocol {
     }
     
 }
+*/

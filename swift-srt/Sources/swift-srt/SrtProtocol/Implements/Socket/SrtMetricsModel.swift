@@ -20,6 +20,28 @@ public struct SrtMetricsModel: Identifiable {
     public let nackCount: Int
     public let roundTripTime: Double
     
+    init(
+        ackAckCount: Int = 0,
+        ackCount: Int = 0,
+        bytesCount: Int = 0,
+        controlCount: Int = 0,
+        dataPacketCount: Int = 0,
+        jitter: Double = 0.0,
+        latency: Double = 0.0,
+        nackCount: Int = 0,
+        roundTripTime: Double = 0.0
+    ) {
+        self.ackAckCount = ackAckCount
+        self.ackCount = ackCount
+        self.bytesCount = bytesCount
+        self.controlCount = controlCount
+        self.dataPacketCount = dataPacketCount
+        self.jitter = jitter
+        self.latency = latency
+        self.nackCount = nackCount
+        self.roundTripTime = roundTripTime
+    }
+    
     public static var blank: SrtMetricsModel {
         .init(
             ackAckCount: 0,

@@ -31,7 +31,7 @@ public protocol SrtPortListenerProtocol {
     var port: NWEndpoint.Port { get }
     
     var listenerState: AnyPublisher<SrtPortListnerStates, Never> { get }
-    var connections: AnyPublisher<[UdpHeader: SrtConnectionProtocol], Never> { get }
+    //var connections: AnyPublisher<[UdpHeader: SrtConnectionProtocol], Never> { get }
     var metrics: AnyPublisher<(UdpHeader, SrtMetricsModel), Never> { get }
 
     func close() -> Void

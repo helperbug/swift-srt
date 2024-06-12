@@ -37,6 +37,8 @@ public protocol SrtConnectionProtocol {
 
     init(updHeader: UdpHeader,
          connection: NWConnection,
+         managerService: SrtPortManagerServiceProtocol,
+         metricsService: SrtMetricsServiceProtocol,
          onCanceled: @escaping (UdpHeader) -> Void,
          onDataPacket: @escaping (DataPacketFrame) -> Void)
 

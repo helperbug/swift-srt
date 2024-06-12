@@ -13,7 +13,9 @@ public struct UdpHeader {
     public let sourcePort: UInt16
     public let destinationIp: String
     public let destinationPort: UInt16
-    
+    public let interface: String
+    public let interfaceType: String
+
     var cookie: UInt32 {
         makeSynCookie()
     }
@@ -47,8 +49,15 @@ public struct UdpHeader {
         return result
     }
     
-    static var blank: UdpHeader {
-        .init(sourceIp: "sourtIp", sourcePort: 0, destinationIp: "destinationIp", destinationPort: 0)
+    public static var blank: UdpHeader {
+        .init(
+            sourceIp: "-",
+            sourcePort: 0,
+            destinationIp: "-",
+            destinationPort: 0,
+            interface: "-",
+            interfaceType: "-"
+        )
     }
 }
 
@@ -58,5 +67,7 @@ extension UdpHeader: Hashable {
         hasher.combine(sourcePort)
         hasher.combine(destinationIp)
         hasher.combine(destinationPort)
+        hasher.combine(interface)
+        hasher.combine(interfaceType)
     }
 }

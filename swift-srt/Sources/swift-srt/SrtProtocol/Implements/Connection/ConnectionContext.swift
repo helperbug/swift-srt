@@ -27,6 +27,9 @@ import Network
 
 public class ConnectionContext: SrtConnectionProtocol {
     
+    private let managerService: SrtPortManagerServiceProtocol
+    private let metricsService: SrtMetricsServiceProtocol
+
     public var onCanceled: (UdpHeader) -> Void
     public var sockets: [UInt32: SrtSocketProtocol] = [:]
     var state: ConnectionState
@@ -63,33 +66,37 @@ public class ConnectionContext: SrtConnectionProtocol {
     
     public required init(updHeader: UdpHeader,
                          connection: NWConnection,
+                         managerService: SrtPortManagerServiceProtocol,
+                         metricsService: SrtMetricsServiceProtocol,
                          onCanceled: @escaping (UdpHeader) -> Void,
                          onDataPacket: @escaping (DataPacketFrame) -> Void) {
         
         self.connection = connection
         self._udpHeader = updHeader
+        self.managerService = managerService
+        self.metricsService = metricsService
         self.onCanceled = onCanceled
         self.onDataPacket = onDataPacket
         
         state = ConnectionSetupState()
         
-        self.timer = Timer.publish(every: 1.0, on: .main, in: .common)
-            .autoconnect()
-            .sink { _ in
-                self.gong()
-            }
+//        self.timer = Timer.publish(every: 1.0, on: .main, in: .common)
+//            .autoconnect()
+//            .sink { _ in
+//                self.gong()
+//            }
     }
 
-    private func gong() {
-        _uptime += 1
-        
-        let currentMetrics = metrics
-        metrics = .init()
-
-        let (receive, send) = currentMetrics.capture()
-        _receiveMetrics = receive
-        _sendMetrics = send
-    }
+//    private func gong() {
+//        _uptime += 1
+//        
+//        let currentMetrics = metrics
+//        metrics = .init()
+//
+//        let (receive, send) = currentMetrics.capture()
+//        _receiveMetrics = receive
+//        _sendMetrics = send
+//    }
     
     private func updateMetrics() {
         
@@ -202,32 +209,21 @@ extension ConnectionContext {
     static func make(serverIp: String,
                      serverPort: UInt16,
                      _ connection: NWConnection,
+                     managerService: SrtPortManagerServiceProtocol,
+                     metricsService: SrtMetricsServiceProtocol,
                      onCanceled: @escaping (UdpHeader) -> Void,
                      onDataPackat: @escaping (DataPacketFrame) -> Void
     ) -> ConnectionContext? {
         
-        guard case .hostPort(let caller, let port) = connection.endpoint else {
+        guard let updHeader = connection.makeUdpHeader() else {
             return nil
         }
-        
-        guard let host = caller as? NWEndpoint.Host else {
-            return nil
-        }
-        
-        guard case .ipv4(let ipv4Address) = host else {
-            return nil
-        }
-        
-        let updHeader: UdpHeader = .init(
-            sourceIp: "\(ipv4Address)",
-            sourcePort: port.rawValue,
-            destinationIp: serverIp,
-            destinationPort: serverPort
-            )
         
         let context: ConnectionContext = .init(
             updHeader: updHeader,
             connection: connection,
+            managerService: managerService,
+            metricsService: metricsService,
             onCanceled: onCanceled,
             onDataPacket: onDataPackat
         )
@@ -254,6 +250,9 @@ extension ConnectionContext { // handlers
         }
 
         self.onDataPacket(dataPacket)
+        
+        let receiveMetrics: SrtMetricsModel = .init(bytesCount: dataPacket.data.count)
+        metricsService.storeConnectionMetric(header: self.udpHeader, receive: receiveMetrics, send: nil)
         
         metrics.receiveBytesCount += dataPacket.data.count
         
@@ -329,64 +328,7 @@ extension ConnectionContext { // handlers
             }
             
             self.handleHandshake(handshake: handshake)
-//            if let data = udpHeader.sourceIp.ipStringToData {
-//                print(data)
-//            }
-//            
-//            if handshake.isInductionRequest {
-//                
-//                var srtListener = SrtListenerContext(
-//                    srtSocketID: handshake.srtSocketID,
-//                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
-//                    synCookie: self.udpHeader.cookie,
-//                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!,
-//                    encrypted: false,
-//                    send: { _, _ in },
-//                    onSocketCreated: { _ in }
-//                )
-//                
-//
-//                sockets[handshake.srtSocketID] = socketContext
-//                
-//                let response = SrtHandshake.makeInductionResponse(
-//                    srtSocketID: handshake.srtSocketID,
-//                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
-//                    synCookie: self.udpHeader.cookie,
-//                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!,
-//                    encrypted: false
-//                )
-//                
-//                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: handshake.srtSocketID, contents: Data())
-//                
-//                let contents = response.makePacket(socketId: handshake.srtSocketID).contents
-//                
-//                send(header: packet, contents: contents)
-//                
-//            } else if handshake.handshakeType == .conclusion,
-//                      let socket = sockets[handshake.srtSocketID],
-//                      handshake.isConclusionRequest(synCookie: socket.synCookie) {
-//                
-//                let response = SrtHandshake.makeConclusionResponse(
-//                    srtSocketID: handshake.srtSocketID,
-//                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
-//                    synCookie: self.udpHeader.cookie,
-//                    peerIpAddress: self.udpHeader.sourceIp.ipStringToData!
-//                )
-//                
-//                var payload: Data = .init()
-//                
-//                handshake.extensions.forEach { handshakeExt in
-//                    socket.update(type: handshakeExt.key, data: handshakeExt.value)
-//                }
-//                
-//                let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: handshake.srtSocketID, contents: Data())
-//                
-//                let contents = response.makePacket(socketId: handshake.srtSocketID).contents + (handshake.extensions.first(where: { $0.key == .streamId})?.value ?? Data())
-//                
-//                send(header: packet, contents: contents)
-//                
-//                print("Handshake conclusion processed for socket \(handshake.srtSocketID)")
-//            }
+            
         case .keepAlive:
             print("KeepAlive packet received")
         case .acknowledgement:
