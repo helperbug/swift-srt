@@ -23,6 +23,11 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
     private var socketStore: [SocketKey: SrtMetrics] = [:]
     private var frameStore: [FrameKey: SrtMetrics] = [:]
 
+    @Published private var _uptime: Int = 0
+    public var uptime: AnyPublisher<Int, Never> {
+        $_uptime.eraseToAnyPublisher()
+    }
+    
     @Published private var _listenerMetrics: (port: NWEndpoint.Port, receive: SrtMetricsModel, send: SrtMetricsModel)
     public var listenerMetrics: AnyPublisher<(port: NWEndpoint.Port, receive: SrtMetricsModel, send: SrtMetricsModel), Never> {
 
@@ -148,6 +153,10 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
     public func flushMetrics() {
         
         metricsWorker.async {
+   
+            self._uptime += 1
+
+            usleep(1000)
             
             let listenerStore = self.listenerStore
             self.listenerStore = [:]
@@ -167,7 +176,7 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
                 self._listenerMetrics = (port: pair.key, receive: receive, send: send)
                 
             }
-
+            
             connectionStore.forEach { pair in
                 
                 let (receive, send) = pair.value.capture()
@@ -188,7 +197,7 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
                 self._socketMetrics = (header: pair.key.header, socketId: pair.key.socketId, receive: receive, send: send)
                 
             }
-
+            
         }
 
     }

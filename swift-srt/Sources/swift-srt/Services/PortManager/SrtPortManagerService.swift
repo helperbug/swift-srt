@@ -22,6 +22,7 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
         self.logService = logService
         self.metricsService = metricsService
         
+        self._frames = (header: .blank, socketId: 0, messageId: 0, frame: Data())
     }
     
     @Published private var _listeners: [NWEndpoint.Port: SrtPortListenerProtocol] = [:]
@@ -50,7 +51,7 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
         $_sockets.eraseToAnyPublisher()
     }
 
-    @Published private var _frames: (header: UdpHeader, socketId: UInt32, messageId: UInt32, frame: Data) = (header: .blank, socketId: 0, messageId: 0, frame: Data())
+    @Published private var _frames: (header: UdpHeader, socketId: UInt32, messageId: UInt32, frame: Data)
     public var frames: AnyPublisher<(header: UdpHeader, socketId: UInt32, messageId: UInt32, frame: Data), Never> {
         $_frames.eraseToAnyPublisher()
     }
@@ -67,6 +68,7 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
         _listeners[port] = SrtPortListenerContext(
             endpoint: endpoint,
             port: port,
+            logService: logService,
             managerService: self,
             metricsService: metricsService
         )
@@ -93,13 +95,32 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
 
     public func removeListener(port: NWEndpoint.Port) {
         
-        _listeners[port] = nil
+        if let listener = _listeners[port] {
+            
+            var headers: [UdpHeader] = []
+
+            _connections.forEach { connection in
+                if connection.key.destinationPort == port.rawValue {
+                    headers.append(connection.key)
+                }
+            }
+            
+            headers.forEach { header in
+                removeConnection(header: header)
+            }
+            
+            listener.close()
+            _listeners[port] = nil
+        }
         
     }
     
     public func removeConnection(header: UdpHeader) {
 
-        _connections[header] = nil
+        if let connection = _connections[header] {
+            _connections[header] = nil
+            connection.cancel()
+        }
         
     }
     

@@ -37,7 +37,9 @@ public struct DataPacketFrame: ByteFrame {
 
     /// The sequential number of the data packet. Range [0; 2^31 - 1].
     public var packetSequenceNumber: UInt32 {
-        return data.prefix(4).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian & 0x7FFFFFFF
+        let val = data.prefix(4).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian & 0x7FFFFFFF
+        
+        return val
     }
 
     /// This field indicates the position of the data packet in the message. The value "10b" (binary) means the first packet of the message. "00b" indicates a packet in the middle. "01b" designates the last packet. If a single data packet forms the whole message, the value is "11b".
@@ -179,7 +181,7 @@ public struct DataPacketFrame: ByteFrame {
                         encryptionFlags: 0,
                         retransmittedFlag: false,
                         messageNumber: 0,
-                        timestamp: 0,
+                        timestamp: UInt32(Date().timeIntervalSince1970),
                         destinationSocketID: 0,
                         payload: .init(),
                         authenticationTag: .init())

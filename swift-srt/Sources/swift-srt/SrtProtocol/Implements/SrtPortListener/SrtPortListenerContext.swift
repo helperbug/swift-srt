@@ -24,26 +24,20 @@
 import Combine
 import Foundation
 import Network
-/*
-public class SrtPortListenerContext2 {
+
+public class SrtPortListenerContext {
     
-    @Published private var _connections: [UdpHeader: SrtConnectionProtocol] = [:]
     private var _endpoint: IPv4Address
     private var _port: NWEndpoint.Port
     @Published private var _listenerState: SrtPortListnerStates = .none
     @Published private var _metrics: (UdpHeader, SrtMetricsModel) = (UdpHeader.blank, SrtMetricsModel.blank)
     
-    private let onConnection: (SrtConnectionProtocol) -> Void
-    private let onConnectionRemove: (UdpHeader) -> Void
-    private let onMetric: (UdpHeader, SrtMetricsModel) -> Void
-
     var listener: NWListener? = nil
     private var state: SrtPortListenerState
+    private let logService: LogServiceProtocol
+    private let managerService: SrtPortManagerServiceProtocol
+    private let metricsService: SrtMetricsServiceProtocol
 
-    public var contexts: [SrtConnectionProtocol] {
-        _connections.values.sorted(by: { $0.udpHeader.sourcePort < $1.udpHeader.sourcePort })
-    }
-    
     var parameters: NWParameters {
         
         let srtProtocol = NWProtocolFramer.Options(definition: SrtProtocolFramer.definition)
@@ -59,21 +53,19 @@ public class SrtPortListenerContext2 {
     public init(
         endpoint: IPv4Address,
         port: NWEndpoint.Port,
-        onConnection: @escaping (SrtConnectionProtocol) -> Void,
-        onConnectionRemove: @escaping (UdpHeader) -> Void,
-        onMetric: @escaping (UdpHeader, SrtMetricsModel) -> Void
+        logService: LogServiceProtocol,
+        managerService: SrtPortManagerServiceProtocol,
+        metricsService: SrtMetricsServiceProtocol
     ) {
         
         self._endpoint = endpoint
         self._port = port
-        self.onConnection = onConnection
-        self.onConnectionRemove = onConnectionRemove
-        self.onMetric = onMetric
+        self.logService = logService
+        self.managerService = managerService
+        self.metricsService = metricsService
         self.state = SrtPortListenerNoneState()
 
-        // logger.log(text: "Starting \(endpoint.debugDescription): \(port)")
-        
-        // self.state.auto(self)
+        self.state.auto(self)
 
     }
     
@@ -101,82 +93,56 @@ public class SrtPortListenerContext2 {
     
 }
 
-extension SrtPortListenerContext2 {
+extension SrtPortListenerContext {
     
     func newConnectionHandler(connection: NWConnection) {
         
         if let context = ConnectionContext.make(serverIp: _endpoint.debugDescription,
                                                 serverPort: _port.rawValue,
                                                 connection,
+                                                logService: logService,
                                                 managerService: managerService,
-                                                onCanceled: onCanceled,
-                                                onDataPackat: onDataPackat) {
+                                                metricsService: metricsService) {
 
-            _connections[context.udpHeader] = context
             context.start()
-            
-            if let path = connection.currentPath {
-                path.availableInterfaces.forEach { interface in
-                    
-                    print("\(interface.type)")
-                    print("\(interface)")
 
-                }
-            }
+            managerService.addConnection(header: context.udpHeader, connection: context)
             
-            self.onConnection(context)
         }
 
     }
     
     func onCanceled(header: UdpHeader) {
 
-        self._connections[header] = nil
-        self.onConnectionRemove(header)
+        managerService.removeConnection(header: header)
 
-    }
-
-    func onDataPackat(packet: DataPacketFrame) {
-
-        let metric: SrtMetricsModel = .init(
-            ackAckCount: 0,
-            ackCount: 0,
-            bytesCount: packet.data.count,
-            controlCount: 0,
-            dataPacketCount: 0,
-            jitter: 0,
-            latency: 0,
-            nackCount: 0,
-            roundTripTime: 0
-        )
-
-        if let entry = _connections.first {
-
-            self.onMetric(entry.key, metric)
-
-        }
-        
     }
 
     func onStateChanged(_ state: NWListener.State) {
 
-        // self.state.onStateChanged(self, state: state)
+        self.state.onStateChanged(self, state: state)
 
     }
     
 }
 
-extension SrtPortListenerContext2: SrtPortListenerProtocol {
+extension SrtPortListenerContext: SrtPortListenerProtocol {
+
+    public var endpoint: IPv4Address {
+
+        _endpoint
+
+    }
+    
+    public var port: NWEndpoint.Port {
+
+        _port
+
+    }
 
     public var listenerState: AnyPublisher<SrtPortListnerStates, Never> {
 
         $_listenerState.eraseToAnyPublisher()
-
-    }
-    
-    public var connections: AnyPublisher<[UdpHeader: SrtConnectionProtocol], Never> {
-
-        $_connections.eraseToAnyPublisher()
 
     }
     
@@ -190,40 +156,14 @@ extension SrtPortListenerContext2: SrtPortListenerProtocol {
 
         if self.state.name == .ready {
 
-            _connections.values.forEach { connection in
-
-                DispatchQueue.global(qos: .userInteractive).async {
-
-                    connection.cancel()
-
-                }
-                
-            }
-            
-            _connections = [:]
+            // self.state.primary(self)
             
             if let listener {
-                
                 listener.cancel()
-                
             }
 
         }
 
     }
     
-    
-    public var endpoint: IPv4Address {
-
-        _endpoint
-
-    }
-    
-    public var port: NWEndpoint.Port {
-
-        _port
-
-    }
-    
 }
-*/

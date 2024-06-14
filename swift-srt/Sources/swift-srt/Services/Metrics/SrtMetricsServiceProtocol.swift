@@ -11,6 +11,7 @@ import Network
 
 public protocol SrtMetricsServiceProtocol: ServiceProtocol {
     
+    var uptime: AnyPublisher<Int, Never> { get }
     var listenerMetrics: AnyPublisher<(port: NWEndpoint.Port, receive: SrtMetricsModel, send: SrtMetricsModel), Never> { get }
     var connectionMetrics: AnyPublisher<(header: UdpHeader, receive: SrtMetricsModel, send: SrtMetricsModel), Never> { get }
     var socketMetrics: AnyPublisher<(header: UdpHeader, socketId: UInt32, receive: SrtMetricsModel, send: SrtMetricsModel), Never> { get }

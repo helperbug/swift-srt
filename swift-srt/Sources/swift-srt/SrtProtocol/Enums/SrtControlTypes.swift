@@ -12,7 +12,7 @@ public enum ControlTypes: UInt16 {
     case none = 0xFFFF
     
     var asField: UInt32 {
-        UInt32(self.rawValue << 16)
+        return UInt32(self.rawValue) << 16
     }
 }
 

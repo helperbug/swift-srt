@@ -44,8 +44,10 @@ public struct AcknowledgementFrame: ByteFrame {
     }
 
     /// The control type value of an ACK control packet is "2".
-    public var controlType: UInt16 {
-        return UInt16(data.prefix(2).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian) & 0x7FFF
+    public var controlType: ControlTypes {
+        let rawValue = UInt16(data.prefix(2).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian) & 0x7FFF
+        
+        return ControlTypes(rawValue: rawValue) ?? .none
     }
 
     /// Future
@@ -104,13 +106,14 @@ public struct AcknowledgementFrame: ByteFrame {
     /// Constructor used by the receive network path
     public init?(_ bytes: Data) {
         guard bytes.count >= 44 else { return nil }
+        
         self.data = bytes
     }
 
     /// Constructor used when sending over the network
     public init(
         isControl: Bool,
-        controlType: UInt16,
+        controlType: ControlTypes,
         reserved: UInt16,
         acknowledgementNumber: UInt32,
         timestamp: UInt32,
@@ -125,7 +128,7 @@ public struct AcknowledgementFrame: ByteFrame {
     ) {
         var data = Data(capacity: 44)
 
-        let header = UInt16(isControl ? 0x8000 : 0x0000) | (controlType & 0x7FFF)
+        let header = UInt16(isControl ? 0x8000 : 0x0000) | (controlType.rawValue & 0x7FFF)
         data.append(contentsOf: withUnsafeBytes(of: header.bigEndian, Array.init))
         data.append(contentsOf: withUnsafeBytes(of: reserved.bigEndian, Array.init))
         data.append(contentsOf: withUnsafeBytes(of: acknowledgementNumber.bigEndian, Array.init))

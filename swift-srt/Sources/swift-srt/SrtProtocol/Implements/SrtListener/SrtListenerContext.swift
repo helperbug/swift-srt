@@ -7,12 +7,6 @@
 
 import Foundation
 
-protocol SrtPacketSender {
-    
-    var send: (SrtPacket, Data) -> Void { get }
-    
-}
-
 public class SrtListenerContext: SrtPacketSender {
     
     let srtSocketID: UInt32

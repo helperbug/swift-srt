@@ -28,21 +28,17 @@ import Network
 public protocol SrtConnectionProtocol {
 
     var udpHeader: UdpHeader { get }
-    var onCanceled: (UdpHeader) -> Void { get }
     var sockets: [UInt32: SrtSocketProtocol] { get }
     var connectionState: ConnectionStates { get }
-    var receiveMetrics: AnyPublisher<SrtMetricsModel, Never> { get }
-    var sendMetrics: AnyPublisher<SrtMetricsModel, Never> { get }
-    var uptime: AnyPublisher<TimeInterval, Never> { get }
 
     init(updHeader: UdpHeader,
          connection: NWConnection,
+         logService: LogServiceProtocol,
          managerService: SrtPortManagerServiceProtocol,
-         metricsService: SrtMetricsServiceProtocol,
-         onCanceled: @escaping (UdpHeader) -> Void,
-         onDataPacket: @escaping (DataPacketFrame) -> Void)
+         metricsService: SrtMetricsServiceProtocol
+    )
 
     func cancel() -> Void
     func removeSocket(id: UInt32) -> Void
-    
+
 }

@@ -27,85 +27,44 @@ import Network
 
 public class ConnectionContext: SrtConnectionProtocol {
     
+    public var sockets: [UInt32: SrtSocketProtocol] = [:]
+
+    private let logService: LogServiceProtocol
     private let managerService: SrtPortManagerServiceProtocol
     private let metricsService: SrtMetricsServiceProtocol
 
-    public var onCanceled: (UdpHeader) -> Void
-    public var sockets: [UInt32: SrtSocketProtocol] = [:]
-    var state: ConnectionState
     private var pendingListener: SrtListenerContext? = nil
-    private let onDataPacket: (DataPacketFrame) -> Void
-    private var timer: AnyCancellable? = nil
-    private var metrics: SrtMetrics = .init()
-    
-    private let _udpHeader: UdpHeader
+    public let udpHeader: UdpHeader
+
+    var state: ConnectionState
     let connection: NWConnection
     
-    @Published private var _uptime: TimeInterval = 0
-    public var uptime: AnyPublisher<TimeInterval, Never> {
-        $_uptime.eraseToAnyPublisher()
-    }
-    
-    @Published private var _receiveMetrics: SrtMetricsModel = .blank
-    public var receiveMetrics: AnyPublisher<SrtMetricsModel, Never> {
-        $_receiveMetrics.eraseToAnyPublisher()
-    }
-    
-    @Published private var _sendMetrics: SrtMetricsModel = .blank
-    public var sendMetrics: AnyPublisher<SrtMetricsModel, Never> {
-        $_sendMetrics.eraseToAnyPublisher()
-    }
-
     public var connectionState: ConnectionStates {
         state.name
-    }
-
-    public var udpHeader: UdpHeader {
-        _udpHeader
     }
     
     public required init(updHeader: UdpHeader,
                          connection: NWConnection,
+                         logService: LogServiceProtocol,
                          managerService: SrtPortManagerServiceProtocol,
-                         metricsService: SrtMetricsServiceProtocol,
-                         onCanceled: @escaping (UdpHeader) -> Void,
-                         onDataPacket: @escaping (DataPacketFrame) -> Void) {
+                         metricsService: SrtMetricsServiceProtocol) {
         
         self.connection = connection
-        self._udpHeader = updHeader
+        self.udpHeader = updHeader
+        self.logService = logService
         self.managerService = managerService
         self.metricsService = metricsService
-        self.onCanceled = onCanceled
-        self.onDataPacket = onDataPacket
         
         state = ConnectionSetupState()
-        
-//        self.timer = Timer.publish(every: 1.0, on: .main, in: .common)
-//            .autoconnect()
-//            .sink { _ in
-//                self.gong()
-//            }
-    }
-
-//    private func gong() {
-//        _uptime += 1
-//        
-//        let currentMetrics = metrics
-//        metrics = .init()
-//
-//        let (receive, send) = currentMetrics.capture()
-//        _receiveMetrics = receive
-//        _sendMetrics = send
-//    }
-    
-    private func updateMetrics() {
         
     }
     
     public func cancel() {
         if connectionState == .ready {
+            
+            managerService.removeConnection(header: udpHeader)
+            
             connection.cancel()
-            self.onCanceled(self.udpHeader)
         }
     }
     
@@ -142,11 +101,6 @@ public class ConnectionContext: SrtConnectionProtocol {
         
     }
     
-    deinit {
-        if let timer {
-            timer.cancel()
-        }
-    }
 }
 
 extension ConnectionContext {
@@ -154,7 +108,8 @@ extension ConnectionContext {
     func receive(packet: SrtPacket) {
         
         if packet.isData {
-            self.handleData(socketId: packet.destinationSocketID, frame: packet.contents)
+            self.handleData(socketId: packet.destinationSocketID, frame: packet.data)
+            
         } else {
             self.handleControl(packet: packet)
         }
@@ -164,16 +119,12 @@ extension ConnectionContext {
     func receiveNextMessage() {
         self.connection.receiveMessage { (data, context, isComplete, error) in
             
-            /// first check for errors
             if let error {
-                /// deal with error
                 print(error)
                 return
             }
             
-            /// make sure there is a context
             guard let context else {
-                // Should never happen
                 print("no context")
                 return
             }
@@ -209,10 +160,9 @@ extension ConnectionContext {
     static func make(serverIp: String,
                      serverPort: UInt16,
                      _ connection: NWConnection,
+                     logService: LogServiceProtocol,
                      managerService: SrtPortManagerServiceProtocol,
-                     metricsService: SrtMetricsServiceProtocol,
-                     onCanceled: @escaping (UdpHeader) -> Void,
-                     onDataPackat: @escaping (DataPacketFrame) -> Void
+                     metricsService: SrtMetricsServiceProtocol
     ) -> ConnectionContext? {
         
         guard let updHeader = connection.makeUdpHeader() else {
@@ -222,10 +172,9 @@ extension ConnectionContext {
         let context: ConnectionContext = .init(
             updHeader: updHeader,
             connection: connection,
+            logService: logService,
             managerService: managerService,
-            metricsService: metricsService,
-            onCanceled: onCanceled,
-            onDataPacket: onDataPackat
+            metricsService: metricsService
         )
         
         connection.stateUpdateHandler = context.onStateChanged(_ :)
@@ -235,41 +184,49 @@ extension ConnectionContext {
     }
 }
 
-extension ConnectionContext { // handlers
+extension ConnectionContext {
+    
+    private func getSocket(socketId: UInt32) -> SrtSocketProtocol? {
+        
+        guard let defaultSocket = self.sockets.values.first else {
+            return nil
+        }
+
+        guard let matchedSocket = self.sockets[socketId] else {
+            return defaultSocket
+        }
+
+        return matchedSocket
+
+    }
     
     private func handleData(socketId: UInt32, frame: Data) {
 
-        guard let defaultSocket = self.sockets.values.first else {
-            print("fatal error")
+        guard let socket = getSocket(socketId: socketId) else {
             return
         }
         
         guard let dataPacket = DataPacketFrame(frame) else {
-            print("bad data")
+            log("Data packet failed parsing")
             return
         }
 
-        self.onDataPacket(dataPacket)
-        
+//         print("data socket is \(dataPacket.destinationSocketID), packetSequenceNumber \(dataPacket.packetSequenceNumber)")
+
         let receiveMetrics: SrtMetricsModel = .init(bytesCount: dataPacket.data.count)
         metricsService.storeConnectionMetric(header: self.udpHeader, receive: receiveMetrics, send: nil)
-        
-        metrics.receiveBytesCount += dataPacket.data.count
-        
-        if let matchedSocket = self.sockets[socketId] {
-            
-            matchedSocket.handleData(packet: dataPacket)
-            
-        } else {
-            
-            defaultSocket.handleData(packet: dataPacket)
-            
+
+        if let ackFrame = socket.handleData(packet: dataPacket) {
+            let packet = SrtPacket(
+                field1: ControlTypes.acknowledgement.asField,
+                field2: ackFrame.acknowledgementNumber,
+                socketID: socketId,
+                contents: Data()
+            )
+
+            send(header: packet, contents: ackFrame.data.dropFirst(16))
         }
-        
-        onDataPacket(dataPacket)
-        
-        // socket.onFrameReceived(frame)
-        
+
     }
 
     private func handleHandshake(handshake: SrtHandshake) {
@@ -291,6 +248,7 @@ extension ConnectionContext { // handlers
                     self.sockets[socket.socketId] = socket
                     self.pendingListener = nil
                 })
+            
         }
         
     }
@@ -298,14 +256,12 @@ extension ConnectionContext { // handlers
     private func handleControl(packet: SrtPacket) {
         
         if let shutdown = ShutdownFrame(packet.data) {
-            print("shutdown \(self.udpHeader) \(shutdown.destinationSocketID)")
-            print("shut'r down")
-            self.onCanceled(self.udpHeader)
+            self.cancel()
         }
 
         guard let controlPacket = ControlPacketFrame(packet.data),
               let controlType = ControlTypes(rawValue: controlPacket.controlType) else {
-            print("Invalid control packet")
+            log("Invalid control packet")
             return
         }
         
@@ -313,49 +269,47 @@ extension ConnectionContext { // handlers
         
         var socketContext = SrtSocketContext(encrypted: true,
                                              socketId: socketId,
-                                             synCookie: self.udpHeader.cookie,
-                                             onFrameReceived: { _ in},
-                                             onHintsReceived: { _ in },
-                                             onLogReceived: { _ in },
-                                             onMetricsReceived: { _ in },
-                                             onStateChanged: { _ in })
+                                             synCookie: self.udpHeader.cookie)
         
         switch controlType {
         case .handshake:
             guard let handshake = SrtHandshake(data: packet.contents) else {
-                print("Invalid handshake packet")
+                log("Invalid handshake packet")
                 return
             }
             
             self.handleHandshake(handshake: handshake)
             
         case .keepAlive:
-            print("KeepAlive packet received")
+            log("KeepAlive packet received")
         case .acknowledgement:
-            print("Acknowledgement packet received")
+            log("Acknowledgement packet received")
         case .negativeAcknowledgement:
-            print("Negative Acknowledgement packet received")
+            log("Negative Acknowledgement packet received")
         case .congestionWarning:
-            print("Congestion Warning packet received")
+            log("Congestion Warning packet received")
         case .shutdown:
             let socketId = controlPacket.destinationSocketID
             sockets.removeValue(forKey: socketId)
             if sockets.isEmpty {
-                print("All sockets closed, cancelling connection")
+                log("All sockets closed, cancelling connection")
                 connection.cancel()
             } else {
-                print("Socket \(socketId) shutdown, remaining sockets: \(sockets.count)")
+                log("Socket \(socketId) shutdown, remaining sockets: \(sockets.count)")
             }
         case .ackack:
-            print("ACKACK packet received")
+            if let socket = getSocket(socketId: packet.destinationSocketID),
+            let ackAckFrame = AckAckFrame(packet.data) {
+                socket.handleAckAck(ackAck: ackAckFrame)
+            }
         case .dropRequest:
-            print("Drop Request packet received")
+            log("Drop Request packet received")
         case .peerError:
-            print("Peer Error packet received")
+            log("Peer Error packet received")
         case .userDefined:
-            print("User Defined packet received")
+            log("User Defined packet received")
         case .none:
-            print("None packet type received")
+            log("None packet type received")
         }
     }
     
@@ -366,5 +320,9 @@ extension ConnectionContext { // handlers
         
         let context = NWConnection.ContentContext(identifier: identifier, metadata: metadata)
         self.connection.send(content: contents, contentContext: context, isComplete: true, completion: .idempotent)
+    }
+    
+    func log(_ message: String) {
+        logService.log("🛜", "Connection", message)
     }
 }

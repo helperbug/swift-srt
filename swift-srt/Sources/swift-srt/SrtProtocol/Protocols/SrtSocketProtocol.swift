@@ -23,20 +23,20 @@ public protocol SrtSocketProtocol {
     /// The synCookie that made this socket.
     var synCookie: UInt32 { get }
     
-    /// Each full video, audio or still frame is delivered here.
-    var onFrameReceived: (Data) -> Void { get }
-    
-    /// Hints are reported once each second along with the metrics
-    var onHintsReceived: ([SrtSocketHints]) -> Void { get }
-    
-    /// Logs are meant for development time
-    var onLogReceived: (String) -> Void { get }
-    
-    /// Metrics are available at the same time as KeepAlive.
-    var onMetricsReceived: ([SrtSocketMetrics]) -> Void { get }
-    
-    /// Each socket state transition is reported here.
-    var onStateChanged: (SrtSocketStates) -> Void { get }
+//    /// Each full video, audio or still frame is delivered here.
+//    var onFrameReceived: (Data) -> Void { get }
+//    
+//    /// Hints are reported once each second along with the metrics
+//    var onHintsReceived: ([SrtSocketHints]) -> Void { get }
+//    
+//    /// Logs are meant for development time
+//    var onLogReceived: (String) -> Void { get }
+//    
+//    /// Metrics are available at the same time as KeepAlive.
+//    var onMetricsReceived: ([SrtSocketMetrics]) -> Void { get }
+//    
+//    /// Each socket state transition is reported here.
+//    var onStateChanged: (SrtSocketStates) -> Void { get }
     
     /// Sends the specified data through the SRT socket. The frame will be decomposed into packets and tracked using ACKs and NACKs.
     ///
@@ -45,8 +45,10 @@ public protocol SrtSocketProtocol {
     
     func handleControl(controlPacket: SrtPacket) -> Result<SrtPacket, SocketError>
 
-    func handleData(packet: DataPacketFrame) -> Void
+    func handleData(packet: DataPacketFrame) -> AcknowledgementFrame?
 
+    func handleAckAck(ackAck: AckAckFrame) -> Void
+    
     /// SRT version formed as major * 0x10000 + minor * 0x100 + patch.
     var srtVersion: UInt32? { get }
     

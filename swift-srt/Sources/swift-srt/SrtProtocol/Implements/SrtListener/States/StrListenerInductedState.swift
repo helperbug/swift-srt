@@ -25,12 +25,7 @@ struct StrListenerInductedState: SrtListenerState {
 
         let socket = SrtSocketContext(encrypted: context.encrypted,
                                       socketId: context.srtSocketID,
-                                      synCookie: context.synCookie,
-                                      onFrameReceived: { _ in },
-                                      onHintsReceived: { _ in },
-                                      onLogReceived: { _ in },
-                                      onMetricsReceived: { _ in },
-                                      onStateChanged: { _ in })
+                                      synCookie: context.synCookie)
         
         context.onSocketCreated(socket)
         
