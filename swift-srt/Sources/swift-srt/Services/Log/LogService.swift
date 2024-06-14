@@ -30,6 +30,8 @@ public class LogService: LogServiceProtocol {
 
         _logs = (icon: icon, source: source, message: message)
 
+        print("\(icon) \(source): \(message)")
+        
     }
     
     public func log(_ message: String) {

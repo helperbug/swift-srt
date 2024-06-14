@@ -30,7 +30,7 @@ public struct AckAckFrame: ByteFrame {
     
     /// Packet Type: 1 bit, value = 1. The packet type value of an ACKACK control packet is "1".
     public var isControl: Bool {
-        return (data[0] & 0b10000000) == 1
+        return (data[0] & 0b10000000) == 0x80
     }
     
     /// The control type value of an ACKACK control packet is "6".
@@ -56,7 +56,7 @@ public struct AckAckFrame: ByteFrame {
     
     /// Constructor used by the receive network path
     public init?(_ bytes: Data) {
-        guard bytes.count == 16 else {
+        guard bytes.count >= 16 else {
             return nil
         }
         

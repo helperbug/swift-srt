@@ -86,8 +86,7 @@ public struct SrtPacket {
 
     }
     
-    init(isData: Bool = false, field1: UInt32, field2: UInt32 = 0, socketID: UInt32, contents: Data) {
-        let timestamp: UInt32 = UInt32(Date().timeIntervalSince1970)
+    init(isData: Bool = false, field1: UInt32, field2: UInt32 = 0, timestamp: UInt32 = UInt32(Date().timeIntervalSince1970), socketID: UInt32, contents: Data) {
         
         var data = Data(capacity: 16 + contents.count)
         

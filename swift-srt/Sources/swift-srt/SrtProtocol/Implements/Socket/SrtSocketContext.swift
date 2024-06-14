@@ -7,12 +7,12 @@ public class SrtSocketContext: SrtSocketProtocol {
 
     private var acknowledgementNumber: UInt32 = 0
     private var availableBufferSize: UInt32 = 8000
-    private let initialTimestamp: TimeInterval
+    private var initialTimestamp: TimeInterval
     private var packetsReceivingRate: UInt32 = 30000
     private var estimatedLinkCapacity: UInt32 = 1000
     private var lastAcknowledgedPacketSequenceNumber: UInt32 = 0
     private var receivingRate: UInt32 = 1024 * 1024
-    private let rootTime: TimeInterval
+    private var rootTime: TimeInterval
     private var rtt: UInt32 = 100000
     private var rttVariance: UInt32 = 50000
     private var acks: [UInt32: UInt32] = [:]
@@ -28,28 +28,33 @@ public class SrtSocketContext: SrtSocketProtocol {
         self.socketId = socketId
         self.synCookie = synCookie
         self.rootTime = Date().timeIntervalSince1970
-        self.initialTimestamp = TimeInterval(dataPacket.timestamp)
+        self.initialTimestamp = TimeInterval(dataPacket.timestamp) / 1_000_000
         
     }
 
     var currentOffset: UInt32 {
-        
         let currentTime = Date().timeIntervalSince1970
         let timeSinceRoot = currentTime - rootTime
         let biasedTimestamp = initialTimestamp + timeSinceRoot
-        let offset = currentTime - biasedTimestamp
+        let offset = biasedTimestamp * 1000000
 
-        return UInt32(offset * 1_000_000) // Convert to microseconds
+        print("initialTimestamp \(initialTimestamp), current time: \(currentTime), root \(rootTime), time since root \(timeSinceRoot), biased \(biasedTimestamp), offset \(offset) : \(UInt32(offset))")
 
+        return UInt32(offset)
     }
     
     var dataCount = 1
     
     public func handleData(packet: DataPacketFrame) -> AcknowledgementFrame?  {
 
+        if dataCount == 1 {
+            self.rootTime = Date().timeIntervalSince1970
+            self.initialTimestamp = TimeInterval(packet.timestamp) / 1_000_000
+        }
+        
         dataCount += 1
         
-        guard dataCount % 20 == 0 else {
+        guard dataCount % 64 == 0 else {
             return nil
         }
 
@@ -71,6 +76,8 @@ public class SrtSocketContext: SrtSocketProtocol {
                                             packetsReceivingRate: packetsReceivingRate,
                                             estimatedLinkCapacity: estimatedLinkCapacity,
                                             receivingRate: receivingRate)
+        
+        acks[acknowledgementNumber] = ackFrame.timestamp
         
         return ackFrame
 
@@ -95,10 +102,14 @@ public class SrtSocketContext: SrtSocketProtocol {
     
     public func handleAckAck(ackAck: AckAckFrame) {
 
-        guard let sendTime = acks[ackAck.acknowledgementNumber]  else {
-            print("Error \(ackAck.acknowledgementNumber) was not find")
+        guard let sendTime = acks[ackAck.acknowledgementNumber],
+            ackAck.acknowledgementNumber > 1 else {
+                
+            print("Error \(ackAck.acknowledgementNumber) was not found")
             return
         }
+        
+        print(acks)
         
         rtt = ackAck.timestamp - sendTime
         rttVariance = rttVarianceCalc.addSample(rtt)
@@ -240,16 +251,30 @@ public class SrtSocketContext: SrtSocketProtocol {
         }
 
         private func calculateVariance() -> UInt32 {
-            let count = UInt32(elements.count)
+            let count = elements.count
             guard count > 1 else { return 0 }
 
-            let mean = elements.reduce(0, +) / count
-            let varianceSum: UInt32 = elements.reduce(0) { result, value in
-                let diff = value > mean ? value - mean : mean - value
-                return result + diff * diff
+            // print(elements)
+
+            let mean = Double(elements.reduce(0, +)) / Double(count)
+
+            //print(mean)
+
+            let differences = elements.map {
+                Double($0) - mean
+            }
+            
+            //print(differences)
+            
+            let deltas = differences.map {
+                $0 * $0
             }
 
-            return varianceSum / (count - 1)
+            //print(deltas)
+
+            let sum = Double(deltas.reduce(0, +)) / Double(elements.count - 1)
+            
+            return UInt32(sum)
         }
 
         func allSamples() -> [UInt32] {

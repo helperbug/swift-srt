@@ -220,6 +220,7 @@ extension ConnectionContext {
             let packet = SrtPacket(
                 field1: ControlTypes.acknowledgement.asField,
                 field2: ackFrame.acknowledgementNumber,
+                timestamp: ackFrame.timestamp,
                 socketID: socketId,
                 contents: Data()
             )
@@ -298,9 +299,14 @@ extension ConnectionContext {
                 log("Socket \(socketId) shutdown, remaining sockets: \(sockets.count)")
             }
         case .ackack:
-            if let socket = getSocket(socketId: packet.destinationSocketID),
-            let ackAckFrame = AckAckFrame(packet.data) {
+            guard let socket = getSocket(socketId: packet.destinationSocketID) else {
+                return
+            }
+            
+            if let ackAckFrame = AckAckFrame(packet.data) {
                 socket.handleAckAck(ackAck: ackAckFrame)
+            } else {
+                log("Failed ACK ACK parsing")
             }
         case .dropRequest:
             log("Drop Request packet received")
