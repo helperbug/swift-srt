@@ -59,6 +59,19 @@ public class ConnectionContext: SrtConnectionProtocol {
         
     }
     
+    public func handshake(address: IPv4Address) {
+        let handshake = SrtHandshake.makeInductionRequest(server: address)
+        
+        let packet = SrtPacket(
+            field1: ControlTypes.handshake.asField,
+            timestamp: UInt32(Date().timeIntervalSince1970),
+            socketID: 0,
+            contents: Data()
+        )
+
+        send(header: packet, contents: handshake.data.dropLast(4))
+    }
+    
     public func cancel() {
         if connectionState == .ready {
             
@@ -79,6 +92,8 @@ public class ConnectionContext: SrtConnectionProtocol {
     }
     
     public func start() {
+        
+        log("Starting Connection")
         
         if self.state.name == .setup {
             state.auto(self)
@@ -157,7 +172,7 @@ extension ConnectionContext {
         }
     }
     
-    static func make(serverIp: String,
+    public static func make(serverIp: String,
                      serverPort: UInt16,
                      _ connection: NWConnection,
                      logService: LogServiceProtocol,
@@ -165,12 +180,21 @@ extension ConnectionContext {
                      metricsService: SrtMetricsServiceProtocol
     ) -> ConnectionContext? {
         
-        guard let updHeader = connection.makeUdpHeader() else {
-            return nil
-        }
+//        guard let updHeader = connection.makeUdpHeader() else {
+//            return nil
+//        }
+
+        let udpHeader: UdpHeader = .init(
+            sourceIp: "127.0.0.1",
+            sourcePort: 8675,
+            destinationIp: "127.0.0.1",
+            destinationPort: 1935,
+            interface: "-",
+            interfaceType: "-"
+        )
         
         let context: ConnectionContext = .init(
-            updHeader: updHeader,
+            updHeader: udpHeader,
             connection: connection,
             logService: logService,
             managerService: managerService,
@@ -211,8 +235,6 @@ extension ConnectionContext {
             return
         }
 
-//         print("data socket is \(dataPacket.destinationSocketID), packetSequenceNumber \(dataPacket.packetSequenceNumber)")
-
         let receiveMetrics: SrtMetricsModel = .init(bytesCount: dataPacket.data.count)
         metricsService.storeConnectionMetric(header: self.udpHeader, receive: receiveMetrics, send: nil)
 
@@ -226,6 +248,9 @@ extension ConnectionContext {
             )
 
             send(header: packet, contents: ackFrame.data.dropFirst(16))
+
+            let sendMetrics: SrtMetricsModel = .init(bytesCount: dataPacket.data.count, dataPacketCount: 1)
+            metricsService.storeConnectionMetric(header: self.udpHeader, receive: nil, send: sendMetrics)
         }
 
     }
@@ -279,7 +304,26 @@ extension ConnectionContext {
                 return
             }
             
-            self.handleHandshake(handshake: handshake)
+            if handshake.handshakeType == .induction,
+               handshake.hsVersion == .version5 {
+                var data = Data([1, 0, 0, 127])
+                data.append(Data(repeating: 0, count: 12))
+                
+                let response = SrtHandshake.makeConclusionRequest(srtSocketID: handshake.srtSocketID,
+                                                                  initialPacketSequenceNumber: 1000,
+                                                                  synCookie: handshake.synCookie,
+                                                                  peerIpAddress: data)
+                
+                let packet = SrtPacket(isData: false,
+                                       field1: 0,
+                                       field2: 0,
+                                       socketID: 0,
+                                       contents: Data())
+                self.send(header: packet, contents: response.data)
+                
+            } else {
+                self.handleHandshake(handshake: handshake)
+            }
             
         case .keepAlive:
             log("KeepAlive packet received")

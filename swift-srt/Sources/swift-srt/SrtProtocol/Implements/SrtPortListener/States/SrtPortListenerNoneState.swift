@@ -53,7 +53,7 @@ struct SrtPortListenerNoneState: SrtPortListenerState {
         do {
             
             let listener = try NWListener(
-                using: context.parameters,
+                using: SrtPortListenerContext.parameters,
                 on: context.port
             )
             

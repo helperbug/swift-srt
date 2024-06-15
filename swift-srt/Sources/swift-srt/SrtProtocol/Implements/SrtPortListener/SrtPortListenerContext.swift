@@ -38,7 +38,7 @@ public class SrtPortListenerContext {
     private let managerService: SrtPortManagerServiceProtocol
     private let metricsService: SrtMetricsServiceProtocol
 
-    var parameters: NWParameters {
+    public static var parameters: NWParameters {
         
         let srtProtocol = NWProtocolFramer.Options(definition: SrtProtocolFramer.definition)
         let udpOptions = NWProtocolUDP.Options()

@@ -261,14 +261,36 @@ public extension SrtHandshake {
         
     }
     
-    static func makeConclusionResponse(
+    static func makeConclusionRequest(
         srtSocketID: UInt32,
         initialPacketSequenceNumber: UInt32,
         synCookie: UInt32,
         peerIpAddress: Data
     ) -> SrtHandshake {
         
-        
+        return SrtHandshake(
+            hsVersion: .version5,
+            encryptionField: 0, // No encryption
+            extensionField: 1,
+            initialPacketSequenceNumber: initialPacketSequenceNumber,
+            maximumTransmissionUnitSize: 1500,
+            maximumFlowWindowSize: 8192,
+            handshakeType: .conclusion,
+            srtSocketID: srtSocketID,
+            synCookie: synCookie,
+            peerIPAddress: peerIpAddress,
+            extensionType: .none,
+            extensionLength: 0,
+            extensionContents: Data()
+        )
+    }
+    
+    static func makeConclusionResponse(
+        srtSocketID: UInt32,
+        initialPacketSequenceNumber: UInt32,
+        synCookie: UInt32,
+        peerIpAddress: Data
+    ) -> SrtHandshake {
         
         return SrtHandshake(
             hsVersion: .version5,
@@ -338,7 +360,7 @@ public extension SrtHandshake {
 extension SrtHandshake {
     
     
-    static func makeInductionRequest(server: IPAddress) -> SrtHandshake {
+    static func makeInductionRequest(server: IPv4Address) -> SrtHandshake {
 
         return SrtHandshake(
             hsVersion: .version4,
@@ -350,7 +372,7 @@ extension SrtHandshake {
             handshakeType: .induction,
             srtSocketID: UInt32.random(in: UInt32.min...UInt32.max),
             synCookie: 0,
-            peerIPAddress: server.toData(),
+            peerIPAddress: Data([1, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             extensionType: .handshakeRequest,
             extensionLength: 0,
             extensionContents: Data()
