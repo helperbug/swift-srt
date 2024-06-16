@@ -34,6 +34,7 @@ public class ConnectionContext: SrtConnectionProtocol {
     private let metricsService: SrtMetricsServiceProtocol
 
     private var pendingListener: SrtListenerContext? = nil
+    private var pendingCaller: SrtCallerContext? = nil
     public let udpHeader: UdpHeader
 
     var state: ConnectionState
@@ -60,16 +61,22 @@ public class ConnectionContext: SrtConnectionProtocol {
     }
     
     public func handshake(address: IPv4Address) {
-        let handshake = SrtHandshake.makeInductionRequest(server: address)
         
-        let packet = SrtPacket(
-            field1: ControlTypes.handshake.asField,
-            timestamp: UInt32(Date().timeIntervalSince1970),
-            socketID: 0,
-            contents: Data()
-        )
+        if pendingCaller == nil {
 
-        send(header: packet, contents: handshake.data.dropLast(4))
+            pendingCaller = SrtCallerContext(srtSocketID: UInt32.random(in: UInt32.min...UInt32.max),
+                                             initialPacketSequenceNumber: 0,
+                                             synCookie: 0,
+                                             peerIpAddress: address.to16bytes(),
+                                             encrypted: false,
+                                             send: send(header:contents:),
+                                             onSocketCreated: { socket in
+                                                 self.sockets[socket.socketId] = socket
+                                                 self.pendingCaller = nil
+                                             })
+            
+        }
+        
     }
     
     public func cancel() {
@@ -261,7 +268,11 @@ extension ConnectionContext {
 
             pendingListener.handleHandshake(handshake: handshake)
 
-        } else {
+        } else if let pendingCaller {
+            
+            pendingCaller.handleHandshake(handshake: handshake)
+            
+        } else if handshake.isConclusionRequest(synCookie: handshake.synCookie) {
 
             self.pendingListener = SrtListenerContext(
                 srtSocketID:    handshake.srtSocketID,
@@ -274,6 +285,10 @@ extension ConnectionContext {
                     self.sockets[socket.socketId] = socket
                     self.pendingListener = nil
                 })
+            
+        } else {
+            
+            log("should never get here")
             
         }
         
@@ -304,26 +319,7 @@ extension ConnectionContext {
                 return
             }
             
-            if handshake.handshakeType == .induction,
-               handshake.hsVersion == .version5 {
-                var data = Data([1, 0, 0, 127])
-                data.append(Data(repeating: 0, count: 12))
-                
-                let response = SrtHandshake.makeConclusionRequest(srtSocketID: handshake.srtSocketID,
-                                                                  initialPacketSequenceNumber: 1000,
-                                                                  synCookie: handshake.synCookie,
-                                                                  peerIpAddress: data)
-                
-                let packet = SrtPacket(isData: false,
-                                       field1: 0,
-                                       field2: 0,
-                                       socketID: 0,
-                                       contents: Data())
-                self.send(header: packet, contents: response.data)
-                
-            } else {
-                self.handleHandshake(handshake: handshake)
-            }
+            self.handleHandshake(handshake: handshake)
             
         case .keepAlive:
             log("KeepAlive packet received")

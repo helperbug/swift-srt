@@ -23,22 +23,12 @@
 
 
 import Foundation
+import Network
 
-public typealias IPAddress = [UInt8]
-
-public extension IPAddress {
-    func toData() -> Data {
-        var data: Data
-
-        if self.count == 4 {
-            data = Data(repeating: 0, count: 16)
-            data.replaceSubrange(0..<4, with: self)
-        } else if self.count == 16 {
-            data = Data(self)
-        } else {
-            data = Data()
-        }
-        
-        return data
+public extension IPv4Address {
+    func to16bytes() -> Data {
+        var addressBytes = Data(self.rawValue.reversed())
+        addressBytes.append(contentsOf: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        return addressBytes
     }
 }

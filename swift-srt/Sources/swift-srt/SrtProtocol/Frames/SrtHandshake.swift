@@ -68,11 +68,18 @@ public struct SrtHandshake {
         data.append(contentsOf: synCookie.bytes)
         data.append(peerIPAddress)
         
-        if extensionType != .none {
+        if extensions.count > 0 {
+            extensions.forEach { ext in
+            
+                data.append(contentsOf: ext.value)
+                
+            }
+        } else if extensionType != .none {
             data.append(contentsOf: extensionType.rawValue.bytes)
             data.append(contentsOf: extensionLength.bytes)
             data.append(extensionContents)
         }
+        
         return data
     }
     
@@ -133,15 +140,9 @@ public struct SrtHandshake {
             // self.handshakeExtensionMessage = nil
         }
         
-        //        if offset + 4 <= data.count {
-        //            self.extensionType = HandshakeExtensionTypes(rawValue: data.toUInt16(from: &offset)) ?? .none
-        //            self.extensionLength = data.toUInt16(from: &offset)
-        //            self.extensionContents = data.subdata(in: offset..<data.count)
-        //        } else {
         self.extensionType = .none
         self.extensionLength = UInt16(0)
         self.extensionContents = Data()
-        //        }
     }
     
     var isInductionRequest: Bool {
@@ -151,6 +152,15 @@ public struct SrtHandshake {
         handshakeType == .induction &&
         srtSocketID != 0 &&
         synCookie == 0
+    }
+    
+    var isInductionResponse: Bool {
+        hsVersion == .version5 &&
+        encryptionField == 0 &&
+        extensionField == 0x4A17 &&
+        handshakeType == .induction &&
+        srtSocketID != 0 &&
+        synCookie != 0
     }
     
     func isConclusionRequest(synCookie reference: UInt32) -> Bool {
@@ -265,13 +275,14 @@ public extension SrtHandshake {
         srtSocketID: UInt32,
         initialPacketSequenceNumber: UInt32,
         synCookie: UInt32,
-        peerIpAddress: Data
+        peerIpAddress: Data,
+        extensions: [HandshakeExtensionTypes: Data]
     ) -> SrtHandshake {
         
         return SrtHandshake(
             hsVersion: .version5,
             encryptionField: 0, // No encryption
-            extensionField: 1,
+            extensionField: 5,
             initialPacketSequenceNumber: initialPacketSequenceNumber,
             maximumTransmissionUnitSize: 1500,
             maximumFlowWindowSize: 8192,
@@ -281,10 +292,11 @@ public extension SrtHandshake {
             peerIPAddress: peerIpAddress,
             extensionType: .none,
             extensionLength: 0,
-            extensionContents: Data()
+            extensionContents: Data(),
+            extensions: extensions
         )
     }
-    
+
     static func makeConclusionResponse(
         srtSocketID: UInt32,
         initialPacketSequenceNumber: UInt32,
@@ -311,19 +323,13 @@ public extension SrtHandshake {
     
     
     private static func generateSynCookie(clientIP: String, clientPort: UInt16, serverIP: String, serverPort: UInt16, mss: UInt8 = 5) -> UInt32 {
-        // Generate the timestamp (top 5 bits)
+
         let currentTime = UInt32(Date().timeIntervalSince1970) / 64
         let timestamp = UInt8(currentTime % 32)
 
         print("timeIntervalSince1970 \(UInt32(Date().timeIntervalSince1970)), currentTime \(currentTime), timestamp \(timestamp)")
         
-        // Create a binary representation of the concatenated values
         var concatenatedData = Data()
-//        concatenatedData.append(contentsOf: serverIP.split(separator: ".").compactMap { UInt8($0) })
-//        concatenatedData.append(contentsOf: withUnsafeBytes(of: serverPort) { Data($0) })
-//        concatenatedData.append(contentsOf: clientIP.split(separator: ".").compactMap { UInt8($0) })
-//        concatenatedData.append(contentsOf: withUnsafeBytes(of: clientPort) { Data($0) })
-//        concatenatedData.append(contentsOf: [timestamp])
         concatenatedData.append(contentsOf: serverIP.split(separator: ".").compactMap { UInt8($0) })
         concatenatedData.append(contentsOf: withUnsafeBytes(of: serverPort.bigEndian) { Data($0) })
         concatenatedData.append(contentsOf: clientIP.split(separator: ".").compactMap { UInt8($0) })
@@ -335,7 +341,6 @@ public extension SrtHandshake {
         let hash24Bits = hash.prefix(3).reduce(0) { (result, byte) in (result << 8) | UInt32(byte) }
 
         // Combine t (timestamp), m (MSS), and s (hash) to form the SYN cookie
-        
         let result = (UInt32(timestamp) << 27) | (UInt32(mss) << 24) | (hash24Bits & 0x00FFFFFF)
         let binaryString = String(result, radix: 2)
 
@@ -360,7 +365,7 @@ public extension SrtHandshake {
 extension SrtHandshake {
     
     
-    static func makeInductionRequest(server: IPv4Address) -> SrtHandshake {
+    static func makeInductionRequest(serverIpAddress: Data) -> SrtHandshake {
 
         return SrtHandshake(
             hsVersion: .version4,
@@ -372,8 +377,8 @@ extension SrtHandshake {
             handshakeType: .induction,
             srtSocketID: UInt32.random(in: UInt32.min...UInt32.max),
             synCookie: 0,
-            peerIPAddress: Data([1, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-            extensionType: .handshakeRequest,
+            peerIPAddress: serverIpAddress,
+            extensionType: .none,
             extensionLength: 0,
             extensionContents: Data()
         )

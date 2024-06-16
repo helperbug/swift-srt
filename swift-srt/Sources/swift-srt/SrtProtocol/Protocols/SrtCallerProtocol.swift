@@ -23,12 +23,13 @@
 
 
 import Foundation
+import Network
 
 public protocol SrtCallerProtocol {
 
     var onStateChanged: (Bool) -> Void { get }
 
-    init(host: IPAddress, port: UInt16)
+    init(host: IPv4Address, port: UInt16)
     func makeSocket(encrypted: Bool) -> SrtSocketProtocol
     func close() -> Void
 
