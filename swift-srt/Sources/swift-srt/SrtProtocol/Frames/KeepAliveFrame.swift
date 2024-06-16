@@ -67,10 +67,10 @@ public struct KeepAliveFrame: ByteFrame {
 
     /// Constructor used when sending over the network
     public init(
-        controlType: UInt16,
-        reserved: UInt16,
-        typeSpecificInformation: UInt32,
-        timestamp: UInt32,
+        controlType: UInt16 = ControlTypes.handshake.rawValue,
+        reserved: UInt16 = 0,
+        typeSpecificInformation: UInt32 = 0,
+        timestamp: UInt32 = UInt32(Date().timeIntervalSince1970),
         destinationSocketID: UInt32
     ) {
         var data = Data(capacity: 16)

@@ -25,6 +25,12 @@ struct StrCallerInductedState: SrtCallerState {
         
         context.send(packet, contents)
 
+        let socket = SrtSocketContext(encrypted: context.encrypted,
+                                      socketId: context.srtSocketID,
+                                      synCookie: context.synCookie)
+
+        context.onSocketCreated(socket)
+
         context.set(newState: .conclusionRequesting)
         
     }
@@ -96,32 +102,3 @@ struct StrCallerInductedState: SrtCallerState {
     }
     
 }
-
-/*
- private func createCmdStdExtension(streamId: String) -> Data {
-     guard let streamIdData = streamId.data(using: .utf8), streamIdData.count <= 512 else {
-         fatalError("Stream ID is too long")
-     }
-
-     var paddedStreamIdData = streamIdData
-     let paddingLength = (4 - (streamIdData.count % 4)) % 4
-     if paddingLength > 0 {
-         paddedStreamIdData.append(contentsOf: repeatElement(UInt8(0), count: paddingLength))
-     }
-
-     var cmdStdExtension = Data()
-     let extensionType = HandshakeExtensionTypes.streamId.rawValue.littleEndian
-     let extensionLength = UInt16(paddedStreamIdData.count / 4).littleEndian // Extension length in 4-byte words
-
-     cmdStdExtension.append(contentsOf: withUnsafeBytes(of: extensionType) { Array($0) })
-     cmdStdExtension.append(contentsOf: withUnsafeBytes(of: extensionLength) { Array($0) })
-     
-     for chunk in stride(from: 0, to: paddedStreamIdData.count, by: 4) {
-         let word = paddedStreamIdData[chunk..<chunk+4]
-         let littleEndianWord = word.reversed()
-         cmdStdExtension.append(contentsOf: littleEndianWord)
-     }
-
-     return cmdStdExtension
- }
- */

@@ -322,7 +322,9 @@ extension ConnectionContext {
             self.handleHandshake(handshake: handshake)
             
         case .keepAlive:
-            log("KeepAlive packet received")
+
+            handleKeepAlive(packet: packet)
+
         case .acknowledgement:
             log("Acknowledgement packet received")
         case .negativeAcknowledgement:
@@ -357,6 +359,14 @@ extension ConnectionContext {
         case .none:
             log("None packet type received")
         }
+    }
+    
+    private func handleKeepAlive(packet: SrtPacket) {
+        
+        let packet = SrtPacket(field1: ControlTypes.keepAlive.asField, timestamp: packet.timestamp + 100, socketID: packet.destinationSocketID, contents: Data())
+        
+        send(header: packet, contents: Data(repeating: 0, count: 4))
+
     }
     
     func send(header: SrtPacket, contents: Data) {
