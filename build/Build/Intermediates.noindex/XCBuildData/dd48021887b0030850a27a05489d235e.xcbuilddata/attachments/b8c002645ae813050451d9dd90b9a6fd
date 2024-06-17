@@ -1,0 +1,4 @@
+module SwiftSrt {
+header "SwiftSrt-Swift.h"
+export *
+}

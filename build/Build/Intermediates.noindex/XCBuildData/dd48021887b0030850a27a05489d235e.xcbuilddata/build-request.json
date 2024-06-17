@@ -1,0 +1,74 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "PACKAGE-PRODUCT:SwiftSrt"
+    }
+  ],
+  "containerPath" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt",
+  "continueBuildingAfterErrors" : false,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "docbuild",
+    "activeArchitecture" : "undefined_arch",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : true,
+      "platform" : "iphoneos",
+      "sdk" : "iphoneos17.5",
+      "sdkVariant" : "iphoneos",
+      "supportedArchitectures" : [
+        "armv4t",
+        "armv5",
+        "armv6",
+        "armv7",
+        "armv7f",
+        "armv7s",
+        "armv7k",
+        "arm64",
+        "arm64e"
+      ],
+      "targetArchitecture" : "undefined_arch"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Products",
+      "derivedDataPath" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build",
+      "indexDataStoreFolderPath" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "docbuild",
+          "CLANG_COVERAGE_MAPPING" : "YES",
+          "CLANG_PROFILE_DATA_DIRECTORY" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/ProfileData",
+          "COLOR_DIAGNOSTICS" : "YES",
+          "diagnostic_message_length" : "80",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "NO",
+          "ONLY_ACTIVE_ARCH" : "YES"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

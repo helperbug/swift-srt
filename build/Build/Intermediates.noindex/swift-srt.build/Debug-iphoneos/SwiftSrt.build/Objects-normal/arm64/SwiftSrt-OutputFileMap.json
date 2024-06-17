@@ -1,0 +1,938 @@
+{
+  "" : {
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SwiftSrt-master.dia",
+    "emit-module-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SwiftSrt-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SwiftSrt-master-emit-module.dia",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SwiftSrt-master.swiftdeps"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/Metrics/SrtMetrics.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetrics.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetrics.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetrics.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetrics.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetrics.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetrics.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetrics.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetrics~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/Services/Log/LogService.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogService.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogService.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogService.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogService.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogService.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogService.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogService.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogService~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/Services/Log/LogServiceProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogServiceProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogServiceProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogServiceProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogServiceProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogServiceProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogServiceProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogServiceProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LogServiceProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/Services/Metrics/SrtMetricsService.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsService.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsService.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsService.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsService.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsService.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsService.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsService.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsService~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/Services/Metrics/SrtMetricsServiceProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsServiceProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsServiceProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsServiceProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsServiceProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsServiceProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsServiceProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsServiceProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsServiceProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/Services/PortManager/SrtPortManagerService.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerService.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerService.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerService.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerService.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerService.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerService.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerService.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerService~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/Services/PortManager/SrtPortManagerServiceProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerServiceProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerServiceProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerServiceProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerServiceProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerServiceProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerServiceProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerServiceProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortManagerServiceProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/Services/ServiceProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ServiceProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ServiceProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ServiceProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ServiceProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ServiceProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ServiceProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ServiceProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ServiceProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/CipherFamilyAndSizeTypes.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CipherFamilyAndSizeTypes.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CipherFamilyAndSizeTypes.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CipherFamilyAndSizeTypes.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CipherFamilyAndSizeTypes.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CipherFamilyAndSizeTypes.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CipherFamilyAndSizeTypes.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CipherFamilyAndSizeTypes.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CipherFamilyAndSizeTypes~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/HandshakeExtensionFlagTypes.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFlagTypes.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFlagTypes.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFlagTypes.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFlagTypes.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFlagTypes.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFlagTypes.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFlagTypes.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFlagTypes~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/HandshakeExtensionTypes.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionTypes.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionTypes.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionTypes.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionTypes.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionTypes.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionTypes.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionTypes.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionTypes~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/HandshakeTypes.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeTypes.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeTypes.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeTypes.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeTypes.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeTypes.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeTypes.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeTypes.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeTypes~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/HandshakeVersions.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeVersions.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeVersions.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeVersions.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeVersions.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeVersions.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeVersions.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeVersions.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeVersions~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/SrtConnectionMetrics.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionMetrics.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionMetrics.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionMetrics.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionMetrics.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionMetrics.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionMetrics.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionMetrics.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionMetrics~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/SrtControlTypes.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtControlTypes.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtControlTypes.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtControlTypes.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtControlTypes.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtControlTypes.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtControlTypes.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtControlTypes.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtControlTypes~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/SrtSocketHints.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketHints.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketHints.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketHints.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketHints.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketHints.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketHints.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketHints.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketHints~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/SrtSocketMetrics.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketMetrics.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketMetrics.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketMetrics.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketMetrics.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketMetrics.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketMetrics.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketMetrics.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketMetrics~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Enums/SrtSocketStates.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketStates.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketStates.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketStates.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketStates.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketStates.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketStates.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketStates.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketStates~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/BinaryEncoder+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/BinaryEncoder+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/BinaryEncoder+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/BinaryEncoder+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/BinaryEncoder+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/BinaryEncoder+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/BinaryEncoder+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/BinaryEncoder+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/BinaryEncoder+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/Data+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/Data+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/Data+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/Data+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/Data+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/Data+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/Data+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/Data+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/Data+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/FixedWidthInteger+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/FixedWidthInteger+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/FixedWidthInteger+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/FixedWidthInteger+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/FixedWidthInteger+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/FixedWidthInteger+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/FixedWidthInteger+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/FixedWidthInteger+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/FixedWidthInteger+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/IPv4Adress+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IPv4Adress+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IPv4Adress+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IPv4Adress+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IPv4Adress+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IPv4Adress+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IPv4Adress+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IPv4Adress+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IPv4Adress+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/NWConnection+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWConnection+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWConnection+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWConnection+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWConnection+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWConnection+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWConnection+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWConnection+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWConnection+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/NWProtocolFramer+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWProtocolFramer+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWProtocolFramer+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWProtocolFramer+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWProtocolFramer+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWProtocolFramer+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWProtocolFramer+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWProtocolFramer+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NWProtocolFramer+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/String+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/String+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/String+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/String+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/String+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/String+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/String+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/String+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/String+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/UInt8+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt8+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt8+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt8+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt8+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt8+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt8+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt8+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt8+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/UInt16+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt16+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt16+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt16+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt16+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt16+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt16+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt16+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt16+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Extension/UInt32+SRT.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt32+SRT.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt32+SRT.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt32+SRT.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt32+SRT.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt32+SRT.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt32+SRT.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt32+SRT.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UInt32+SRT~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/AckAckFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AckAckFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AckAckFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AckAckFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AckAckFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AckAckFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AckAckFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AckAckFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AckAckFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/AcknowledgementFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AcknowledgementFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AcknowledgementFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AcknowledgementFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AcknowledgementFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AcknowledgementFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AcknowledgementFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AcknowledgementFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/AcknowledgementFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/ByteFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ByteFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ByteFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ByteFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ByteFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ByteFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ByteFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ByteFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ByteFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/CongestionWarningFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CongestionWarningFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CongestionWarningFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CongestionWarningFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CongestionWarningFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CongestionWarningFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CongestionWarningFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CongestionWarningFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/CongestionWarningFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/ControlPacketFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ControlPacketFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ControlPacketFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ControlPacketFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ControlPacketFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ControlPacketFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ControlPacketFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ControlPacketFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ControlPacketFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/DataPacketFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/DataPacketFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/DataPacketFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/DataPacketFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/DataPacketFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/DataPacketFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/DataPacketFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/DataPacketFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/DataPacketFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/GroupMembershipExtensionFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/GroupMembershipExtensionFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/GroupMembershipExtensionFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/GroupMembershipExtensionFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/GroupMembershipExtensionFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/GroupMembershipExtensionFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/GroupMembershipExtensionFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/GroupMembershipExtensionFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/GroupMembershipExtensionFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/HandshakeExtensionFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/HandshakeExtensionFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/IntegrityCheckVectorFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IntegrityCheckVectorFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IntegrityCheckVectorFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IntegrityCheckVectorFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IntegrityCheckVectorFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IntegrityCheckVectorFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IntegrityCheckVectorFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IntegrityCheckVectorFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/IntegrityCheckVectorFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/KeepAliveFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeepAliveFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeepAliveFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeepAliveFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeepAliveFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeepAliveFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeepAliveFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeepAliveFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeepAliveFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/KeyMaterialExtensionMessageFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialExtensionMessageFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialExtensionMessageFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialExtensionMessageFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialExtensionMessageFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialExtensionMessageFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialExtensionMessageFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialExtensionMessageFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialExtensionMessageFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/KeyMaterialFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/KeyMaterialFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/LossReportFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LossReportFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LossReportFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LossReportFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LossReportFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LossReportFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LossReportFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LossReportFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/LossReportFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/MessageDropRequestFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/MessageDropRequestFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/MessageDropRequestFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/MessageDropRequestFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/MessageDropRequestFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/MessageDropRequestFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/MessageDropRequestFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/MessageDropRequestFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/MessageDropRequestFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/NegativeAckFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NegativeAckFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NegativeAckFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NegativeAckFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NegativeAckFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NegativeAckFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NegativeAckFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NegativeAckFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/NegativeAckFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/PeerErrorFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/PeerErrorFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/PeerErrorFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/PeerErrorFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/PeerErrorFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/PeerErrorFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/PeerErrorFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/PeerErrorFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/PeerErrorFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/ShutdownFrame.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ShutdownFrame.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ShutdownFrame.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ShutdownFrame.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ShutdownFrame.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ShutdownFrame.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ShutdownFrame.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ShutdownFrame.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ShutdownFrame~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Frames/SrtHandshake.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtHandshake.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtHandshake.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtHandshake.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtHandshake.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtHandshake.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtHandshake.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtHandshake.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtHandshake~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Connection/ConnectionContext.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionContext.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionContext.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionContext.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionContext.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionContext.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionContext.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionContext.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionContext~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Connection/States/ConnectionReadyState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionReadyState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionReadyState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionReadyState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionReadyState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionReadyState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionReadyState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionReadyState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionReadyState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Connection/States/ConnectionSetupState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionSetupState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionSetupState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionSetupState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionSetupState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionSetupState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionSetupState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionSetupState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionSetupState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Connection/States/ConnectionState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Connection/States/ConnectionStates.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionStates.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionStates.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionStates.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionStates.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionStates.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionStates.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionStates.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/ConnectionStates~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Message/SrtReceiveMessageContext.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageContext.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageContext.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageContext.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageContext.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageContext.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageContext.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageContext.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageContext~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Message/SrtSendMessageContext.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageContext.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageContext.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageContext.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageContext.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageContext.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageContext.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageContext.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageContext~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Socket/SocketError.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SocketError.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SocketError.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SocketError.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SocketError.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SocketError.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SocketError.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SocketError.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SocketError~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Socket/SrtMetricsModel.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsModel.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsModel.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsModel.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsModel.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsModel.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsModel.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsModel.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtMetricsModel~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/Socket/SrtSocketContext.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketContext.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketContext.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketContext.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketContext.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketContext.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketContext.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketContext.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketContext~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/SrtCallerContext.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerContext.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerContext.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerContext.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerContext.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerContext.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerContext.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerContext.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerContext~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/States/SrtCallerActiveState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerActiveState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerActiveState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerActiveState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerActiveState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerActiveState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerActiveState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerActiveState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerActiveState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/States/SrtCallerConclusionRequestingState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerConclusionRequestingState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerConclusionRequestingState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerConclusionRequestingState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerConclusionRequestingState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerConclusionRequestingState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerConclusionRequestingState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerConclusionRequestingState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerConclusionRequestingState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/States/SrtCallerErrorStateState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerErrorStateState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerErrorStateState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerErrorStateState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerErrorStateState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerErrorStateState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerErrorStateState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerErrorStateState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerErrorStateState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/States/SrtCallerInductionRequestingState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerInductionRequestingState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerInductionRequestingState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerInductionRequestingState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerInductionRequestingState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerInductionRequestingState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerInductionRequestingState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerInductionRequestingState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerInductionRequestingState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/States/SrtCallerShutdownState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerShutdownState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerShutdownState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerShutdownState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerShutdownState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerShutdownState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerShutdownState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerShutdownState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerShutdownState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/States/SrtCallerState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/States/SrtCallerStates.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerStates.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerStates.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerStates.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerStates.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerStates.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerStates.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerStates.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerStates~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/States/StrCallerInductedState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerInductedState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerInductedState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerInductedState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerInductedState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerInductedState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerInductedState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerInductedState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerInductedState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtCaller/States/StrCallerStartState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerStartState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerStartState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerStartState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerStartState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerStartState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerStartState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerStartState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrCallerStartState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/SrtListenerContext.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerContext.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerContext.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerContext.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerContext.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerContext.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerContext.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerContext.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerContext~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/States/SrtListenerActiveState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerActiveState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerActiveState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerActiveState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerActiveState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerActiveState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerActiveState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerActiveState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerActiveState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/States/SrtListenerConclusionRespondingState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerConclusionRespondingState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerConclusionRespondingState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerConclusionRespondingState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerConclusionRespondingState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerConclusionRespondingState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerConclusionRespondingState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerConclusionRespondingState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerConclusionRespondingState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/States/SrtListenerErrorStateState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerErrorStateState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerErrorStateState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerErrorStateState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerErrorStateState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerErrorStateState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerErrorStateState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerErrorStateState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerErrorStateState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/States/SrtListenerInductionRespondingState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerInductionRespondingState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerInductionRespondingState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerInductionRespondingState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerInductionRespondingState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerInductionRespondingState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerInductionRespondingState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerInductionRespondingState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerInductionRespondingState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/States/SrtListenerShutdownState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerShutdownState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerShutdownState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerShutdownState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerShutdownState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerShutdownState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerShutdownState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerShutdownState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerShutdownState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/States/SrtListenerState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/States/SrtListenerStates.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerStates.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerStates.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerStates.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerStates.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerStates.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerStates.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerStates.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtListenerStates~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/States/StrListenerInducedState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInducedState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInducedState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInducedState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInducedState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInducedState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInducedState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInducedState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInducedState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtListener/States/StrListenerInductedState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInductedState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInductedState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInductedState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInductedState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInductedState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInductedState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInductedState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/StrListenerInductedState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtPortListener/SrtPortListenerContext.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerContext.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerContext.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerContext.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerContext.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerContext.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerContext.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerContext.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerContext~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtPortListener/States/SrtPortListenerErrorState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerErrorState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerErrorState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerErrorState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerErrorState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerErrorState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerErrorState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerErrorState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerErrorState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtPortListener/States/SrtPortListenerNoneState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerNoneState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerNoneState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerNoneState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerNoneState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerNoneState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerNoneState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerNoneState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerNoneState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtPortListener/States/SrtPortListenerReadyState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerReadyState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerReadyState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerReadyState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerReadyState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerReadyState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerReadyState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerReadyState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerReadyState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtPortListener/States/SrtPortListenerState.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerState.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerState.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerState.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerState.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerState.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerState.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerState.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerState~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtPortListener/States/SrtPortListnerStates.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListnerStates.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListnerStates.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListnerStates.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListnerStates.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListnerStates.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListnerStates.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListnerStates.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListnerStates~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Implements/SrtProtocolFramer.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtProtocolFramer.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtProtocolFramer.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtProtocolFramer.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtProtocolFramer.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtProtocolFramer.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtProtocolFramer.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtProtocolFramer.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtProtocolFramer~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Protocols/SrtCallerProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtCallerProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Protocols/SrtConnectionProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtConnectionProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Protocols/SrtPacketSender.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketSender.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketSender.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketSender.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketSender.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketSender.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketSender.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketSender.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketSender~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Protocols/SrtPortListenerProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPortListenerProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Protocols/SrtReceiveMessageProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtReceiveMessageProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Protocols/SrtSendMessageProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSendMessageProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/Protocols/SrtSocketProtocol.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketProtocol.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketProtocol.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketProtocol.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketProtocol.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketProtocol.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketProtocol.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketProtocol.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtSocketProtocol~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/SrtPacket.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacket.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacket.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacket.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacket.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacket.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacket.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacket.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacket~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/SrtPacketHeader.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketHeader.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketHeader.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketHeader.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketHeader.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketHeader.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketHeader.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketHeader.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/SrtPacketHeader~partial.swiftmodule"
+  },
+  "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/Sources/swift-srt/SrtProtocol/UdpHeader.swift" : {
+    "const-values" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UdpHeader.swiftconstvalues",
+    "dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UdpHeader.d",
+    "diagnostics" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UdpHeader.dia",
+    "index-unit-output-path" : "/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UdpHeader.o",
+    "llvm-bc" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UdpHeader.bc",
+    "object" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UdpHeader.o",
+    "swift-dependencies" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UdpHeader.swiftdeps",
+    "swiftmodule" : "/Users/benwaidhofer/Documents/GitHub/swift-srt/swift-srt/build/Build/Intermediates.noindex/swift-srt.build/Debug-iphoneos/SwiftSrt.build/Objects-normal/arm64/UdpHeader~partial.swiftmodule"
+  }
+}
