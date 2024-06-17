@@ -1,7 +1,10 @@
-name: Generate and Deploy Documentation
+name: CI
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -10,34 +13,18 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
       with:
         path: swift-srt  # Specify the directory containing Package.swift
 
     - name: Set up Swift
       uses: fwal/setup-swift@v1
-      with:
-        swift-version: '5.7'
 
-    - name: Build documentation
-      run: swift build --target swift-srt --configuration debug
-      working-directory: ./swift-srt  # Set the correct working directory
-
-    - name: Generate Documentation
-      run: swift package --disable-sandbox preview-documentation --target swift-srt --output-path ./docs
-      working-directory: ./swift-srt  # Set the correct working directory
-
-    - name: Transform for Static Hosting
+    - name: Build Documentation
       run: |
-        $(xcrun --find docc) process-archive \
-        transform-for-static-hosting ./docs/SwiftSrt.doccarchive \
-        --output-path ./docs/site \
-        --hosting-base-path /swift-srt
-      working-directory: ./swift-srt  # Set the correct working directory
-
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/site
-      working-directory: ./swift-srt  # Set the correct working directory
+        cd swift-srt
+        swift build --target swift-srt --configuration debug
+        xcodebuild docbuild -scheme swift-srt -destination generic/platform=iOS
+        cp -R build/Build/Products/Debug-iphoneos/swift-srt.doccarchive ../docs
+        $(xcrun --find docc) process-archive transform-for-static-hosting ../docs/swift-srt.doccarchive --output-path ../docs --hosting-base-path swift-srt/documentation/swiftsrt
