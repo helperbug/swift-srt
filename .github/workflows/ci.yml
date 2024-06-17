@@ -1,4 +1,4 @@
-name: Build and Publish Documentation
+name: Build and Deploy Documentation
 
 on:
   push:
@@ -8,30 +8,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      
-      - name: Set up Swift
-        uses: fwal/setup-swift@v1
-        with:
-          swift-version: '5.7.3'
-      
-      - name: Build project
-        run: swift build --target swift-srt --configuration debug
-      
-      - name: Generate DocC documentation
-        run: swift package --disable-sandbox preview-documentation --target swift-srt --output-path build/SwiftSrt.doccarchive
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Transform for static hosting
-        run: |
-          $(xcrun --find docc) process-archive \
-          transform-for-static-hosting build/SwiftSrt.doccarchive \
-          --output-path docs \
-          --hosting-base-path swift-srt/documentation/swiftsrt
+    - name: Set up Swift
+      uses: fwal/setup-swift@v1
+      with:
+        swift-version: '5.7.3'
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+    - name: Build Documentation
+      run: swift build --target swift-srt --configuration debug
+
+    - name: Generate DocC Archive
+      run: swift package --disable-sandbox preview-documentation --target swift-srt --output-path build/docs
+
+    - name: Transform DocC Archive for Static Hosting
+      run: |
+        $(xcrun --find docc) process-archive transform-for-static-hosting build/docs/swift-srt.doccarchive \
+        --output-path build/site \
+        --hosting-base-path swift-srt/documentation/swiftsrt
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: build/site
