@@ -14,14 +14,12 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # Updated to v3 to use Node.js 20
-      with:
-        path: swift-srt
+      uses: actions/checkout@v3
 
     - name: Set up Swift
       uses: fwal/setup-swift@v1
       with:
-        node-version: '20.x'  # Ensure using Node.js 20
+        swift-version: '5.7.3'
 
     - name: Build Documentation
       run: |
@@ -30,3 +28,4 @@ jobs:
         xcodebuild docbuild -scheme swift-srt -destination generic/platform=iOS
         cp -R build/Build/Products/Debug-iphoneos/swift-srt.doccarchive ../docs
         $(xcrun --find docc) process-archive transform-for-static-hosting ../docs/swift-srt.doccarchive --output-path ../docs --hosting-base-path swift-srt/documentation/swiftsrt
+      working-directory: swift-srt
