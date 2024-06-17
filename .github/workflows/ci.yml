@@ -28,17 +28,17 @@ jobs:
     - name: Generate DocC Archive
       working-directory: ./swift-srt
       run: |
-        swift package \
-        --disable-sandbox \
-        generate-documentation \
-        --target swift-srt \
-        --output-path ./docs
+        xcodebuild docbuild \
+        -scheme swift-srt \
+        -destination 'generic/platform=iOS' \
+        -derivedDataPath build
 
     - name: Transform for Static Hosting
       working-directory: ./swift-srt
       run: |
-        $(xcrun --find docc) process-archive transform-for-static-hosting \
-        ./docs/SwiftSrt.doccarchive \
+        $(xcrun --find docc) process-archive \
+        transform-for-static-hosting \
+        build/Build/Products/Debug-iphoneos/SwiftSrt.doccarchive \
         --output-path ./site \
         --hosting-base-path swift-srt/documentation/swiftsrt
 
