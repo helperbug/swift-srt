@@ -22,9 +22,11 @@ jobs:
         swift-version: '5.7'
 
     - name: Build project
+      working-directory: ./swift-srt
       run: swift build --configuration debug
 
     - name: Generate DocC Archive
+      working-directory: ./swift-srt
       run: |
         swift package \
         --disable-sandbox \
@@ -33,6 +35,7 @@ jobs:
         --output-path ./docs
 
     - name: Transform for Static Hosting
+      working-directory: ./swift-srt
       run: |
         $(xcrun --find docc) process-archive transform-for-static-hosting \
         ./docs/SwiftSrt.doccarchive \
@@ -44,5 +47,5 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git add .
-        git commit -m "Update generated documentation"
+        git commit -m "Update documentation"
         git push
