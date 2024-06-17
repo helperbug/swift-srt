@@ -1,4 +1,4 @@
-name: Build and Deploy Documentation
+name: CI
 
 on:
   push:
@@ -10,28 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - name: Check out code
+      uses: actions/checkout@v2  # Using v2 instead of v3
 
     - name: Set up Swift
       uses: fwal/setup-swift@v1
-      with:
-        swift-version: '5.7.3'
 
-    - name: Build Documentation
+    - name: Build
       run: swift build --target swift-srt --configuration debug
 
-    - name: Generate DocC Archive
-      run: swift package --disable-sandbox preview-documentation --target swift-srt --output-path build/docs
-
-    - name: Transform DocC Archive for Static Hosting
+    - name: Generate documentation
       run: |
-        $(xcrun --find docc) process-archive transform-for-static-hosting build/docs/swift-srt.doccarchive \
-        --output-path build/site \
-        --hosting-base-path swift-srt/documentation/swiftsrt
+        swift package --allow-writing-to-directory ./docs \
+        generate-documentation --target swift-srt --output-path ./swift-srt.doccarchive
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build/site
+    - name: Generate static documentation
+      run: $(xcrun --find docc) process-archive transform-for-static-hosting ./swift-srt.doccarchive --output-path ./docs --hosting-base-path /swift-srt/documentation/swiftsrt
