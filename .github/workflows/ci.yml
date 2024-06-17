@@ -19,7 +19,7 @@ jobs:
     - name: Set up Swift
       uses: fwal/setup-swift@v2
       with:
-        swift-version: '5.7'
+        swift-version: '5.10'
 
     - name: Build project
       working-directory: ./swift-srt
