@@ -16,7 +16,7 @@ To get started with swift-srt, please refer to the [Documentation](_site/index.h
 
 The comprehensive documentation can be accessed through the following link:
 
-[swift-srt Documentation](index.html)
+[swift-srt Documentation](_site/index.html)
 
 ## Support
 
