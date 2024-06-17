@@ -1,0 +1,37 @@
+name: Generate and Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Swift
+      uses: fwal/setup-swift@v1
+      with:
+        swift-version: '5.7'
+
+    - name: Build documentation
+      run: swift build --target swift-srt --configuration debug
+
+    - name: Generate Documentation
+      run: swift package --disable-sandbox preview-documentation --target swift-srt --output-path ./docs
+
+    - name: Transform for Static Hosting
+      run: |
+        $(xcrun --find docc) process-archive \
+        transform-for-static-hosting ./docs/SwiftSrt.doccarchive \
+        --output-path ./docs/site \
+        --hosting-base-path /swift-srt
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/site
