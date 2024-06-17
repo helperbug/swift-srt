@@ -33,7 +33,7 @@ The SRT Connection is implemented as a UDP NWConnection with a custom NWFramer. 
 
   
 
-### ListenerSession
+### Listener Session
 
   
 
@@ -41,7 +41,7 @@ The `ListenerSession` manages and accepts incoming connection requests. It is de
 
   
 
-### CallerSession
+### Caller Session
 
   
 
@@ -66,7 +66,6 @@ The handshake process is crucial for establishing a secure and reliable connecti
   
 
 #### Caller-Listener Handshake
-
   
 
 **Induction Phase**:
