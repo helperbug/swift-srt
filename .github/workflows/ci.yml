@@ -13,9 +13,6 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout code
-      uses: msft-github/msbuild@v1
-
     - name: Set up Swift
       uses: fwal/setup-swift@v1
       with:
@@ -32,10 +29,17 @@ jobs:
         --target swift-srt \
         --output-path ./docs
 
-    - name: Publish DocC
-      uses: MakeSchool-Tutorials/Static-Docc-Site-Generator@v1
-      with:
-        docc-archive-path: ./docs
-        hosting-base-path: /swift-srt/documentation/swiftsrt
-        gh-pages-branch: gh-pages
-        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Transform for Static Hosting
+      run: |
+        $(xcrun --find docc) process-archive transform-for-static-hosting \
+        ./docs/SwiftSrt.doccarchive \
+        --output-path ./site \
+        --hosting-base-path swift-srt/documentation/swiftsrt
+
+    - name: Commit and Push Documentation
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add .
+        git commit -m "Update generated documentation"
+        git push
