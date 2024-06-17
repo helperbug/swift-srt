@@ -13,12 +13,6 @@ Welcome to the swift-srt project documentation. Here you'll find all the informa
 
 To get started with swift-srt, refer to the DocC site [Documentation](https://helperbug.github.io/swift-srt/documentation/swiftsrt/).
 
-## Repository Structure
-
-- **Sources**: Contains the source code for the swift-srt package.
-- **Tests**: Contains the test cases for swift-srt.
-- **docs**: Contains the documentation generated using DocC.
-
 ## Documentation
 
 The comprehensive documentation can be accessed through the following link:
