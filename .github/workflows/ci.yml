@@ -4,25 +4,38 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2  # Using v2 instead of v3
+    - name: Checkout code
+      uses: msft-github/msbuild@v1
 
     - name: Set up Swift
       uses: fwal/setup-swift@v1
+      with:
+        swift-version: '5.7'
 
-    - name: Build
-      run: swift build --target swift-srt --configuration debug
+    - name: Build project
+      run: swift build --configuration debug
 
-    - name: Generate documentation
+    - name: Generate DocC Archive
       run: |
-        swift package --allow-writing-to-directory ./docs \
-        generate-documentation --target swift-srt --output-path ./swift-srt.doccarchive
+        swift package \
+        --disable-sandbox \
+        generate-documentation \
+        --target swift-srt \
+        --output-path ./docs
 
-    - name: Generate static documentation
-      run: $(xcrun --find docc) process-archive transform-for-static-hosting ./swift-srt.doccarchive --output-path ./docs --hosting-base-path /swift-srt/documentation/swiftsrt
+    - name: Publish DocC
+      uses: MakeSchool-Tutorials/Static-Docc-Site-Generator@v1
+      with:
+        docc-archive-path: ./docs
+        hosting-base-path: /swift-srt/documentation/swiftsrt
+        gh-pages-branch: gh-pages
+        token: ${{ secrets.GITHUB_TOKEN }}
