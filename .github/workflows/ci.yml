@@ -1,31 +1,37 @@
-name: CI
+name: Build and Publish Documentation
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
-    runs-on: macos-latest
-
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Swift
+        uses: fwal/setup-swift@v1
+        with:
+          swift-version: '5.7.3'
+      
+      - name: Build project
+        run: swift build --target swift-srt --configuration debug
+      
+      - name: Generate DocC documentation
+        run: swift package --disable-sandbox preview-documentation --target swift-srt --output-path build/SwiftSrt.doccarchive
 
-    - name: Set up Swift
-      uses: fwal/setup-swift@v1
-      with:
-        swift-version: '5.7.3'
+      - name: Transform for static hosting
+        run: |
+          $(xcrun --find docc) process-archive \
+          transform-for-static-hosting build/SwiftSrt.doccarchive \
+          --output-path docs \
+          --hosting-base-path swift-srt/documentation/swiftsrt
 
-    - name: Build Documentation
-      run: |
-        cd swift-srt
-        swift build --target swift-srt --configuration debug
-        xcodebuild docbuild -scheme swift-srt -destination generic/platform=iOS
-        cp -R build/Build/Products/Debug-iphoneos/swift-srt.doccarchive ../docs
-        $(xcrun --find docc) process-archive transform-for-static-hosting ../docs/swift-srt.doccarchive --output-path ../docs --hosting-base-path swift-srt/documentation/swiftsrt
-      working-directory: swift-srt
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
