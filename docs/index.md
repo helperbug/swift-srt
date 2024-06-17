@@ -4,7 +4,7 @@ Welcome to the swift-srt project documentation. Here you'll find all the informa
 
 ## Getting Started
 
-To get started with swift-srt, please refer to the [Documentation](index.html).
+To get started with swift-srt, please refer to the [Documentation](_site/index.html).
 
 ## Repository Structure
 
