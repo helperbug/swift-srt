@@ -1,8 +1,24 @@
 //
 //  SrtSocketProtocol.swift
+//  swift-srt
 //
+//  Created by Ben Waidhofer on 6/15/2024.
 //
-//  Created by Ben Waidhofer on 5/26/24.
+//  This source file is part of the swift-srt open source project
+//
+//  Licensed under the MIT License. You may obtain a copy of the License at
+//  https://opensource.org/licenses/MIT
+//
+//  Portions of this project are based on the SRT protocol specification.
+//  SRT is licensed under the Mozilla Public License, v. 2.0.
+//  You may obtain a copy of the License at
+//  https://github.com/Haivision/srt/blob/master/LICENSE
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 //
 
 import Combine
@@ -22,21 +38,6 @@ public protocol SrtSocketProtocol {
     
     /// The synCookie that made this socket.
     var synCookie: UInt32 { get }
-    
-//    /// Each full video, audio or still frame is delivered here.
-//    var onFrameReceived: (Data) -> Void { get }
-//    
-//    /// Hints are reported once each second along with the metrics
-//    var onHintsReceived: ([SrtSocketHints]) -> Void { get }
-//    
-//    /// Logs are meant for development time
-//    var onLogReceived: (String) -> Void { get }
-//    
-//    /// Metrics are available at the same time as KeepAlive.
-//    var onMetricsReceived: ([SrtSocketMetrics]) -> Void { get }
-//    
-//    /// Each socket state transition is reported here.
-//    var onStateChanged: (SrtSocketStates) -> Void { get }
     
     /// Sends the specified data through the SRT socket. The frame will be decomposed into packets and tracked using ACKs and NACKs.
     ///
@@ -98,7 +99,7 @@ public protocol SrtSocketProtocol {
     var groupWeight: UInt16? { get }
     
     /// Initial packet sequence number.
-    var initialPacketSequenceNumber: UInt32? { get }
+    var initialPacketSequenceNumber: UInt32 { get set }
     
     /// Maximum Transmission Unit (MTU) size, in bytes.
     var maximumTransmissionUnitSize: UInt32? { get }
