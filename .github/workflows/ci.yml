@@ -19,7 +19,7 @@ jobs:
     - name: Set up Swift
       uses: fwal/setup-swift@v2
       with:
-        swift-version: '5.10'
+        swift-version: '5.9'
 
     - name: Build project
       working-directory: ./swift-srt
@@ -30,22 +30,22 @@ jobs:
       run: |
         xcodebuild docbuild \
         -scheme swift-srt \
-        -destination 'generic/platform=iOS' \
+        -destination 'platform=macOS' \
         -derivedDataPath build
 
-    - name: Transform for Static Hosting
+    - name: Transform DocC for Static Hosting
       working-directory: ./swift-srt
       run: |
         $(xcrun --find docc) process-archive \
-        transform-for-static-hosting \
-        build/Build/Products/Debug-iphoneos/SwiftSrt.doccarchive \
-        --output-path ./site \
-        --hosting-base-path swift-srt/documentation/swiftsrt
+        transform-for-static-hosting build/Build/Products/Debug/SwiftSrt.doccarchive \
+        --output-path ./docs \
+        --hosting-base-path /swift-srt/documentation/swiftsrt
 
     - name: Commit and Push Documentation
+      working-directory: ./swift-srt
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add .
-        git commit -m "Update documentation"
+        git add docs
+        git commit -m 'Update generated documentation'
         git push
