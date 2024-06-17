@@ -11,6 +11,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        path: swift-srt  # Specify the directory containing Package.swift
 
     - name: Set up Swift
       uses: fwal/setup-swift@v1
@@ -19,9 +21,11 @@ jobs:
 
     - name: Build documentation
       run: swift build --target swift-srt --configuration debug
+      working-directory: ./swift-srt  # Set the correct working directory
 
     - name: Generate Documentation
       run: swift package --disable-sandbox preview-documentation --target swift-srt --output-path ./docs
+      working-directory: ./swift-srt  # Set the correct working directory
 
     - name: Transform for Static Hosting
       run: |
@@ -29,9 +33,11 @@ jobs:
         transform-for-static-hosting ./docs/SwiftSrt.doccarchive \
         --output-path ./docs/site \
         --hosting-base-path /swift-srt
+      working-directory: ./swift-srt  # Set the correct working directory
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./docs/site
+      working-directory: ./swift-srt  # Set the correct working directory
