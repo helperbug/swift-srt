@@ -25,6 +25,8 @@ import Combine
 import Foundation
 import Network
 
+/// Represent an active UPD connection with the SRT framer. A caller creates the connection context as soon as it connects. A listener
+/// can create multiple connections, one for each connected client.
 public class ConnectionContext: SrtConnectionProtocol {
     
     public var sockets: [UInt32: SrtSocketProtocol] = [:]
