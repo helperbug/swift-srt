@@ -25,7 +25,7 @@ import Network
 
 extension NWConnection {
     
-    func makeUdpHeader() -> UdpHeader? {
+    func makeUdpHeader(isHost: Bool) -> UdpHeader? {
         
         let serverIp: IPv4Address
         let serverPort: UInt16
@@ -33,7 +33,7 @@ extension NWConnection {
         let clientPort: UInt16
         let localInterface: String
         let localInterfaceType: String
-
+        
         guard case .hostPort(let caller, let port) = self.endpoint else {
             return nil
         }
@@ -76,11 +76,28 @@ extension NWConnection {
             return nil
         }
         
+        let sourceIp: String
+        let sourcePort: UInt16
+        let destinationIp: String
+        let destinationPort: UInt16
+
+        if isHost {
+            sourceIp = "\(clientIp)"
+            sourcePort = clientPort
+            destinationIp = "\(serverIp)"
+            destinationPort = serverPort
+        } else {
+            sourceIp = "\(serverIp)"
+            sourcePort = serverPort
+            destinationIp = "\(clientIp)"
+            destinationPort = clientPort
+        }
+        
         let udpHeader: UdpHeader = .init(
-            sourceIp: "\(clientIp)",
-            sourcePort: clientPort,
-            destinationIp: "\(serverIp)",
-            destinationPort: serverPort,
+            sourceIp: sourceIp,
+            sourcePort: sourcePort,
+            destinationIp: destinationIp,
+            destinationPort: destinationPort,
             interface: localInterface,
             interfaceType: localInterfaceType
         )

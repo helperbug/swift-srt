@@ -26,13 +26,13 @@ import Foundation
 import Network
 
 public class SrtPortManagerService: SrtPortManagerServiceProtocol {
-
+    
     public var icon: String = "⚓️"
     public var source: String = "Port Manager"
-
+    
     private let logService: LogServiceProtocol
     private let metricsService: SrtMetricsServiceProtocol
-
+    
     public init(logService: LogServiceProtocol, metricsService: SrtMetricsServiceProtocol) {
         
         self.logService = logService
@@ -43,35 +43,35 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
     
     @Published private var _listeners: [NWEndpoint.Port: SrtPortListenerProtocol] = [:]
     public var listeners: AnyPublisher<[NWEndpoint.Port: SrtPortListenerProtocol], Never> {
-
+        
         $_listeners.eraseToAnyPublisher()
-
+        
     }
     
     @Published private var _connections: [UdpHeader: SrtConnectionProtocol] = [:]
     public var connections: AnyPublisher<[UdpHeader: SrtConnectionProtocol], Never> {
-
+        
         $_connections.eraseToAnyPublisher()
-
+        
     }
     
     @Published private var _metrics: (UdpHeader, SrtMetricsModel) = (.blank, .blank)
     public var metrics: AnyPublisher<(UdpHeader, SrtMetricsModel), Never> {
-
+        
         $_metrics.eraseToAnyPublisher()
-
+        
     }
-
+    
     @Published private var _sockets: [UdpHeader : [UInt32 : SrtSocketProtocol]] = [:]
     public var sockets: AnyPublisher<[UdpHeader : [UInt32 : SrtSocketProtocol]], Never> {
         $_sockets.eraseToAnyPublisher()
     }
-
+    
     @Published private var _frames: (header: UdpHeader, socketId: UInt32, messageId: UInt32, frame: Data)
     public var frames: AnyPublisher<(header: UdpHeader, socketId: UInt32, messageId: UInt32, frame: Data), Never> {
         $_frames.eraseToAnyPublisher()
     }
-
+    
     
     public func log(_ message: String) {
         
@@ -90,7 +90,7 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
         )
         
     }
-
+    
     public func addConnection(header: UdpHeader, connection: SrtConnectionProtocol) {
         
         _connections[header] = connection
@@ -100,7 +100,7 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
     public func addSocket(header: UdpHeader, socket: SrtSocketProtocol) {
         
         _sockets[header] = [socket.socketId: socket]
-
+        
     }
     
     public func addFrame(header: UdpHeader, socketId: UInt32, messageId: UInt32, frame: Data) {
@@ -108,13 +108,13 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
         _frames = (header: header, socketId: socketId, messageId: messageId, frame: frame)
         
     }
-
+    
     public func removeListener(port: NWEndpoint.Port) {
         
         if let listener = _listeners[port] {
             
             var headers: [UdpHeader] = []
-
+            
             _connections.forEach { connection in
                 if connection.key.destinationPort == port.rawValue {
                     headers.append(connection.key)
@@ -132,7 +132,7 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
     }
     
     public func removeConnection(header: UdpHeader) {
-
+        
         if let connection = _connections[header] {
             _connections[header] = nil
             connection.cancel()
@@ -141,15 +141,15 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
     }
     
     public func removeSocket(header: UdpHeader, socketId: UInt32) {
-
+        
         _sockets[header]?[socketId] = nil
         
     }
-
+    
     public func shutdown(port: NWEndpoint.Port? = nil) {
         
         _listeners.values.forEach { listener in
-
+            
             if let port,
                listener.port == port {
                 listener.close()
@@ -161,4 +161,14 @@ public class SrtPortManagerService: SrtPortManagerServiceProtocol {
         
     }
     
+    public func shutdownConnection(connection: UdpHeader) {
+
+        if let connection = _connections[connection] {
+
+            connection.shutdown()
+            
+        }
+
+    }
+
 }

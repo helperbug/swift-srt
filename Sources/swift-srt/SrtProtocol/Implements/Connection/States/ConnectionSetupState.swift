@@ -48,14 +48,7 @@ class ConnectionSetupState: ConnectionState {
                     return
                 }
                 
-                print(String(format: "Duration of establishment: %.0f microseconds", report.duration * 1000000))
-                //                print("Attempt started after: \(report.attemptStartedAfterInterval) seconds")
-                //                print("Previous attempts: \(report.previousAttemptCount)")
-                //                print("Used proxy: \(report.usedProxy)")
-                //                print("Proxy configured: \(report.proxyConfigured)")
-                //                if let proxy = report.proxyEndpoint {
-                //                    print("Proxy endpoint: \(proxy)")
-                //                }
+                // print(String(format: "Duration of establishment: %.0f microseconds", report.duration * 1000000))
             }
         }
     }

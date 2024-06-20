@@ -1,4 +1,0 @@
-Target dependency graph (2 targets)
-Target 'SwiftSrt' in project 'swift-srt'
-➜ Explicit dependency on target 'SwiftSrt' in project 'swift-srt'
-Target 'SwiftSrt' in project 'swift-srt' (no dependencies)

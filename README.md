@@ -1,7 +1,6 @@
 
-# Swift SRT
 
-  
+# Swift SRT
 
 Secure Reliable Transport (SRT) is now a first-class member of Apple's ecosystem! This Swift package is implemented using NWFramerProtocol and Apple’s native networking framework. Designed for modern standards, it excels in live streaming, video on demand, and two-way communication applications by providing reactive "hints" to automate peak quality based on network conditions. 
 
@@ -17,15 +16,11 @@ Key features include:
 
 - Support for both delegate pattern and Combine publishers
 
-- DocC
+- DocC [Swift SRT Docs](https://helperbug.github.io/swift-srt/documentation/swiftsrt/)
 
 This open-source project is public-domain. The design emphasizes simplicity and utility, following the principles of Occam's Razor.
 
-  
-
 # Connection
-
-  
 
 The SRT Connection is implemented as a UDP NWConnection with a custom NWFramer. The frames, lifecycle and operations of SRT are managed internally. Connections can handle multiple streams identified by a SocketID. When the last socket is shut down, the connection ends.
 

@@ -37,6 +37,7 @@ public class ConnectionContext: SrtConnectionProtocol {
 
     private var pendingListener: SrtListenerContext? = nil
     private var pendingCaller: SrtCallerContext? = nil
+    private var latestTimestamp: UInt32 = 0
     public let udpHeader: UdpHeader
 
     var state: ConnectionState
@@ -82,11 +83,12 @@ public class ConnectionContext: SrtConnectionProtocol {
     }
     
     public func cancel() {
-        if connectionState == .ready {
+        if connection.state == .ready {
             
             managerService.removeConnection(header: udpHeader)
             
-            connection.cancel()
+            connection.forceCancel()
+
         }
     }
     
@@ -109,8 +111,14 @@ public class ConnectionContext: SrtConnectionProtocol {
         }
         
     }
-    
-    public func onStateChanged(_ state: NWConnection.State) {
+
+    public func sendFrame(frame: Data) {
+
+        log("Sending \(frame.count) bytes")
+
+    }
+
+    func onStateChanged(_ state: NWConnection.State) {
         
         self.state.onStateChanged(self, state: state)
         
@@ -181,27 +189,19 @@ extension ConnectionContext {
         }
     }
     
-    public static func make(serverIp: String,
-                     serverPort: UInt16,
-                     _ connection: NWConnection,
-                     logService: LogServiceProtocol,
-                     managerService: SrtPortManagerServiceProtocol,
-                     metricsService: SrtMetricsServiceProtocol
+    public static func make(isHost: Bool,
+                            serverIp: String,
+                            serverPort: UInt16,
+                            _ connection: NWConnection,
+                            logService: LogServiceProtocol,
+                            managerService: SrtPortManagerServiceProtocol,
+                            metricsService: SrtMetricsServiceProtocol
     ) -> ConnectionContext? {
         
-//        guard let updHeader = connection.makeUdpHeader() else {
-//            return nil
-//        }
+        guard let udpHeader = connection.makeUdpHeader(isHost: isHost) else {
+            return nil
+        }
 
-        let udpHeader: UdpHeader = .init(
-            sourceIp: "127.0.0.1",
-            sourcePort: 8675,
-            destinationIp: "127.0.0.1",
-            destinationPort: 1935,
-            interface: "-",
-            interfaceType: "-"
-        )
-        
         let context: ConnectionContext = .init(
             updHeader: udpHeader,
             connection: connection,
@@ -244,6 +244,8 @@ extension ConnectionContext {
             return
         }
 
+        let chunks = MpegTsParser.parseTSChunks(from: frame)
+        
         let receiveMetrics: SrtMetricsModel = .init(bytesCount: dataPacket.data.count)
         metricsService.storeConnectionMetric(header: self.udpHeader, receive: receiveMetrics, send: nil)
 
@@ -274,8 +276,8 @@ extension ConnectionContext {
             
             pendingCaller.handleHandshake(handshake: handshake)
             
-        } else if handshake.isConclusionRequest(synCookie: handshake.synCookie) {
-
+        } else if handshake.isInductionRequest {
+            
             self.pendingListener = SrtListenerContext(
                 srtSocketID:    handshake.srtSocketID,
                 initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
@@ -364,14 +366,21 @@ extension ConnectionContext {
     }
     
     private func handleKeepAlive(packet: SrtPacket) {
-        
-        let packet = SrtPacket(field1: ControlTypes.keepAlive.asField, timestamp: packet.timestamp + 100, socketID: packet.destinationSocketID, contents: Data())
+
+        latestTimestamp = packet.timestamp + 100
+        let packet = SrtPacket(field1: ControlTypes.keepAlive.asField, timestamp: latestTimestamp, socketID: packet.destinationSocketID, contents: Data())
         
         send(header: packet, contents: Data(repeating: 0, count: 4))
 
     }
     
     func send(header: SrtPacket, contents: Data) {
+        
+        guard connection.state == .ready else {
+            print("ignoring \(connection.state)")
+            return
+        }
+        
         let message = NWProtocolFramer.Message(srtPacket: header)
         let metadata = [message]
         let identifier = "\(self)"
@@ -383,4 +392,31 @@ extension ConnectionContext {
     func log(_ message: String) {
         logService.log("🛜", "Connection", message)
     }
+    
+    public func shutdown() {
+
+        let socketId: UInt32
+
+        if let socket = sockets.values.first {
+            
+            socketId = socket.socketId
+
+        } else {
+
+            socketId = 0
+
+        }
+        
+        let packet = SrtPacket(
+            field1: ControlTypes.shutdown.asField,
+            timestamp: latestTimestamp + 100,
+            socketID: socketId,
+            contents: Data()
+        )
+        
+        send(header: packet, contents: Data(repeating: 0, count: 4))
+        managerService.removeConnection(header: udpHeader)
+
+    }
+
 }

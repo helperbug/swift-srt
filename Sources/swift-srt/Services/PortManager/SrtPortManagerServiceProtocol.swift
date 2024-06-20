@@ -43,5 +43,6 @@ public protocol SrtPortManagerServiceProtocol: ServiceProtocol {
     func removeSocket(header: UdpHeader, socketId: UInt32) -> Void
 
     func shutdown(port: NWEndpoint.Port?) -> Void
+    func shutdownConnection(connection: UdpHeader) -> Void
     
 }

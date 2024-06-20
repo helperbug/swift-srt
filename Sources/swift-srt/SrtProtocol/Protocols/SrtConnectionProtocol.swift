@@ -40,5 +40,7 @@ public protocol SrtConnectionProtocol {
 
     func cancel() -> Void
     func removeSocket(id: UInt32) -> Void
+    func sendFrame(frame: Data) -> Void
+    func shutdown() -> Void
 
 }

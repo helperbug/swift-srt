@@ -97,7 +97,8 @@ extension SrtPortListenerContext {
     
     func newConnectionHandler(connection: NWConnection) {
         
-        if let context = ConnectionContext.make(serverIp: _endpoint.debugDescription,
+        if let context = ConnectionContext.make(isHost: true,
+                                                serverIp: _endpoint.debugDescription,
                                                 serverPort: _port.rawValue,
                                                 connection,
                                                 logService: logService,
