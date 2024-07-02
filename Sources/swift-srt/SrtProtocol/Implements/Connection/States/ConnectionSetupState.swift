@@ -48,7 +48,8 @@ class ConnectionSetupState: ConnectionState {
                     return
                 }
                 
-                // print(String(format: "Duration of establishment: %.0f microseconds", report.duration * 1000000))
+                let message = String(format: "Duration of establishment: %.0f microseconds", report.duration * 1000000)
+                context.log(message)
             }
         }
     }

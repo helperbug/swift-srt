@@ -150,11 +150,11 @@ public struct SrtHandshake {
         
         self.extensions = extensions
         
-        if let handshakeExtensionData = extensions[.handshakeRequest] {
-            // self.handshakeExtensionMessage = HandshakeExtensionMessage(handshakeExtensionData)
-        } else {
-            // self.handshakeExtensionMessage = nil
-        }
+//        if let handshakeExtensionData = extensions[.handshakeRequest] {
+//            // self.handshakeExtensionMessage = HandshakeExtensionMessage(handshakeExtensionData)
+//        } else {
+//            // self.handshakeExtensionMessage = nil
+//        }
         
         self.extensionType = .none
         self.extensionLength = UInt16(0)
@@ -367,7 +367,7 @@ public extension SrtHandshake {
     }
 
     
-    public func makePacket(socketId: UInt32) -> SrtPacket
+    func makePacket(socketId: UInt32) -> SrtPacket
     {
         SrtPacket(
             field1: ControlTypes.handshake.asField,

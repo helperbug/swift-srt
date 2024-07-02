@@ -36,6 +36,9 @@ let package = Package(
             name: "SwiftSrt",
             targets: ["SwiftSrt"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.1.0"),
+    ],
     targets: [
         .target(
             name: "SwiftSrt"),

@@ -97,7 +97,7 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
             if let existing = self.listenerStore[port] {
                 existing.delta(receive: receive, send: send)
             } else {
-                var new = SrtMetrics()
+                let new = SrtMetrics()
                 new.delta(receive: receive, send: send)
                 self.listenerStore[port] = new
             }
@@ -113,7 +113,7 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
             if let existing = self.connectionStore[header] {
                 existing.delta(receive: receive, send: send)
             } else {
-                var new = SrtMetrics()
+                let new = SrtMetrics()
                 new.delta(receive: receive, send: send)
                 self.connectionStore[header] = new
             }
@@ -133,7 +133,7 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
             if let existing = self.socketStore[socketKey] {
                 existing.delta(receive: receive, send: send)
             } else {
-                var new = SrtMetrics()
+                let new = SrtMetrics()
                 new.delta(receive: receive, send: send)
                 self.socketStore[socketKey] = new
             }
@@ -151,7 +151,7 @@ public class SrtMetricsService: SrtMetricsServiceProtocol {
             if let existing = self.frameStore[frameKey] {
                 existing.delta(receive: receive, send: send)
             } else {
-                var new = SrtMetrics()
+                let new = SrtMetrics()
                 new.delta(receive: receive, send: send)
                 self.frameStore[frameKey] = new
             }

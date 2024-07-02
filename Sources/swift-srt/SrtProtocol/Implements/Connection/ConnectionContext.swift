@@ -244,7 +244,7 @@ extension ConnectionContext {
             return
         }
 
-        let chunks = MpegTsParser.parseTSChunks(from: frame)
+        // let chunks = MpegTsParser.parseTSChunks(from: frame)
         
         let receiveMetrics: SrtMetricsModel = .init(bytesCount: dataPacket.data.count)
         metricsService.storeConnectionMetric(header: self.udpHeader, receive: receiveMetrics, send: nil)
@@ -300,7 +300,7 @@ extension ConnectionContext {
     
     private func handleControl(packet: SrtPacket) {
         
-        if let shutdown = ShutdownFrame(packet.data) {
+        if let _ = ShutdownFrame(packet.data) {
             self.cancel()
         }
 
@@ -312,7 +312,7 @@ extension ConnectionContext {
         
         let socketId = packet.destinationSocketID
         
-        var socketContext = SrtSocketContext(encrypted: true,
+        let _ = SrtSocketContext(encrypted: true,
                                              socketId: socketId,
                                              synCookie: self.udpHeader.cookie)
         

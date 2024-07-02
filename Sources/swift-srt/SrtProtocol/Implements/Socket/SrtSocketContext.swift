@@ -223,7 +223,7 @@ public class SrtSocketContext: SrtSocketProtocol {
     
     public func update(type: HandshakeExtensionTypes, data: Data) {
         
-        print("updating \(type) with \(data.asString)")
+        print("updating \(type) with \(data.asString ?? "[missing]")")
         
         switch type {
             

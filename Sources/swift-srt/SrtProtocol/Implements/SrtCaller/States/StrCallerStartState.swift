@@ -32,7 +32,7 @@ struct StrCallerStartState: SrtCallerState {
         let inductionRequest = SrtHandshake.makeInductionRequest(serverIpAddress: context.peerIpAddress)
         
         let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: 0, contents: Data())
-        let contents = inductionRequest.makePacket(socketId: 0).contents
+        let _ = inductionRequest.makePacket(socketId: 0).contents
         
         context.send(packet, inductionRequest.data)
 

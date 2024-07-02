@@ -38,11 +38,7 @@ extension NWConnection {
             return nil
         }
         
-        guard let host = caller as? NWEndpoint.Host else {
-            return nil
-        }
-        
-        guard case .ipv4(let ipv4Address) = host else {
+        guard case .ipv4(let ipv4Address) = caller else {
             return nil
         }
         
@@ -50,7 +46,7 @@ extension NWConnection {
         clientPort = port.rawValue
         
         guard let path = self.currentPath,
-              let localEndpoint = path.localEndpoint else {
+              let _ = path.localEndpoint else {
             return nil
         }
         

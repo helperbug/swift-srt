@@ -110,7 +110,7 @@ class SrtReceiveMessageContext: SrtReceiveMessageProtocol {
 
     private func detectRangesOfLostPackets() -> [(UInt32, UInt32)] {
 
-        var ranges: [(UInt32, UInt32)] = []
+        let ranges: [(UInt32, UInt32)] = []
         var start: Int? = nil
 
         for (index, packet) in packets.enumerated() {
@@ -118,13 +118,13 @@ class SrtReceiveMessageContext: SrtReceiveMessageProtocol {
                 if start == nil {
                     start = index
                 }
-            } else if let s = start {
+            } else if let _ = start {
                 // ranges.append((UInt32(s + sequenceNumberBase), UInt32(index + sequenceNumberBase - 1)))
                 start = nil
             }
         }
         
-        if let s = start {
+        if let _ = start {
             // ranges.append((UInt32(s + sequenceNumberBase), UInt32(packets.count + sequenceNumberBase - 1)))
         }
 
