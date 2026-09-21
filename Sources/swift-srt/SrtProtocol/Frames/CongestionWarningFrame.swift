@@ -31,7 +31,7 @@ public struct CongestionWarningFrame: ByteFrame {
 
     /// The packet type value of a congestion warning control packet is "1".
     public var isControl: Bool {
-        return (data[0] & 0b10000000) == 1
+        return (data[0] & 0b10000000) != 0
     }
 
     /// The control type value of a congestion warning control packet is "4".

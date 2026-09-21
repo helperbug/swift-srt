@@ -46,9 +46,8 @@ public struct SrtPacketHeader {
         var cursor = 0
         
         let flagAndPacketTypeDependentField1 = alignedBuffer.toUInt32(from: &cursor)
-        let isData = (flagAndPacketTypeDependentField1 >> 31) & 1 == 0
-        
-        self.isControl = isData
+        /// The top bit is set on control packets and clear on data packets.
+        self.isControl = (flagAndPacketTypeDependentField1 >> 31) & 1 == 1
         self.flagAndPacketTypeDependentField1 = flagAndPacketTypeDependentField1 & 0x7FFFFFFF
         
         packetTypeDependentField2 = alignedBuffer.toUInt32(from: &cursor)

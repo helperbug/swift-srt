@@ -67,7 +67,7 @@ public struct KeepAliveFrame: ByteFrame {
 
     /// Constructor used when sending over the network
     public init(
-        controlType: UInt16 = ControlTypes.handshake.rawValue,
+        controlType: UInt16 = ControlTypes.keepAlive.rawValue,
         reserved: UInt16 = 0,
         typeSpecificInformation: UInt32 = 0,
         timestamp: UInt32 = UInt32(Date().timeIntervalSince1970),
@@ -75,11 +75,10 @@ public struct KeepAliveFrame: ByteFrame {
     ) {
         var data = Data(capacity: 16)
 
-        var header = (controlType & 0x7FFF)
-        data.append(contentsOf: withUnsafeBytes(of: &header) { Data($0) })
-
-        var reservedBigEndian = reserved.bigEndian
-        data.append(contentsOf: withUnsafeBytes(of: &reservedBigEndian) { Data($0) })
+        /// Control type and subtype share the first word, with the control bit set.
+        let header = UInt32(controlType & 0x7FFF) << 16 | UInt32(reserved) | 0x80000000
+        var headerBigEndian = header.bigEndian
+        data.append(contentsOf: withUnsafeBytes(of: &headerBigEndian) { Data($0) })
 
         var typeSpecificInfoBigEndian = typeSpecificInformation.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &typeSpecificInfoBigEndian) { Data($0) })

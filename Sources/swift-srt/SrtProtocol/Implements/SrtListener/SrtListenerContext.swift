@@ -25,7 +25,13 @@ import Foundation
 
 public class SrtListenerContext: SrtPacketSender {
     
+    /// This listener's own socket ID, which it advertises to the caller.
     let srtSocketID: UInt32
+
+    /// Socket ID of the caller, taken from the induction request. Every response
+    /// is addressed to it.
+    let peerSocketID: UInt32
+
     let initialPacketSequenceNumber: UInt32
     let synCookie: UInt32
     let peerIpAddress: Data
@@ -33,10 +39,15 @@ public class SrtListenerContext: SrtPacketSender {
     let send: (SrtPacket, Data) -> Void
     let onSocketCreated: (SrtSocketProtocol) -> Void
 
-    private var state: SrtListenerState
+    /// The current handshake phase, observable so callers and tests can tell an
+    /// established connection from one still negotiating.
+    var state: SrtListenerStates { _state.name }
+
+    private var _state: SrtListenerState
     
     init(
         srtSocketID: UInt32,
+        peerSocketID: UInt32,
         initialPacketSequenceNumber: UInt32,
         synCookie: UInt32,
         peerIpAddress: Data,
@@ -45,20 +56,46 @@ public class SrtListenerContext: SrtPacketSender {
         onSocketCreated: @escaping (SrtSocketProtocol) -> Void
     ) {
         self.srtSocketID = srtSocketID
+        self.peerSocketID = peerSocketID
         self.initialPacketSequenceNumber = initialPacketSequenceNumber
         self.synCookie = synCookie
         self.peerIpAddress = peerIpAddress
         self.encrypted = encrypted
-        self.state = StrListenerInducedState()
+        self._state = StrListenerInducedState()
         self.send = send
         self.onSocketCreated = onSocketCreated
         
-        self.state.auto(self)
     }
-    
+
+    /// Sending from `init` meant the reply could arrive before the caller had a
+    /// reference to hand it to. Starting is now a separate, explicit step.
+    func start() {
+
+        self._state.auto(self)
+
+    }
+
+    /// Parameters the caller asked for in its conclusion request.
+    private(set) var streamId: String?
+    private(set) var srtVersion: UInt32?
+    private(set) var srtFlags: UInt32?
+    private(set) var receiverTsbpdDelay: UInt16?
+    private(set) var senderTsbpdDelay: UInt16?
+
+    /// Record what the caller requested so the socket can be built from it.
+    func apply(handshake: SrtHandshake) {
+
+        self.streamId = handshake.streamId
+        self.srtVersion = handshake.srtVersion
+        self.srtFlags = handshake.srtFlags
+        self.receiverTsbpdDelay = handshake.receiverTsbpdDelay
+        self.senderTsbpdDelay = handshake.senderTsbpdDelay
+
+    }
+
     func handleHandshake(handshake: SrtHandshake) {
         
-        self.state.handleHandshake(self, handshake: handshake)
+        self._state.handleHandshake(self, handshake: handshake)
         
     }
     
@@ -66,8 +103,8 @@ public class SrtListenerContext: SrtPacketSender {
     func set(newState: SrtListenerStates) -> SrtListenerState {
         
         print("setting listener state to \(newState.label)")
-        self.state = newState.instance
-        return self.state
+        self._state = newState.instance
+        return self._state
         
     }
     

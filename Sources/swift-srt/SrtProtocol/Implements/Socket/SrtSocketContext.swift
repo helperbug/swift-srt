@@ -41,6 +41,9 @@ public class SrtSocketContext: SrtSocketProtocol {
     private var acks: [UInt32: UInt32] = [:]
     private let rttVarianceCalc: RttVariance = .init(maxSize: 10)
 
+    /// Anything beyond 10 seconds is a wrapped or reordered timestamp, not a round trip.
+    private static let maximumPlausibleRtt: UInt32 = 10_000_000
+
     init(encrypted: Bool,
          socketId: UInt32,
          synCookie: UInt32,
@@ -59,11 +62,15 @@ public class SrtSocketContext: SrtSocketProtocol {
         let currentTime = Date().timeIntervalSince1970
         let timeSinceRoot = currentTime - rootTime
         let biasedTimestamp = initialTimestamp + timeSinceRoot
-        let offset = biasedTimestamp * 1000000
+        let offset = biasedTimestamp * 1_000_000
 
-        print("initialTimestamp \(initialTimestamp), current time: \(currentTime), root \(rootTime), time since root \(timeSinceRoot), biased \(biasedTimestamp), offset \(offset) : \(UInt32(offset))")
+        /// SRT timestamps are 32-bit microsecond counters that wrap; converting a
+        /// negative or oversized Double straight to UInt32 would trap.
+        guard offset.isFinite, offset >= 0 else {
+            return 0
+        }
 
-        return UInt32(offset)
+        return UInt32(offset.truncatingRemainder(dividingBy: Double(UInt32.max) + 1))
     }
     
     var dataCount = 1
@@ -134,7 +141,17 @@ public class SrtSocketContext: SrtSocketProtocol {
         
         print(acks)
         
-        rtt = ackAck.timestamp - sendTime
+        /// Timestamps are 32-bit microsecond counters that wrap, and packets can be
+        /// reordered, so an unsigned subtraction here would trap. Wrap instead and
+        /// discard a sample that is not plausible.
+        let sample = ackAck.timestamp &- sendTime
+
+        guard sample > 0, sample < Self.maximumPlausibleRtt else {
+            print("Discarding implausible RTT sample \(sample)us")
+            return
+        }
+
+        rtt = sample
         rttVariance = rttVarianceCalc.addSample(rtt)
             
     }

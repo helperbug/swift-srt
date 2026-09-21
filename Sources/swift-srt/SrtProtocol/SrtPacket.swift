@@ -43,7 +43,7 @@ public struct SrtPacket {
             return 0
         }
         
-        return data.prefix(4).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian & 0xEFFFFFF
+        return data.prefix(4).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian & 0x7FFFFFFF
 
     }
     

@@ -73,7 +73,7 @@ public struct KeyMaterialFrame: ByteFrame {
     /// 10b: Odd key is provided
     /// 11b: Both even and odd keys are provided.
     public var keyEncryption: UInt8 {
-        return data[2] & 0xC0
+        return data[3] & 0x03
     }
 
     /// This is a fixed-width field for specifying the Key Encryption Key Index (big-endian order) was used to wrap (and optionally authenticate) the SEK(s). The value 0 is used to indicate the default key of the current stream. Other values are reserved for the possible use of a key management system in the future to retrieve a cryptographic context.
@@ -130,23 +130,60 @@ public struct KeyMaterialFrame: ByteFrame {
         return data[14]
     }
 
+    /// Byte offset at which the salt begins.
+    private static let saltOffset = 15
+
+    /// Salt length in bytes. Widened out of UInt8 before the multiply, which
+    /// would otherwise overflow and trap on a peer-supplied value above 63.
+    public var saltLengthInBytes: Int {
+        Int(saltLength) * 4
+    }
+
+    /// Wrapped key length in bytes: n = (KK + 1) / 2 keys of KLen, plus an 8 byte
+    /// integrity check vector. Widened for the same reason as the salt.
+    public var wrappedKeyLengthInBytes: Int {
+        let keyCount = (Int(keyEncryption) + 1) / 2
+        return keyCount * Int(keyLength) * 4 + 8
+    }
+
     /// This is a variable-width field that complements the keying material by specifying a salt key.
     public var salt: Data {
-        return data.subdata(in: 15..<(15 + Int(saltLength * 4)))
+        let end = Self.saltOffset + saltLengthInBytes
+
+        guard end <= data.count else {
+            return Data()
+        }
+
+        return data.subdata(in: Self.saltOffset..<end)
     }
 
     /// This is a variable-width field for specifying Wrapped key(s), where n = (KK + 1)/2 and the size of the wrap field is ((n * KLen) + 8) bytes.
     public var wrappedKey: Data {
-        let start = 15 + Int(saltLength * 4)
-        let length = Int(((keyEncryption + 1) / 2) * keyLength * 4 + 8)
-        return data.subdata(in: start..<(start + length))
+        let start = Self.saltOffset + saltLengthInBytes
+        let end = start + wrappedKeyLengthInBytes
+
+        guard start <= data.count, end <= data.count else {
+            return Data()
+        }
+
+        return data.subdata(in: start..<end)
     }
 
+    /// Constructor used by the receive network path. Every length in a KM message
+    /// comes from the peer, so the declared salt and key sizes have to be checked
+    /// against the buffer before any field is read.
     public init?(_ data: Data) {
 
-        guard data.count >= 15 else { return nil }
+        guard data.count >= Self.saltOffset else { return nil }
 
         self.data = data
+
+        /// Both keys can only be present if KK says so; 00b is an invalid extension.
+        guard keyEncryption != 0 else { return nil }
+
+        let declared = Self.saltOffset + saltLengthInBytes + wrappedKeyLengthInBytes
+
+        guard declared <= data.count else { return nil }
 
     }
 

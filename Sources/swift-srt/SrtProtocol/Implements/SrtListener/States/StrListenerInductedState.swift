@@ -29,55 +29,42 @@ struct StrListenerInductedState: SrtListenerState {
     
     func auto(_ context: SrtListenerContext) {
         
-        let conclusionResponse = makeConclusionResponse(srtSocketID: context.srtSocketID,
-                                                        initialPacketSequenceNumber: context.initialPacketSequenceNumber,
-                                                        synCookie: context.synCookie,
-                                                        peerIpAddress: context.peerIpAddress)
-        
-        let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: context.srtSocketID, contents: Data())
-        let contents = conclusionResponse.makePacket(socketId: context.srtSocketID).contents
-        
-        context.send(packet, contents)
-
-        let socket = SrtSocketContext(encrypted: context.encrypted,
-                                      socketId: context.srtSocketID,
-                                      synCookie: context.synCookie)
-        
-        context.onSocketCreated(socket)
-        
-        context.set(newState: .active)
-        
-    }
-    
-    private func makeConclusionResponse(
-        srtSocketID: UInt32,
-        initialPacketSequenceNumber: UInt32,
-        synCookie: UInt32,
-        peerIpAddress: Data
-    ) -> SrtHandshake {
-        
-        let handshakeExt = HandshakeExtensionMessage(srtVersion: 0x00010502,
-                                                     srtFlags: 0xbf,
-                                                     receiverTsbpdDelay: 120,
-                                                     senderTsbpdDelay: 120)
-        
-        let contents = handshakeExt.data
-        
-        return SrtHandshake(
-            hsVersion: .version5,
-            encryptionField: 0, // No encryption
-            extensionField: 1,
-            initialPacketSequenceNumber: initialPacketSequenceNumber,
-            maximumTransmissionUnitSize: 1500,
-            maximumFlowWindowSize: 8192,
-            handshakeType: .conclusion,
-            srtSocketID: srtSocketID,
-            synCookie: synCookie,
-            peerIPAddress: peerIpAddress,
-            extensionType: .handshakeResponse,
-            extensionLength: UInt16(contents.count / 4),
-            extensionContents: contents
+        let conclusionResponse = SrtHandshake.makeConclusionResponse(
+            srtSocketID: context.srtSocketID,
+            initialPacketSequenceNumber: context.initialPacketSequenceNumber,
+            synCookie: context.synCookie,
+            peerIpAddress: context.peerIpAddress
         )
+
+        /// Addressed to the caller, advertising this listener's own socket ID.
+        let packet = SrtPacket(
+            field1: ControlTypes.handshake.asField,
+            socketID: context.peerSocketID,
+            contents: Data()
+        )
+
+        /// The socket is keyed by the caller's ID -- that is the destination ID the
+        /// caller puts on its data packets. Register it, and move to active, before
+        /// the response goes out: the caller may send data the instant it lands.
+        let socket = SrtSocketContext(
+            encrypted: context.encrypted,
+            socketId: context.peerSocketID,
+            synCookie: context.synCookie
+        )
+
+        socket.initialPacketSequenceNumber = context.initialPacketSequenceNumber
+
+        /// Carry across what the caller asked for in its conclusion request.
+        socket.srtVersion = context.srtVersion
+        socket.srtFlags = context.srtFlags
+        socket.receiverTsbpdDelay = context.receiverTsbpdDelay
+        socket.senderTsbpdDelay = context.senderTsbpdDelay
+        socket.streamId = context.streamId
+
+        context.set(newState: .active)
+        context.onSocketCreated(socket)
+        context.send(packet, conclusionResponse.data)
+        
     }
 
 }
