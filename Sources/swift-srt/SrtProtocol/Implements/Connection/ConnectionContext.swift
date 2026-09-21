@@ -152,7 +152,7 @@ public class ConnectionContext: SrtConnectionProtocol {
 extension ConnectionContext {
     
     func receive(packet: SrtPacket) {
-        
+
         if packet.isData {
             self.handleData(socketId: packet.destinationSocketID, frame: packet.data)
             
@@ -253,8 +253,15 @@ extension ConnectionContext {
             return
         }
 
-        // let chunks = MpegTsParser.parseTSChunks(from: frame)
-        
+        /// Hand the payload to the application. Without this the received bytes
+        /// stop here and nothing downstream ever sees the stream.
+        managerService.addFrame(
+            header: self.udpHeader,
+            socketId: socketId,
+            messageId: dataPacket.messageNumber,
+            frame: dataPacket.payload
+        )
+
         let receiveMetrics: SrtMetricsModel = .init(bytesCount: dataPacket.data.count)
         metricsService.storeConnectionMetric(header: self.udpHeader, receive: receiveMetrics, send: nil)
 
@@ -263,7 +270,7 @@ extension ConnectionContext {
                 field1: ControlTypes.acknowledgement.asField,
                 field2: ackFrame.acknowledgementNumber,
                 timestamp: ackFrame.timestamp,
-                socketID: socketId,
+                socketID: socket.peerSocketId,
                 contents: Data()
             )
 
@@ -358,7 +365,7 @@ extension ConnectionContext {
         case .congestionWarning:
             log("Congestion Warning packet received")
         case .shutdown:
-            let socketId = controlPacket.destinationSocketID
+            let socketId = packet.destinationSocketID
             sockets.removeValue(forKey: socketId)
             if sockets.isEmpty {
                 log("All sockets closed, cancelling connection")
@@ -389,15 +396,23 @@ extension ConnectionContext {
     
     private func handleKeepAlive(packet: SrtPacket) {
 
-        guard getSocket(socketId: packet.destinationSocketID) != nil else {
+        guard let socket = getSocket(socketId: packet.destinationSocketID) else {
             log("Ignoring keep-alive for unknown socket \(packet.destinationSocketID)")
             return
         }
 
         latestTimestamp = packet.timestamp + 100
-        let packet = SrtPacket(field1: ControlTypes.keepAlive.asField, timestamp: latestTimestamp, socketID: packet.destinationSocketID, contents: Data())
-        
-        send(header: packet, contents: Data(repeating: 0, count: 4))
+
+        let reply = SrtPacket(
+            field1: ControlTypes.keepAlive.asField,
+            timestamp: latestTimestamp,
+            socketID: socket.peerSocketId,
+            contents: Data()
+        )
+
+        /// libsrt rejects a zero-length keep-alive body: it wants a CIF greater
+        /// than zero and aligned to four bytes.
+        send(header: reply, contents: Data(repeating: 0, count: 4))
 
     }
     
@@ -426,7 +441,7 @@ extension ConnectionContext {
 
         if let socket = sockets.values.first {
             
-            socketId = socket.socketId
+            socketId = socket.peerSocketId
 
         } else {
 

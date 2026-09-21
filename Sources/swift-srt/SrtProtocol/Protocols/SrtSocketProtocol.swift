@@ -35,6 +35,9 @@ public protocol SrtSocketProtocol {
     
     /// ID of the source SRT socket.
     var socketId: UInt32 { get }
+
+    /// Destination socket ID for anything sent back to the peer.
+    var peerSocketId: UInt32 { get }
     
     /// The synCookie that made this socket.
     var synCookie: UInt32 { get }

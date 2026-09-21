@@ -121,9 +121,14 @@ final class HandshakeExchangeTests: XCTestCase {
         // -- Both sides ended up connected -------------------------------------
         XCTAssertNotNil(listenerSocket, "listener never created a socket")
         XCTAssertNotNil(callerSocket, "caller never created a socket")
+        /// Each side keys its socket by its OWN ID, because that is what the peer
+        /// puts in the destination field of every packet it sends. Keying by the
+        /// peer's ID instead makes every inbound packet fail to match.
         XCTAssertEqual(callerSocket?.socketId, caller1.srtSocketID)
-        XCTAssertEqual(listenerSocket?.socketId, caller1.srtSocketID,
-                       "the listener addresses its socket by the caller's ID")
+        XCTAssertEqual(callerSocket?.peerSocketId, listenerSocketID)
+
+        XCTAssertEqual(listenerSocket?.socketId, listenerSocketID)
+        XCTAssertEqual(listenerSocket?.peerSocketId, caller1.srtSocketID)
     }
 
     /// A conclusion request carrying someone else's cookie must not connect.

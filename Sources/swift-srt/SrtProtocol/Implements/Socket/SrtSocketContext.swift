@@ -26,7 +26,13 @@ import Foundation
 public class SrtSocketContext: SrtSocketProtocol {
     
     public var id: UUID = .init()
+
+    /// This socket's own ID. The peer puts it in the destination field of every
+    /// packet it sends here, so inbound packets are matched on it.
     public var socketId: UInt32
+
+    /// The peer's socket ID, used as the destination on everything sent back.
+    public var peerSocketId: UInt32
 
     private var acknowledgementNumber: UInt32 = 0
     private var availableBufferSize: UInt32 = 8000
@@ -46,12 +52,14 @@ public class SrtSocketContext: SrtSocketProtocol {
 
     init(encrypted: Bool,
          socketId: UInt32,
+         peerSocketId: UInt32 = 0,
          synCookie: UInt32,
          dataPacket: DataPacketFrame = .blank) {
         
         self.id = UUID()
         self.encrypted = encrypted
         self.socketId = socketId
+        self.peerSocketId = peerSocketId
         self.synCookie = synCookie
         self.rootTime = Date().timeIntervalSince1970
         self.initialTimestamp = TimeInterval(dataPacket.timestamp) / 1_000_000

@@ -43,12 +43,14 @@ struct StrListenerInductedState: SrtListenerState {
             contents: Data()
         )
 
-        /// The socket is keyed by the caller's ID -- that is the destination ID the
-        /// caller puts on its data packets. Register it, and move to active, before
-        /// the response goes out: the caller may send data the instant it lands.
+        /// The socket is keyed by this listener's own ID: that is what the caller
+        /// puts in the destination field of everything it sends. Register it, and
+        /// move to active, before the response goes out -- the caller may send data
+        /// the instant it lands.
         let socket = SrtSocketContext(
             encrypted: context.encrypted,
-            socketId: context.peerSocketID,
+            socketId: context.srtSocketID,
+            peerSocketId: context.peerSocketID,
             synCookie: context.synCookie
         )
 

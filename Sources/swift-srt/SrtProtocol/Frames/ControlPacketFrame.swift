@@ -74,9 +74,6 @@ public struct ControlPacketFrame: ByteFrame {
         self.controlPacketType = controlType
         
         self.data = bytes
-        
-        print("Socket ID: \(self.destinationSocketID)")
-        print(String(format: "%02X", self.destinationSocketID))
     }
 
     /// Constructor used when sending over the network

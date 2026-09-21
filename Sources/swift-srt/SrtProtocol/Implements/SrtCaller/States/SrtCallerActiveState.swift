@@ -34,6 +34,7 @@ struct SrtCallerActiveState: SrtCallerState {
         let socket = SrtSocketContext(
             encrypted: context.encrypted,
             socketId: context.srtSocketID,
+            peerSocketId: context.peerSocketID,
             synCookie: context.synCookie
         )
 
