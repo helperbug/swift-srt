@@ -35,14 +35,14 @@ public struct PeerErrorFrame: ByteFrame {
     /// Packet Type: 1 bit, value = 1. The packet type value of a Peer Error control packet is "1".
     public var isControl: Bool {
         
-        return (data[0] & 0b10000000) == 1
+        return (data[0] & 0b10000000) != 0
         
     }
     
     /// Control Type: 15 bits, value = 8. The control type value of a Peer Error control packet is "8".
     public var controlType: UInt16 {
         
-        return data.prefix(2).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian & 0xEFF
+        return data.prefix(2).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian & 0x7FFF
 
     }
     

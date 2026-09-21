@@ -33,9 +33,10 @@ struct SrtPortListenerErrorState: SrtPortListenerState {
     func auto(_ context: SrtPortListenerContext) {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            
-            context.set(state: .none)
-            
+
+            /// Re-arm the listener; set() alone only installs the state.
+            context.set(state: .none).auto(context)
+
         }
         
     }

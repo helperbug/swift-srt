@@ -73,20 +73,24 @@ public class SrtPortListenerContext {
     func set(state: SrtPortListnerStates) -> SrtPortListenerState {
         
         let newState: SrtPortListenerState
-        
-        if state == .ready {
-            
+
+        switch state {
+        case .ready:
             newState = SrtPortListenerReadyState()
-
-        } else {
-            
+        case .error:
+            newState = SrtPortListenerErrorState()
+        case .none:
             newState = SrtPortListenerNoneState()
-
         }
-        
+
         self.state = newState
         self._listenerState = newState.name
-        
+
+        /// The error state schedules its own retry back into .none.
+        if state == .error {
+            newState.auto(self)
+        }
+
         return newState
         
     }

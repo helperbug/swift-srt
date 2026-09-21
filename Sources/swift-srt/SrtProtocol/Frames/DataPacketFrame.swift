@@ -144,10 +144,12 @@ public struct DataPacketFrame: ByteFrame {
         var packetSequenceNumberBigEndian = packetSequenceNumberWithFlag.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &packetSequenceNumberBigEndian) { Data($0) })
 
-        let messageNumberWithFlags = (UInt32(packetPosition) << 30) |
-                                     (orderFlag ? 0b00100000 : 0) |
-                                     (UInt32(encryptionFlags) << 3) |
-                                     (retransmittedFlag ? 0b00000100 : 0) |
+        /// PP occupies bits 31-30, O bit 29, KK bits 28-27, R bit 26 and the
+        /// message number the remaining 26 bits.
+        let messageNumberWithFlags = (UInt32(packetPosition & 0b11) << 30) |
+                                     (orderFlag ? (1 << 29) : 0) |
+                                     (UInt32(encryptionFlags & 0b11) << 27) |
+                                     (retransmittedFlag ? (1 << 26) : 0) |
                                      (messageNumber & 0x03FFFFFF)
         var messageNumberBigEndian = messageNumberWithFlags.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &messageNumberBigEndian) { Data($0) })
@@ -166,11 +168,15 @@ public struct DataPacketFrame: ByteFrame {
     
     public func makePacket(socketId: UInt32) -> SrtPacket
     {
+        /// The first word of a data packet is its sequence number, and the second
+        /// carries the flags and message number -- not a control type.
         SrtPacket(
             isData: true,
-            field1: ControlTypes.ackack.asField,
+            field1: packetSequenceNumber,
+            field2: data.subdata(in: 4..<8).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian,
+            timestamp: timestamp,
             socketID: socketId,
-            contents: self.data
+            contents: payload
         )
     }
 

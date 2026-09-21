@@ -31,9 +31,9 @@ class ConnectionSetupState: ConnectionState {
     func onStateChanged(_ context: ConnectionContext, state: NWConnection.State) {
         
         if state == .preparing {
-            
-            let state = context.set(newState: .setup)
-            state.state.auto(context)
+
+            /// Already started; calling start() again on a live NWConnection traps.
+            context.log("Connection preparing")
 
         } else if state == .ready {
             

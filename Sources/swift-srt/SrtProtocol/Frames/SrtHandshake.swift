@@ -85,10 +85,15 @@ public struct SrtHandshake {
         data.append(peerIPAddress)
         
         if extensions.count > 0 {
-            extensions.forEach { ext in
-            
-                data.append(contentsOf: ext.value)
-                
+            /// Extensions are TLVs. A dictionary has no order of its own, so emit them
+            /// by ascending type to keep the encoding deterministic — libsrt expects
+            /// HSREQ/HSRSP (1, 2) ahead of the KM (3, 4) and config (5+) blocks.
+            extensions.sorted { $0.key.rawValue < $1.key.rawValue }.forEach { ext in
+
+                data.append(contentsOf: ext.key.rawValue.bytes)
+                data.append(contentsOf: UInt16(ext.value.count / 4).bytes)
+                data.append(ext.value)
+
             }
         } else if extensionType != .none {
             data.append(contentsOf: extensionType.rawValue.bytes)
@@ -141,11 +146,15 @@ public struct SrtHandshake {
         
         while offset + 4 <= data.count {
             let extensionType = HandshakeExtensionTypes(rawValue: data.toUInt16(from: &offset)) ?? .none
-            let extensionLength = data.toUInt16(from: &offset)
-            let extensionContents = data.subdata(in: offset..<(offset + Int(extensionLength) * 4))
-            
-            extensions[extensionType] = extensionContents
-            offset += Int(extensionLength) * 4
+            let extensionLength = Int(data.toUInt16(from: &offset)) * 4
+
+            /// The length is attacker-controlled, so never read past the buffer.
+            guard offset + extensionLength <= data.count else {
+                return nil
+            }
+
+            extensions[extensionType] = data.subdata(in: offset..<(offset + extensionLength))
+            offset += extensionLength
         }
         
         self.extensions = extensions
@@ -179,15 +188,27 @@ public struct SrtHandshake {
         synCookie != 0
     }
     
+    /// A conclusion request always carries HSREQ; KMREQ and CONFIG are optional,
+    /// so match on the HSREQ bit rather than on one exact extension field value.
+    /// The request echoes back the cookie the listener handed out during induction.
     func isConclusionRequest(synCookie reference: UInt32) -> Bool {
         hsVersion == .version5 &&
-        encryptionField == 0 &&
-        extensionField == 0x0005 &&
+        extensionField & UInt16(HandshakeExtensionFlagTypes.handshakeRequest.rawValue) != 0 &&
         handshakeType == .conclusion &&
         srtSocketID != 0 &&
-        synCookie == reference
+        synCookie == reference &&
+        extensions[.handshakeResponse] == nil
     }
-    
+
+    /// The listener answers with an HSRSP extension and no cookie, which is what
+    /// separates a conclusion response from the request that provoked it.
+    var isConclusionResponse: Bool {
+        hsVersion == .version5 &&
+        handshakeType == .conclusion &&
+        srtSocketID != 0 &&
+        (extensions[.handshakeResponse] != nil || extensionType == .handshakeResponse)
+    }
+
 }
 
 public extension SrtHandshake {
@@ -287,6 +308,59 @@ public extension SrtHandshake {
         
     }
     
+    /// Smallest MTU that still leaves room for an SRT header on top of UDP/IPv4.
+    /// A peer advertising less than this would size payload buffers to nothing.
+    static let minimumTransmissionUnitSize: UInt32 = 76
+
+    /// Largest MTU worth honouring; beyond this a peer is asking us to allocate
+    /// buffers out of proportion to any real path.
+    static let maximumTransmissionUnitSize: UInt32 = 65536
+
+    /// Payload bytes left once the UDP/IPv4 and SRT headers are accounted for.
+    var usablePayloadSize: Int {
+        Int(maximumTransmissionUnitSize) - 28 - 16
+    }
+
+    /// Peer-supplied transmission parameters have to be usable before anything
+    /// sizes a buffer from them.
+    var hasUsableTransmissionParameters: Bool {
+        maximumTransmissionUnitSize >= Self.minimumTransmissionUnitSize &&
+        maximumTransmissionUnitSize <= Self.maximumTransmissionUnitSize &&
+        maximumFlowWindowSize > 0
+    }
+
+    /// SRT version this package advertises, formed as major * 0x10000 + minor * 0x100 + patch.
+    /// Tracks libsrt 1.5.7 (2026-08-27).
+    static let srtLibraryVersion: UInt32 = 0x00010507
+
+    /// TSBPDSND | TSBPDRCV | CRYPT | TLPKTDROP | PERIODICNAK | REXMITFLG | STREAM as libsrt sends them.
+    static let defaultSrtFlags: UInt32 = 0xbf
+
+    /// Latency budget in milliseconds.
+    static let defaultTsbpdDelay: UInt16 = 120
+
+    /// The extension field is a bitmap of which extension groups follow, so it has
+    /// to be derived from the extensions actually being sent rather than hardcoded.
+    static func extensionField(for extensions: [HandshakeExtensionTypes: Data]) -> UInt16 {
+
+        var field: UInt32 = 0
+
+        for type in extensions.keys {
+            switch type {
+            case .handshakeRequest, .handshakeResponse:
+                field |= HandshakeExtensionFlagTypes.handshakeRequest.rawValue
+            case .keyMaterialRequest, .keyMaterialResponse:
+                field |= HandshakeExtensionFlagTypes.keyMaterialRequest.rawValue
+            case .streamId, .congestionControl, .filterControl, .groupControl:
+                field |= HandshakeExtensionFlagTypes.configuration.rawValue
+            case .none:
+                break
+            }
+        }
+
+        return UInt16(field)
+    }
+
     static func makeConclusionRequest(
         srtSocketID: UInt32,
         initialPacketSequenceNumber: UInt32,
@@ -294,11 +368,11 @@ public extension SrtHandshake {
         peerIpAddress: Data,
         extensions: [HandshakeExtensionTypes: Data]
     ) -> SrtHandshake {
-        
+
         return SrtHandshake(
             hsVersion: .version5,
             encryptionField: 0, // No encryption
-            extensionField: 5,
+            extensionField: extensionField(for: extensions),
             initialPacketSequenceNumber: initialPacketSequenceNumber,
             maximumTransmissionUnitSize: 1500,
             maximumFlowWindowSize: 8192,
@@ -313,27 +387,39 @@ public extension SrtHandshake {
         )
     }
 
+    /// The Handshake Extension Message MUST be present in the conclusion response,
+    /// carried as HSRSP. The response does not echo the cookie back.
     static func makeConclusionResponse(
         srtSocketID: UInt32,
         initialPacketSequenceNumber: UInt32,
         synCookie: UInt32,
         peerIpAddress: Data
     ) -> SrtHandshake {
-        
+
+        let hsrsp = HandshakeExtensionMessage(
+            srtVersion: Self.srtLibraryVersion,
+            srtFlags: Self.defaultSrtFlags,
+            receiverTsbpdDelay: Self.defaultTsbpdDelay,
+            senderTsbpdDelay: Self.defaultTsbpdDelay
+        )
+
+        let extensions: [HandshakeExtensionTypes: Data] = [.handshakeResponse: hsrsp.data]
+
         return SrtHandshake(
             hsVersion: .version5,
             encryptionField: 0, // No encryption
-            extensionField: 1,
+            extensionField: extensionField(for: extensions),
             initialPacketSequenceNumber: initialPacketSequenceNumber,
             maximumTransmissionUnitSize: 1500,
             maximumFlowWindowSize: 8192,
             handshakeType: .conclusion,
             srtSocketID: srtSocketID,
-            synCookie: synCookie,
+            synCookie: 0,
             peerIPAddress: peerIpAddress,
             extensionType: .none,
             extensionLength: 0,
-            extensionContents: Data()
+            extensionContents: Data(),
+            extensions: [.handshakeResponse: hsrsp.data]
         )
     }
     
@@ -381,17 +467,21 @@ public extension SrtHandshake {
 extension SrtHandshake {
     
     
-    static func makeInductionRequest(serverIpAddress: Data) -> SrtHandshake {
+    static func makeInductionRequest(
+        srtSocketID: UInt32,
+        initialPacketSequenceNumber: UInt32 = 0,
+        serverIpAddress: Data
+    ) -> SrtHandshake {
 
         return SrtHandshake(
             hsVersion: .version4,
             encryptionField: 0,
             extensionField: 2,
-            initialPacketSequenceNumber: 0,
+            initialPacketSequenceNumber: initialPacketSequenceNumber,
             maximumTransmissionUnitSize: 1500,
             maximumFlowWindowSize: 8192,
             handshakeType: .induction,
-            srtSocketID: UInt32.random(in: UInt32.min...UInt32.max),
+            srtSocketID: srtSocketID,
             synCookie: 0,
             peerIPAddress: serverIpAddress,
             extensionType: .none,
@@ -483,14 +573,25 @@ extension SrtHandshake {
         return nil
     }
     
-    /// StreamID is used to identify a path
+    /// StreamID is used to identify a path. libsrt stores it as 32-bit words with
+    /// the bytes reversed inside each word, zero padded to a word boundary, so the
+    /// reversal has to be undone before the bytes read as text.
     public var streamId: String? {
-        if let streamIdData = extensions[.streamId],
-           let streamId = String(data: streamIdData, encoding: .utf8) {
-            return streamId
-        } else {
+        guard let encoded = extensions[.streamId], !encoded.isEmpty else {
             return nil
         }
+
+        var bytes = Data(capacity: encoded.count)
+        for start in stride(from: 0, to: encoded.count - (encoded.count % 4), by: 4) {
+            bytes.append(contentsOf: encoded[encoded.startIndex + start ..< encoded.startIndex + start + 4].reversed())
+        }
+
+        /// Trailing padding is zero bytes, and a short id leaves them inside the word.
+        while bytes.last == 0 {
+            bytes.removeLast()
+        }
+
+        return String(data: bytes, encoding: .utf8)
     }
     
     /// Type of congestion control

@@ -40,6 +40,11 @@ public class ConnectionContext: SrtConnectionProtocol {
     private var latestTimestamp: UInt32 = 0
     public let udpHeader: UdpHeader
 
+    /// `UdpHeader.cookie` mixes in the wall clock at one-minute accuracy, so reading it
+    /// twice can yield two different cookies. Mint it once per connection and compare
+    /// the caller's conclusion request against that fixed value.
+    let synCookie: UInt32
+
     var state: ConnectionState
     let connection: NWConnection
     
@@ -55,6 +60,7 @@ public class ConnectionContext: SrtConnectionProtocol {
         
         self.connection = connection
         self.udpHeader = updHeader
+        self.synCookie = updHeader.cookie
         self.logService = logService
         self.managerService = managerService
         self.metricsService = metricsService
@@ -63,23 +69,31 @@ public class ConnectionContext: SrtConnectionProtocol {
         
     }
     
-    public func handshake(address: IPv4Address) {
-        
-        if pendingCaller == nil {
+    public func handshake(address: IPv4Address, streamId: String? = nil) {
 
-            pendingCaller = SrtCallerContext(srtSocketID: UInt32.random(in: UInt32.min...UInt32.max),
-                                             initialPacketSequenceNumber: 0,
-                                             synCookie: 0,
-                                             peerIpAddress: address.to16bytes(),
-                                             encrypted: false,
-                                             send: send(header:contents:),
-                                             onSocketCreated: { socket in
-                                                 self.sockets[socket.socketId] = socket
-                                                 self.pendingCaller = nil
-                                             })
-            
+        guard pendingCaller == nil else {
+            return
         }
-        
+
+        /// Socket ID 0 is reserved to mean "connection request", so never pick it.
+        let caller = SrtCallerContext(srtSocketID: UInt32.random(in: 1...UInt32.max),
+                                      initialPacketSequenceNumber: 0,
+                                      synCookie: 0,
+                                      peerIpAddress: address.to16bytes(),
+                                      encrypted: false,
+                                      streamId: streamId,
+                                      send: send(header:contents:),
+                                      onSocketCreated: { [weak self] socket in
+                                          guard let self else { return }
+                                          self.sockets[socket.socketId] = socket
+                                          self.pendingCaller = nil
+                                      })
+
+        /// Assign before starting: the induction response can arrive as soon as the
+        /// request goes out, and it has to find the caller here.
+        pendingCaller = caller
+        caller.start()
+
     }
     
     public func cancel() {
@@ -219,17 +233,12 @@ extension ConnectionContext {
 
 extension ConnectionContext {
     
+    /// Packets are dispatched strictly by destination socket ID. Falling back to
+    /// an arbitrary socket would let a packet addressed to nobody drive the state
+    /// of an unrelated stream on the same connection.
     private func getSocket(socketId: UInt32) -> SrtSocketProtocol? {
-        
-        guard let defaultSocket = self.sockets.values.first else {
-            return nil
-        }
 
-        guard let matchedSocket = self.sockets[socketId] else {
-            return defaultSocket
-        }
-
-        return matchedSocket
+        self.sockets[socketId]
 
     }
     
@@ -266,7 +275,16 @@ extension ConnectionContext {
 
     }
 
-    private func handleHandshake(handshake: SrtHandshake) {
+    private func handleHandshake(handshake: SrtHandshake, destinationSocketID: UInt32) {
+
+        /// Once a socket exists for this ID the handshake that built it is done;
+        /// a further one is a late retransmission and must not reopen anything.
+        if destinationSocketID != 0, sockets[destinationSocketID] != nil {
+
+            log("Ignoring handshake for established socket \(destinationSocketID)")
+            return
+
+        }
 
         if let pendingListener {
 
@@ -277,19 +295,32 @@ extension ConnectionContext {
             pendingCaller.handleHandshake(handshake: handshake)
             
         } else if handshake.isInductionRequest {
-            
-            self.pendingListener = SrtListenerContext(
-                srtSocketID:    handshake.srtSocketID,
+
+            guard let peerIpAddress = self.udpHeader.sourceIp.ipStringToData else {
+                log("Cannot parse peer address \(self.udpHeader.sourceIp)")
+                return
+            }
+
+            /// The listener answers with a socket ID of its own; the caller's ID from
+            /// the induction request becomes the destination for everything we send.
+            let listener = SrtListenerContext(
+                srtSocketID: UInt32.random(in: 1...UInt32.max),
+                peerSocketID: handshake.srtSocketID,
                 initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
-                synCookie: self.udpHeader.cookie,
-                peerIpAddress: self.udpHeader.sourceIp.ipStringToData!,
+                synCookie: self.synCookie,
+                peerIpAddress: peerIpAddress,
                 encrypted: false,
                 send: self.send(header:contents:),
-                onSocketCreated: { socket in
+                onSocketCreated: { [weak self] socket in
+                    guard let self else { return }
                     self.sockets[socket.socketId] = socket
                     self.pendingListener = nil
                 })
-            
+
+            /// Assign before starting, so the conclusion request finds it here.
+            self.pendingListener = listener
+            listener.start()
+
         } else {
             
             log("should never get here")
@@ -300,21 +331,11 @@ extension ConnectionContext {
     
     private func handleControl(packet: SrtPacket) {
         
-        if let _ = ShutdownFrame(packet.data) {
-            self.cancel()
-        }
-
         guard let controlPacket = ControlPacketFrame(packet.data),
               let controlType = ControlTypes(rawValue: controlPacket.controlType) else {
             log("Invalid control packet")
             return
         }
-        
-        let socketId = packet.destinationSocketID
-        
-        let _ = SrtSocketContext(encrypted: true,
-                                             socketId: socketId,
-                                             synCookie: self.udpHeader.cookie)
         
         switch controlType {
         case .handshake:
@@ -323,7 +344,8 @@ extension ConnectionContext {
                 return
             }
             
-            self.handleHandshake(handshake: handshake)
+            self.handleHandshake(handshake: handshake,
+                                 destinationSocketID: packet.destinationSocketID)
             
         case .keepAlive:
 
@@ -366,6 +388,11 @@ extension ConnectionContext {
     }
     
     private func handleKeepAlive(packet: SrtPacket) {
+
+        guard getSocket(socketId: packet.destinationSocketID) != nil else {
+            log("Ignoring keep-alive for unknown socket \(packet.destinationSocketID)")
+            return
+        }
 
         latestTimestamp = packet.timestamp + 100
         let packet = SrtPacket(field1: ControlTypes.keepAlive.asField, timestamp: latestTimestamp, socketID: packet.destinationSocketID, contents: Data())

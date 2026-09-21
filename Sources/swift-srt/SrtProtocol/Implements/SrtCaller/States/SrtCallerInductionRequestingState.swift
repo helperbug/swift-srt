@@ -28,19 +28,27 @@ struct SrtCallerInductionRequestingState: SrtCallerState {
 
     func handleHandshake(_ context: SrtCallerContext, handshake: SrtHandshake) {
         
-        if handshake.isInductionResponse {
-            
-            context.synCookie = handshake.synCookie
-            
-            let state = context.set(newState: .inducted)
-            
-            state.auto(context)
-            
-        } else {
+        guard handshake.isInductionResponse else {
             
             context.set(newState: .shutdown)
+            return
             
         }
+
+        guard handshake.hasUsableTransmissionParameters else {
+
+            print("Rejecting induction response with unusable transmission parameters")
+            context.set(newState: .shutdown)
+            return
+
+        }
+
+        /// Carry the cookie and the listener's socket ID into the conclusion phase.
+        context.synCookie = handshake.synCookie
+        context.peerSocketID = handshake.srtSocketID
+
+        let state = context.set(newState: .inducted)
+        state.auto(context)
         
     }
     

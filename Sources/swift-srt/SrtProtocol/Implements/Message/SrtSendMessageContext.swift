@@ -81,7 +81,17 @@ class SrtSendMessageContext: SrtSendMessageProtocol {
             let end = min(start + chunkSize, frame.count)
             let chunk = frame[start..<end]
             let packetSequenceNumber = sequenceNumber + UInt32(i)
-            let packetPosition: UInt8 = i == 0 ? 0b01 : (i == totalChunks - 1 ? 0b10 : 0b00)
+            /// 10b first, 01b last, 00b middle, 11b when one packet is the whole message.
+            let packetPosition: UInt8
+            if totalChunks == 1 {
+                packetPosition = 0b11
+            } else if i == 0 {
+                packetPosition = 0b10
+            } else if i == totalChunks - 1 {
+                packetPosition = 0b01
+            } else {
+                packetPosition = 0b00
+            }
             let dataPacket = DataPacketFrame(
                 packetSequenceNumber: packetSequenceNumber,
                 packetPosition: packetPosition,

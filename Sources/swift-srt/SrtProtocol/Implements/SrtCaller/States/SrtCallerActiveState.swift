@@ -26,8 +26,32 @@ import Foundation
 struct SrtCallerActiveState: SrtCallerState {
     var name: SrtCallerStates = .active
 
-    func handleHandshake(_ context: SrtListenerContext, handshake: SrtHandshake) {
+    func auto(_ context: SrtCallerContext) {
+
+        /// The listener has answered, so the connection is established. The socket is
+        /// keyed by this caller's own ID, which is the destination the listener puts
+        /// on the packets it sends back.
+        let socket = SrtSocketContext(
+            encrypted: context.encrypted,
+            socketId: context.srtSocketID,
+            synCookie: context.synCookie
+        )
+
+        socket.initialPacketSequenceNumber = context.initialPacketSequenceNumber
+
+        /// Carry across what the listener agreed to in its conclusion response.
+        socket.srtVersion = context.srtVersion
+        socket.srtFlags = context.srtFlags
+        socket.receiverTsbpdDelay = context.receiverTsbpdDelay
+        socket.senderTsbpdDelay = context.senderTsbpdDelay
+        socket.streamId = context.streamId
+
+        context.onSocketCreated(socket)
 
     }
+
+    /// A repeated conclusion response means our answer was lost; it is safely ignored
+    /// because the connection is already up.
+    func handleHandshake(_ context: SrtCallerContext, handshake: SrtHandshake) { }
 
 }

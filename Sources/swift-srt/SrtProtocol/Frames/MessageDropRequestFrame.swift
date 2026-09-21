@@ -39,12 +39,12 @@ public struct MessageDropRequestFrame: ByteFrame {
     
     /// Packet Type: 1 bit, value = 1. The packet type value of a Drop Request control packet is "1"
     public var isControl: Bool {
-        return (data[0] & 0b10000000) == 1
+        return (data[0] & 0b10000000) != 0
     }
     
     /// Control Type: 15 bits, value = 7. The control type value of a Drop Request control packet is "7".
     public var controlType: UInt16 {
-        return data.prefix(2).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian & 0xEF
+        return data.prefix(2).withUnsafeBytes { $0.load(as: UInt16.self) }.bigEndian & 0x7FFF
     }
     
     /// Reserved always zero
@@ -73,14 +73,14 @@ public struct MessageDropRequestFrame: ByteFrame {
     /// The sequence number of the first packet in the message.
     public var firstSequenceNumber: UInt32 {
 
-        return data.subdata(in: 16..<20).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian & 0xEFFF
+        return data.subdata(in: 16..<20).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian & 0x7FFFFFFF
 
     }
     
     /// The sequence number of the last packet in the message.
     public var lastSequenceNumber: UInt32 {
 
-        return data.subdata(in: 20..<24).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian & 0xEFFF
+        return data.subdata(in: 20..<24).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian & 0x7FFFFFFF
 
     }
     
@@ -94,7 +94,17 @@ public struct MessageDropRequestFrame: ByteFrame {
         self.data = bytes
         
         guard isControl, controlType == 7 else { return nil }
+
+        /// A reversed range, or one spanning more packets than could plausibly be
+        /// in flight, must not reach the receiver buffer.
+        guard firstSequenceNumber <= lastSequenceNumber,
+              lastSequenceNumber - firstSequenceNumber <= Self.maximumDropRange else {
+            return nil
+        }
     }
+
+    /// Upper bound on how many packets one drop request may span.
+    static let maximumDropRange: UInt32 = 1 << 20
     
     /// Constructor used when sending over the network
     public init(
