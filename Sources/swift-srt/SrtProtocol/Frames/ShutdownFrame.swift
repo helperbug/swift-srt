@@ -105,7 +105,7 @@ public struct ShutdownFrame: ByteFrame {
     public func makePacket(socketId: UInt32) -> SrtPacket
     {
         SrtPacket(
-            isData: true,
+            isData: false,
             field1: ControlTypes.shutdown.asField,
             socketID: socketId,
             contents: self.data

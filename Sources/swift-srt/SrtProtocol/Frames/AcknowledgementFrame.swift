@@ -108,7 +108,16 @@ public struct AcknowledgementFrame: ByteFrame {
         guard bytes.count >= 44 else { return nil }
         
         self.data = bytes
+
+        /// Packet sequence numbers occupy 31 bits; a value with the top bit set is
+        /// forged or malformed and must not reach send-buffer bookkeeping.
+        guard lastAcknowledgedPacketSequenceNumber <= Self.maximumSequenceNumber else {
+            return nil
+        }
     }
+
+    /// Sequence numbers range over [0, 2^31 - 1].
+    static let maximumSequenceNumber: UInt32 = 0x7FFFFFFF
 
     /// Constructor used when sending over the network
     public init(

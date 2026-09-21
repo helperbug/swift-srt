@@ -90,8 +90,11 @@ public struct ControlPacketFrame: ByteFrame {
     ) {
         var data = Data(capacity: 16 + controlInformationField.count)
 
-        var header = (controlType & 0x7FFF) << 16 | (subtype & 0xFFFF)
-        data.append(contentsOf: withUnsafeBytes(of: &header) { Data($0) })
+        /// Shifting a UInt16 left by 16 discards the whole value, and the result has
+        /// to go out big-endian with the control bit set.
+        let header = UInt32(controlType & 0x7FFF) << 16 | UInt32(subtype) | 0x80000000
+        var headerBigEndian = header.bigEndian
+        data.append(contentsOf: withUnsafeBytes(of: &headerBigEndian) { Data($0) })
 
         var typeSpecificInfoBigEndian = typeSpecificInformation.bigEndian
         data.append(contentsOf: withUnsafeBytes(of: &typeSpecificInfoBigEndian) { Data($0) })

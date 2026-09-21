@@ -59,10 +59,12 @@ extension SrtCallerState {
         
     }
     
+    /// Handshakes arrive from the network, so an unexpected one in any state is
+    /// a packet to drop -- never a reason to trap.
     func handleHandshake(_ context: SrtCallerContext, handshake: SrtHandshake) {
-        
-        fatalError(name.label)
-        
+
+        print("Ignoring \(handshake.handshakeType) handshake in caller state \(name.label)")
+
     }
     
 }

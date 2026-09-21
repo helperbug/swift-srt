@@ -28,95 +28,69 @@ struct StrCallerInductedState: SrtCallerState {
 
     func auto(_ context: SrtCallerContext) {
         
-        let extensions = makeExtensions(streamId: "input/live/test")
-        
-        let conclusionRequest = SrtHandshake.makeConclusionRequest(srtSocketID: context.srtSocketID,
-                                                                   initialPacketSequenceNumber: context.initialPacketSequenceNumber,
-                                                                   synCookie: context.synCookie,
-                                                                   peerIpAddress: context.peerIpAddress,
-                                                                   extensions: extensions)
-        
-        let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: 0, contents: Data())
-        let contents = conclusionRequest.makePacket(socketId: context.srtSocketID).contents
-        
-        context.send(packet, contents)
+        let conclusionRequest = SrtHandshake.makeConclusionRequest(
+            srtSocketID: context.srtSocketID,
+            initialPacketSequenceNumber: context.initialPacketSequenceNumber,
+            synCookie: context.synCookie,
+            peerIpAddress: context.peerIpAddress,
+            extensions: makeExtensions(streamId: context.streamId)
+        )
 
-        let socket = SrtSocketContext(encrypted: context.encrypted,
-                                      socketId: context.srtSocketID,
-                                      synCookie: context.synCookie)
+        /// Past induction every packet is addressed to the listener's socket ID,
+        /// which arrived in the induction response.
+        let packet = SrtPacket(
+            field1: ControlTypes.handshake.asField,
+            socketID: context.peerSocketID,
+            contents: Data()
+        )
 
-        socket.initialPacketSequenceNumber = context.initialPacketSequenceNumber
-        
-        context.onSocketCreated(socket)
-
+        /// The socket is not created here: the connection is not established until
+        /// the listener answers with a conclusion response. Advance first so that
+        /// response is handled in the right state.
         context.set(newState: .conclusionRequesting)
+        context.send(packet, conclusionRequest.data)
         
     }
     
-    private func makeExtensions(streamId: String? = nil) -> [HandshakeExtensionTypes: Data] {
+    private func makeExtensions(streamId: String?) -> [HandshakeExtensionTypes: Data] {
         var extensions: [HandshakeExtensionTypes: Data] = [:]
 
-        let hsreqExtension = createHsreqExtension(
-            srtVersion: 0x010502,
-            srtFlags: 0xbf,
-            receiverTsbpdDelay: 120,
-            senderTsbpdDelay: 0
+        let hsreq = HandshakeExtensionMessage(
+            srtVersion: SrtHandshake.srtLibraryVersion,
+            srtFlags: SrtHandshake.defaultSrtFlags,
+            receiverTsbpdDelay: SrtHandshake.defaultTsbpdDelay,
+            senderTsbpdDelay: SrtHandshake.defaultTsbpdDelay
         )
-        extensions[.handshakeRequest] = hsreqExtension
+        extensions[.handshakeRequest] = hsreq.data
 
-        if let streamId {
-            let cmdStdExtension = createCmdStdExtension(streamId: streamId)
-            extensions[.streamId] = cmdStdExtension
+        if let streamId, !streamId.isEmpty {
+            extensions[.streamId] = Self.encodeStreamId(streamId)
         }
 
         return extensions
     }
-    
-    private func createHsreqExtension(
-        srtVersion: UInt32,
-        srtFlags: UInt32,
-        receiverTsbpdDelay: UInt16,
-        senderTsbpdDelay: UInt16
-    ) -> Data {
-        var hsreqExtension = Data()
-        let extensionType = HandshakeExtensionTypes.handshakeRequest.rawValue
-        let extensionLength = UInt16(3)
 
-        hsreqExtension.append(contentsOf: extensionType.bytes)
-        hsreqExtension.append(contentsOf: extensionLength.bytes)
-        hsreqExtension.append(contentsOf: srtVersion.bytes)
-        hsreqExtension.append(contentsOf: srtFlags.bytes)
-        hsreqExtension.append(contentsOf: receiverTsbpdDelay.bytes)
-        hsreqExtension.append(contentsOf: senderTsbpdDelay.bytes)
-        
-        return hsreqExtension
-    }
-
-    private func createCmdStdExtension(streamId: String) -> Data {
-        guard let streamIdData = streamId.data(using: .utf8), streamIdData.count <= 512 else {
-            fatalError("Stream ID is too long")
+    /// libsrt carries the stream ID as 32-bit words with the bytes reversed inside
+    /// each word, zero padded up to a word boundary.
+    static func encodeStreamId(_ streamId: String) -> Data {
+        guard var bytes = streamId.data(using: .utf8), !bytes.isEmpty else {
+            return Data()
         }
 
-        var paddedStreamIdData = streamIdData
-        let paddingLength = (4 - (streamIdData.count % 4)) % 4
-        if paddingLength > 0 {
-            paddedStreamIdData.append(contentsOf: repeatElement(UInt8(0), count: paddingLength))
+        /// SRT_CMD_SID carries at most 512 bytes; truncate rather than trap.
+        if bytes.count > 512 {
+            bytes = bytes.prefix(512)
         }
-        
-        var cmdStdExtension = Data()
-        let extensionType = HandshakeExtensionTypes.streamId.rawValue
-        let extensionLength = UInt16(paddedStreamIdData.count / 4) // Extension length in 4-byte words
-        
-        cmdStdExtension.append(contentsOf: extensionType.littleEndian.bytes)
-        cmdStdExtension.append(contentsOf: extensionLength.littleEndian.bytes)
 
-        for chunk in stride(from: 0, to: paddedStreamIdData.count, by: 4) {
-            let word = paddedStreamIdData[chunk..<chunk+4]
-            let littleEndianWord = word.reversed()
-            cmdStdExtension.append(contentsOf: littleEndianWord)
+        let padding = (4 - (bytes.count % 4)) % 4
+        bytes.append(contentsOf: repeatElement(UInt8(0), count: padding))
+
+        var encoded = Data(capacity: bytes.count)
+        for start in stride(from: 0, to: bytes.count, by: 4) {
+            encoded.append(contentsOf: bytes[start..<(start + 4)].reversed())
         }
-        
-        return cmdStdExtension
+
+        return encoded
     }
     
 }

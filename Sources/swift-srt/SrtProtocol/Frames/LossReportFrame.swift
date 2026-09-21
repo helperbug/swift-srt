@@ -35,7 +35,7 @@ public struct NegativeAcknowledgementFrame: ByteFrame {
 
     /// Packet Type: 1 bit, value = 1. The packet type value of a NAK control packet is "1".
     public var isControl: Bool {
-        return (data[0] & 0b10000000) == 1
+        return (data[0] & 0b10000000) != 0
     }
 
     /// Control Type: 15 bits, value = NAK{0x0003}. The control type value of a NAK control packet is "3".

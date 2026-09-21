@@ -28,17 +28,27 @@ struct SrtCallerConclusionRequestingState: SrtCallerState {
 
     func handleHandshake(_ context: SrtCallerContext, handshake: SrtHandshake) {
         
-        if handshake.isConclusionRequest(synCookie: context.synCookie) {
-            
-            let state = context.set(newState: .active)
-            
-            state.auto(context)
-            
-        } else {
+        /// The listener replies with a conclusion response carrying HSRSP -- not with
+        /// another conclusion request.
+        guard handshake.isConclusionResponse else {
             
             context.set(newState: .shutdown)
+            return
             
         }
+
+        guard handshake.hasUsableTransmissionParameters else {
+
+            print("Rejecting conclusion response with unusable transmission parameters")
+            context.set(newState: .shutdown)
+            return
+
+        }
+
+        context.apply(handshake: handshake)
+
+        let state = context.set(newState: .active)
+        state.auto(context)
         
     }
 }

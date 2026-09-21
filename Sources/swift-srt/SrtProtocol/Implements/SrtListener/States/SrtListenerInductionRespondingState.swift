@@ -28,17 +28,34 @@ struct SrtListenerInductionRespondingState: SrtListenerState {
     let name: SrtListenerStates = .inductionResponding
     
     func handleHandshake(_ context: SrtListenerContext, handshake: SrtHandshake) {
-        
-        if handshake.isConclusionRequest(synCookie: context.synCookie) {
-            
-            let state = context.set(newState: .inducted)
-            state.auto(context)
-            
-        } else {
-            
-            context.set(newState: .shutdown)
-            
+
+        /// A repeated induction request means our response was lost in flight.
+        if handshake.isInductionRequest {
+
+            context.set(newState: .induced).auto(context)
+            return
+
         }
+
+        guard handshake.isConclusionRequest(synCookie: context.synCookie) else {
+
+            /// A mismatched cookie is a forged or stale packet. Drop it and stay
+            /// put; tearing the listener down here would let any peer cancel a
+            /// handshake in progress.
+            print("Ignoring conclusion request with an unrecognised cookie")
+            return
+
+        }
+
+        guard handshake.hasUsableTransmissionParameters else {
+
+            print("Ignoring conclusion request with unusable transmission parameters")
+            return
+
+        }
+
+        context.apply(handshake: handshake)
+        context.set(newState: .inducted).auto(context)
         
     }
     

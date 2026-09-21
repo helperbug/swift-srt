@@ -29,14 +29,24 @@ struct StrCallerStartState: SrtCallerState {
 
     func auto(_ context: SrtCallerContext) {
         
-        let inductionRequest = SrtHandshake.makeInductionRequest(serverIpAddress: context.peerIpAddress)
-        
-        let packet = SrtPacket(field1: ControlTypes.handshake.asField, socketID: 0, contents: Data())
-        let _ = inductionRequest.makePacket(socketId: 0).contents
-        
-        context.send(packet, inductionRequest.data)
+        let inductionRequest = SrtHandshake.makeInductionRequest(
+            srtSocketID: context.srtSocketID,
+            initialPacketSequenceNumber: context.initialPacketSequenceNumber,
+            serverIpAddress: context.peerIpAddress
+        )
 
+        /// An induction request is addressed to socket 0, which the listener reads as
+        /// a connection request.
+        let packet = SrtPacket(
+            field1: ControlTypes.handshake.asField,
+            socketID: 0,
+            contents: Data()
+        )
+        
+        /// Advance before transmitting: the response can arrive the moment the
+        /// request leaves, and it must find the context already expecting it.
         context.set(newState: .inductionRequesting)
+        context.send(packet, inductionRequest.data)
         
     }
     

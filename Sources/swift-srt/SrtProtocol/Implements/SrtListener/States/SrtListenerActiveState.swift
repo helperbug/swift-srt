@@ -26,5 +26,10 @@ import Foundation
 struct SrtListenerActiveState: SrtListenerState {
     
     let name: SrtListenerStates = .active
+
+    /// The connection is established. A repeated conclusion request means our
+    /// response was lost, and a late induction request is a replay: neither may
+    /// roll the connection back or build a second socket.
+    func handleHandshake(_ context: SrtListenerContext, handshake: SrtHandshake) { }
     
 }
