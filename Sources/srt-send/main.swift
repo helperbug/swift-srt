@@ -22,6 +22,8 @@ var toHost: String?
 var toPort: UInt16?
 var seconds = 60.0
 var passphrase: String?
+var keyRefreshRate: UInt32?
+var keyPreAnnounce: UInt32?
 var rendezvousHost: String?
 var rendezvousPort: UInt16?
 var localPort: UInt16 = 9300
@@ -39,6 +41,8 @@ for (index, argument) in arguments.enumerated() {
         }
     case "--seconds": if let next, let v = Double(next) { seconds = v }
     case "--passphrase": passphrase = next
+    case "--km-refresh": if let next, let v = UInt32(next) { keyRefreshRate = v }
+    case "--km-preannounce": if let next, let v = UInt32(next) { keyPreAnnounce = v }
     case "--local": if let next, let v = UInt16(next) { localPort = v }
     case "--rendezvous":
         if let next {
@@ -74,14 +78,21 @@ nonisolated func own(_ socket: sending SrtSocket) {
 
 nonisolated func report(_ socket: SrtSocket, final: Bool = false) {
     let s = socket.statistics
-    print(String(format: "%@ socket %u  sent %d  retrans %d  acked %d  dropped %d  acks %d  naks %d  ackacks %d  dropreq %d  keepalives %d  peer rtt %.1fms  peer buf %u",
+    print(String(format: "%@ socket %u  sent %d  retrans %d  acked %d  dropped %d  acks %d  naks %d  ackacks %d  dropreq %d  keepalives %d  peer rtt %.1fms  peer buf %u  km sent %d  refreshes %d",
                  final ? "──" : "  ", socket.socketId, s.send.sent, s.send.retransmitted, s.send.acknowledged, s.send.dropped,
                  s.acksReceived, s.naksReceived, s.ackAcksSent, s.dropRequestsSent, s.keepAlivesSent,
-                 Double(s.peerRttMicroseconds) / 1000, s.peerAvailableBuffer))
+                 Double(s.peerRttMicroseconds) / 1000, s.peerAvailableBuffer, s.keyMaterialSent, s.keyRefreshes))
 }
+
+/// Read from the socket handler, which is not main-actor: a `let` of a
+/// Sendable value is fine there where the parsed `var`s are not.
+let keyRefresh: (rate: UInt32, preAnnounce: UInt32)? = keyRefreshRate.map { ($0, keyPreAnnounce ?? $0 / 4) }
 
 manager.onSocket { socket in
     print("⇄ socket \(socket.socketId) up, peer \(socket.peerSocketId); streaming")
+    if let keyRefresh {
+        socket.setKeyRefresh(rate: keyRefresh.rate, preAnnounce: keyRefresh.preAnnounce)
+    }
     own(socket)
 }
 

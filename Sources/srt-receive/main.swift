@@ -187,9 +187,9 @@ nonisolated func consume(_ socket: sending SrtSocket) {
 
 nonisolated func report(_ socket: SrtSocket, final: Bool = false) {
     let s = socket.statistics
-    print(String(format: "%@ socket %u  recv %d  lost %d  retrans %d  dropped %d  belated %d  dup %d  delivered %d  acks %d/%d  naks %d  ackacks %d  rtt %.1fms  latency %dms  ticks %d (%d idle)  drift %dµs/%d  decrypted %d  undecryptable %d",
+    print(String(format: "%@ socket %u  recv %d  lost %d  retrans %d  dropped %d  belated %d  dup %d  delivered %d  acks %d/%d  naks %d  ackacks %d  rtt %.1fms  latency %dms  ticks %d (%d idle)  drift %dµs/%d  decrypted %d  undecryptable %d  km in %d  km rejected %d",
                  final ? "──" : "  ", socket.socketId, s.buffer.received, s.buffer.lost, s.buffer.retransmitted, s.buffer.dropped, s.buffer.belated, s.buffer.duplicates, s.buffer.delivered,
-                 s.acksSent, s.lightAcksSent, s.naksSent, s.ackAcksReceived, Double(s.rttMicroseconds) / 1000, Int(s.latencyMicroseconds / 1000), s.ticks, s.ticksWithNothingToAck, Int(s.driftMicroseconds), s.driftCorrections, s.decryptedPackets, s.undecryptablePackets))
+                 s.acksSent, s.lightAcksSent, s.naksSent, s.ackAcksReceived, Double(s.rttMicroseconds) / 1000, Int(s.latencyMicroseconds / 1000), s.ticks, s.ticksWithNothingToAck, Int(s.driftMicroseconds), s.driftCorrections, s.decryptedPackets, s.undecryptablePackets, s.keyMaterialReceived, s.keyMaterialRejected))
 }
 
 manager.onSocket { socket in

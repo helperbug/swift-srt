@@ -31,6 +31,10 @@ public struct SrtSocketStatistics: Sendable, Equatable {
     public var encryptedPackets = 0
     public var decryptedPackets = 0
     public var undecryptablePackets = 0
+    public var keyRefreshes = 0
+    public var keyMaterialSent = 0
+    public var keyMaterialReceived = 0
+    public var keyMaterialRejected = 0
     public var rttMicroseconds: UInt32 = 0
     public var rttVarianceMicroseconds: UInt32 = 0
     public var latencyMicroseconds: UInt32 = 0
@@ -207,10 +211,15 @@ public final class SrtSocketContext {
             var body = chunk
             var keyFlags: UInt8 = 0
             if let encryption {
+                /// The refresh schedule runs on the packet count; whatever it
+                /// decides to announce goes out ahead of the packet it applies to.
+                encryption.manageKeys()
+                sendKeyMaterial(now: now, header: header, send: send, metrics: metrics)
                 guard let sealed = encryption.encrypt(chunk, sequence: sequence) else { continue }
                 body = sealed
-                keyFlags = KeyMaterialFrame.KeyFlags.even.rawValue
+                keyFlags = encryption.activeKey.rawValue
                 statistics.encryptedPackets += 1
+                statistics.keyRefreshes = encryption.refreshes
             }
 
             let packet = DataPacketFrame(
@@ -324,7 +333,82 @@ public final class SrtSocketContext {
             statistics.keepAlivesSent += 1
         }
 
+        /// Key material the peer has not echoed yet goes again.
+        sendKeyMaterial(now: now, header: header, send: send, metrics: metrics)
+
         updateRates(now: now)
+    }
+
+    // MARK: Key material after the handshake
+
+    /// KMREQ and KMRSP travel as user-defined control packets, subtypes 3 and 4,
+    /// with the same haicrypt bytes the handshake extension carries.
+    static let keyMaterialRequestSubtype: UInt16 = 3
+    static let keyMaterialResponseSubtype: UInt16 = 4
+
+    /// Shorter key periods than libsrt's defaults, for tests and tools.
+    public func setKeyRefresh(rate: UInt32, preAnnounce: UInt32) {
+        encryption?.setRefresh(rate: rate, preAnnounce: preAnnounce)
+    }
+
+    private func sendKeyMaterial(now: UInt32,
+                                 header: UdpHeader,
+                                 send: (SrtPacket, Data) -> Void,
+                                 metrics: SrtMetricsServiceProtocol) {
+        guard let encryption else { return }
+        for material in encryption.keyMaterialToSend(now: now, rttMicroseconds: rtt.rtt) {
+            sendKeyMaterial(material, subtype: Self.keyMaterialRequestSubtype, header: header, send: send, metrics: metrics)
+            statistics.keyMaterialSent += 1
+        }
+    }
+
+    private func sendKeyMaterial(_ contents: Data,
+                                 subtype: UInt16,
+                                 header: UdpHeader,
+                                 send: (SrtPacket, Data) -> Void,
+                                 metrics: SrtMetricsServiceProtocol) {
+        let packet = SrtPacket(field1: ControlTypes.userDefined.asField | UInt32(subtype), socketID: peerSocketId, contents: Data())
+        send(packet, contents)
+        metrics.storeSocketMetric(header: header, socketId: socketId, receive: nil,
+                                  send: SrtMetricsModel(bytesCount: 16 + contents.count, controlCount: 1, nackCount: 0))
+    }
+
+    /// A KMREQ is installed and echoed, or refused in four bytes; a KMRSP
+    /// settles an announcement of ours. Either way the stream keeps flowing.
+    private func handleKeyMaterial(_ control: ControlPacketFrame,
+                                   header: UdpHeader,
+                                   send: (SrtPacket, Data) -> Void,
+                                   metrics: SrtMetricsServiceProtocol) {
+        let body = control.controlInformationField
+
+        switch control.subtype {
+        case Self.keyMaterialRequestSubtype:
+            statistics.keyMaterialReceived += 1
+            let reply: Data
+            if let encryption {
+                switch encryption.install(keyMaterial: body) {
+                case .success(let echo):
+                    reply = echo
+                case .failure(let error):
+                    reply = SrtEncryption.refusal(error)
+                    statistics.keyMaterialRejected += 1
+                }
+            } else {
+                reply = SrtEncryption.refusal(.noSecret)
+                statistics.keyMaterialRejected += 1
+            }
+            sendKeyMaterial(reply, subtype: Self.keyMaterialResponseSubtype, header: header, send: send, metrics: metrics)
+
+        case Self.keyMaterialResponseSubtype:
+            if body.count == 4 {
+                statistics.keyMaterialRejected += 1
+            } else {
+                encryption?.acknowledge(keyMaterialResponse: body)
+            }
+
+        default:
+            break
+        }
     }
 
     // MARK: Control
@@ -358,7 +442,10 @@ public final class SrtSocketContext {
         case .negativeAcknowledgement:
             handleNak(packet, header: header, send: send, metrics: metrics)
 
-        case .congestionWarning, .peerError, .userDefined, .shutdown, .handshake, .none:
+        case .userDefined:
+            handleKeyMaterial(control, header: header, send: send, metrics: metrics)
+
+        case .congestionWarning, .peerError, .shutdown, .handshake, .none:
             /// Handled by the connection, or not part of live mode.
             break
         }
@@ -600,7 +687,8 @@ public final class SrtSocketContext {
         for packet in ready {
             var payload = packet.payload
             if packet.encryptionFlags != 0 {
-                guard let encryption, let opened = encryption.decrypt(payload, sequence: packet.packetSequenceNumber) else {
+                guard let encryption, let keyFlags = KeyMaterialFrame.KeyFlags(rawValue: packet.encryptionFlags),
+                      let opened = encryption.decrypt(payload, sequence: packet.packetSequenceNumber, keyFlags: keyFlags) else {
                     statistics.undecryptablePackets += 1
                     continue
                 }

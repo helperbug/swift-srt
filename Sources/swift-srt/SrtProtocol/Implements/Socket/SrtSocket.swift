@@ -58,6 +58,12 @@ public final class SrtSocket {
 
     /// Only meaningful from the task that calls `process`.
     public var statistics: SrtSocketStatistics { engine.statistics }
+
+    /// Shorter key periods than libsrt's defaults (a key every 2^24 packets,
+    /// announced 2^16 ahead). Only meaningful from the task that calls `process`.
+    public func setKeyRefresh(rate: UInt32, preAnnounce: UInt32) {
+        engine.setKeyRefresh(rate: rate, preAnnounce: preAnnounce)
+    }
 }
 
 /// What the connection keeps for routing: just the way in. Sendable, so the
