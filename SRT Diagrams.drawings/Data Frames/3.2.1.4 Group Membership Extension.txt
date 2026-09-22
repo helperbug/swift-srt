@@ -1,0 +1,6 @@
+diagram packet
+bits 32
+Group ID: 32 blue
+Type: 8 orange
+Flags: 8 orange
+Weight: 16 green

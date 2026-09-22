@@ -1,0 +1,10 @@
+diagram packet
+bits 32
+F: 1 red
+Control Type is 7: 15 indigo
+Reserved is 0: 16 gray
+Message Number: 32 yellow
+Timestamp: 32 green
+Destination Socket ID: 32 purple
+First Packet Sequence Number: 32 blue
+Last Packet Sequence Number: 32 blue

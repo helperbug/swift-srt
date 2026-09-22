@@ -1,0 +1,16 @@
+diagram flow
+start send: A data packet is sent, first time or retransmitted
+process avg: AvgPayloadSize becomes seven eighths of itself plus one eighth of this payload
+start ackr: A full ACK arrives
+process pkt: PktSize is AvgPayloadSize plus the SRT header
+process period: PKT_SND_PERIOD is PktSize times one million divided by MAX_BW
+start rto: Retransmission timeout, RTT plus four variances plus two SYN
+process again: Update AvgPayloadSize the same way
+end pace: The minimum gap between packets, where retransmissions fit
+send -> avg
+avg -> pace
+ackr -> pkt
+pkt -> period
+period -> pace
+rto -> again
+again -> pace

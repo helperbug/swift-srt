@@ -1,0 +1,14 @@
+diagram sequence
+participant C: Caller, the Initiator
+participant L: Listener, the Responder
+C -> L: INDUCTION, Version 4, Extension Field 2, Cookie 0, Destination Socket ID 0
+note trailing L: no resources allocated
+L --> C: INDUCTION, Version 5, Extension Field 0x4A17, Encryption Field, SYN Cookie
+note leading C: checks the magic code, reads the advertised cipher
+C -> L: CONCLUSION, Version 5, the returned cookie, HSREQ and KMREQ and CONFIG
+activate L
+L --> C: CONCLUSION, Version 5, HSRSP and KMRSP
+deactivate L
+note span C L: connected, latency is the greater of the two proposals
+footer bar C
+footer bar L

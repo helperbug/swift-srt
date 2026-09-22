@@ -1,0 +1,9 @@
+diagram table
+Setting : Value : Why
+Transmission mode : message : one packet is one message
+Packet Position flags : 11b only : no message spans packets
+TSBPD : on : fixed end-to-end latency
+Too-late packet drop : on : a packet with no chance is dropped, not waited for
+Congestion control : LiveCC : pacing, with room for retransmissions
+Periodic NAK reports : on : loss is reported again while it persists
+Order Flag : 0, and ignored by the receiver : TSBPD already delivers in time order

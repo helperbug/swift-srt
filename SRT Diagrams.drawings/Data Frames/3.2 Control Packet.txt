@@ -1,0 +1,9 @@
+diagram packet
+bits 32
+F: 1 red
+Control Type: 15 indigo
+Subtype: 16 indigo
+Type-specific Information: 32 gray
+Timestamp: 32 green
+Destination Socket ID: 32 purple
+Control Information Field: 64 mint

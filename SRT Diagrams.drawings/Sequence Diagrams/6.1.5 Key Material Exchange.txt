@@ -1,0 +1,8 @@
+diagram sequence
+participant I: Initiator
+participant R: Responder
+note leading I: SEK from the random generator, Salt 128 bits, KEK from PBKDF2 over the passphrase
+I -> R: KMREQ, the KM message with KK, cipher, lengths, salt and the wrapped key
+note trailing R: derives the same KEK, unwraps, checks the integrity vector
+R --> I: KMRSP, the same KM message returned
+note span I R: payload encrypted with AES-CTR, the header stays in the clear

@@ -1,0 +1,21 @@
+diagram flow
+start nak: Loss report arrives
+process flag: Set the loss flag
+decision ratio: Is the loss ratio under two percent?
+process hold: Hold the rate and remember the current period
+decision newperiod: Is the lost sequence number past LastDecSeq?
+process decrease: Grow the sending period by three percent, reset the counters, pick DecRandom
+decision within: Is this the DecRandom multiple, within five decreases?
+process again: Grow the sending period by three percent again
+end done: Wait for the next report
+nak -> flag
+flag -> ratio
+ratio -> hold: yes
+hold -> done
+ratio -> newperiod: no
+newperiod -> decrease: yes
+decrease -> done
+newperiod -> within: no
+within -> again: yes
+again -> done
+within -> done: no

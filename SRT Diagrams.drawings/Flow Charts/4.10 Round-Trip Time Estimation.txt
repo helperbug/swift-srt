@@ -1,0 +1,12 @@
+diagram flow
+start ack: Receiver sends a full ACK and records the time
+process ackack: Sender answers ACKACK with the same number, with no processing delay
+process rtt: rtt is the ACKACK arrival minus the ACK departure
+process smooth: RTT becomes seven eighths of RTT plus one eighth of rtt
+process var: RTTVar becomes three quarters of RTTVar plus one quarter of the difference
+end report: Both ride in the next full ACK, and the sender smooths them again
+ack -> ackack
+ackack -> rtt
+rtt -> smooth
+smooth -> var
+var -> report

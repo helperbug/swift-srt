@@ -1,0 +1,5 @@
+diagram packet
+bits 32
+Integrity Check Vector: 64 red
+xSEK: 128 blue
+oSEK: 128 teal

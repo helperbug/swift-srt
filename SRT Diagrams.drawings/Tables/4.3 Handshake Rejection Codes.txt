@@ -1,0 +1,18 @@
+diagram table
+Code : Error : Meaning
+1000 : REJ_UNKNOWN : unknown reason
+1001 : REJ_SYSTEM : system function error
+1002 : REJ_PEER : rejected by the peer
+1003 : REJ_RESOURCE : resource allocation problem
+1004 : REJ_ROGUE : incorrect data in the handshake
+1005 : REJ_BACKLOG : the listener's backlog is exceeded
+1006 : REJ_IPE : internal program error
+1007 : REJ_CLOSE : the socket is closing
+1008 : REJ_VERSION : the peer is older than our minimum
+1009 : REJ_RDVCOOKIE : rendezvous cookie collision
+1010 : REJ_BADSECRET : wrong password
+1011 : REJ_UNSECURE : password required or unexpected
+1012 : REJ_MESSAGEAPI : stream flag collision
+1013 : REJ_CONGESTION : incompatible congestion controller
+1014 : REJ_FILTER : incompatible packet filter
+1015 : REJ_GROUP : incompatible group

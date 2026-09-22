@@ -1,0 +1,12 @@
+diagram packet
+bits 32
+F: 1 red
+Packet Sequence Number: 31 blue
+PP: 2 orange
+O: 1 orange
+KK: 2 orange
+R: 1 orange
+Message Number: 26 teal
+Timestamp: 32 green
+Destination Socket ID: 32 purple
+Data: 64 mint

@@ -1,0 +1,16 @@
+diagram flow
+start loop: Receiver buffer read loop
+process next: Find i, the next available packet position
+process time: Compute PktTsbpdTime for position i
+decision due: Is the play time still in the future?
+process wait: Nothing is due, wait
+process skip: Drop every position before i and send a fake ACK
+process deliver: Deliver packet i and set pos to i plus one
+loop -> next
+next -> time
+time -> due
+due -> wait: yes
+wait -> next
+due -> skip: no
+skip -> deliver
+deliver -> next

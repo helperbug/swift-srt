@@ -1,0 +1,17 @@
+diagram flow
+start wave: Both peers send WAVEAHAND with Version 5 and their own cookie
+process md5: Each cookie is host, port and the time to one minute, scrambled with MD5
+decision equal: Cookies identical?
+process wait: No connection until fresh cookies are generated, up to a minute
+decision greater: Is my cookie the greater?
+process initiator: I am the Initiator and I attach HSREQ
+process responder: I am the Responder and I attach HSRSP
+end conclusion: Exchange CONCLUSION, then AGREEMENT
+wave -> md5
+md5 -> equal
+equal -> wait: yes
+equal -> greater: no
+greater -> initiator: yes
+greater -> responder: no
+initiator -> conclusion
+responder -> conclusion

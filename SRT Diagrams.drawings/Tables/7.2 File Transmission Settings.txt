@@ -1,0 +1,8 @@
+diagram table
+Setting : Value : Why
+Transmission mode : buffer or message : buffer is one file per connection
+TSBPD : off : delivery timing does not matter
+Too-late packet drop : off : dropping would corrupt the file
+Congestion control : FileCC : uses the whole link
+Retransmission : until acknowledged : integrity over latency
+File name and segmentation : the application's business : the protocol adds nothing to the data

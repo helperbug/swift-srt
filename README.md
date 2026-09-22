@@ -1,7 +1,9 @@
 # swift-srt
 
-Secure Reliable Transport (SRT) in Swift, on Apple's Network framework. Swift 6
-language mode with full data-race safety, no `@unchecked Sendable`, no
+Secure Reliable Transport (SRT) in Swift, on Apple's Network framework. SRT
+is a protocol created, open-sourced, and maintained by Haivision; this is an
+independent implementation with no libsrt code in it. Swift 6 language mode
+with full data-race safety, no `@unchecked Sendable`, no
 `nonisolated(unsafe)`. macOS, iOS, tvOS and watchOS 26 and later.
 
 The wire protocol follows the SRT specification and is verified against
@@ -127,5 +129,11 @@ the demuxer, and the impairment proxy.
 
 ## License
 
-MIT. Portions follow the SRT protocol specification, which is licensed under
-the Mozilla Public License 2.0.
+MIT. This is an independent implementation of the SRT protocol, written from
+the IETF Internet-Draft [draft-sharabayko-srt-01](https://datatracker.ietf.org/doc/html/draft-sharabayko-srt-01)
+and verified against libsrt 1.5.7, which serves only as the peer in
+interoperability tests. No libsrt code (MPL 2.0) is included. The
+documentation and diagrams here are our own.
+
+SRT is a registered trademark of Haivision. This project is not affiliated
+with or endorsed by Haivision or the SRT Alliance.

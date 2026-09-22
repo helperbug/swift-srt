@@ -1,0 +1,5 @@
+diagram packet
+bits 32
+Zeroed: 80 gray
+Packet Index: 32 blue
+Block Counter: 16 orange

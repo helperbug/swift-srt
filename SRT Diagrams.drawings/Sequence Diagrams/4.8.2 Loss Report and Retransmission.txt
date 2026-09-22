@@ -1,0 +1,15 @@
+diagram sequence
+participant S: Sender
+participant R: Receiver
+S ->> R: DATA sequence 100
+S -x R: DATA sequence 101
+S ->> R: DATA sequence 102
+note trailing R: a gap at 101
+R -> S: NAK, loss list holds 101
+activate S
+note leading S: the loss list has priority over new data
+S ->> R: DATA sequence 101 with the R flag set
+deactivate S
+R -> S: NAK repeated every NAKInterval while 101 is still missing
+S -> R: DROPREQ, message number with the first and last sequence number
+note span S R: a packet leaves the loss list when it is ACKed or dropped

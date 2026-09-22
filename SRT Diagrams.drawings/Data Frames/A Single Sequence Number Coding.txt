@@ -1,0 +1,4 @@
+diagram packet
+bits 32
+Zero: 1 orange
+Sequence Number: 31 blue

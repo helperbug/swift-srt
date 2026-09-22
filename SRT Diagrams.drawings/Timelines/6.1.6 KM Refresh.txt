@@ -1,0 +1,8 @@
+diagram timeline
+era Odd key encrypting green
+Start: Payload encrypted with the odd key, KK is 10b
+era Both keys live orange
+Announce: At 4000 packets before the switch the new even key is wrapped and sent
+era Even key encrypting blue
+Switch: At two to the twenty-fifth packet the sender changes to the even key
+Retire: At 4000 packets after the switch the odd key is decommissioned

@@ -1,0 +1,5 @@
+diagram table
+Variant : Fields present : Cadence : Draws an ACKACK
+Full ACK : every field through Receiving Rate : every 10 ms : yes
+Light ACK : Last Acknowledged Packet Sequence Number only : every 64 packets : no
+Small ACK : through Available Buffer Size : receiver's choice : no

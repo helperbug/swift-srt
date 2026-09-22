@@ -1,0 +1,7 @@
+diagram sequence
+participant I: Initiator
+participant R: Responder
+I -> R: HSREQ with Receiver TSBPD Delay and Sender TSBPD Delay
+note trailing R: takes the larger value in each direction
+R --> I: HSRSP with the agreed delays
+note span I R: effective latency is the maximum of the two, never below 120 ms

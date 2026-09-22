@@ -1,0 +1,12 @@
+diagram sequence
+participant S: Sender
+participant R: Receiver
+R -> S: Full ACK every 10 ms, sequence number, RTT, variance, buffer and rates
+activate S
+note leading S: acknowledged packets leave the send buffer
+S --> R: ACKACK echoing the Acknowledgement Number
+deactivate S
+note trailing R: round-trip time is the gap between that ACK and this ACKACK
+R ->> S: Light ACK after 64 packets, sequence number only
+R ->> S: Small ACK, through Available Buffer Size
+note span S R: only a full ACK draws an ACKACK

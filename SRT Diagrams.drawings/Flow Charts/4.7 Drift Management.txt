@@ -1,0 +1,16 @@
+diagram flow
+start recv: Packet received
+process delta: Compare when it was expected with its timestamp
+process sample: Add the difference to the sample set, sized in packets
+decision enough: Enough samples to be sure?
+process keep: Keep accumulating, jitter averages out
+process factor: Compute the timestamp correction factor
+process apply: Adjust the time base, every scheduled delivery moves with it
+recv -> delta
+delta -> sample
+sample -> enough
+enough -> keep: no
+keep -> recv
+enough -> factor: yes
+factor -> apply
+apply -> recv

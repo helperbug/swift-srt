@@ -1,0 +1,8 @@
+diagram packet
+bits 32
+F: 1 red
+Meaning depends on the packet type: 31 gray
+Meaning depends on the packet type: 32 gray
+Timestamp: 32 green
+Destination Socket ID: 32 purple
+Packet Contents: 64 teal

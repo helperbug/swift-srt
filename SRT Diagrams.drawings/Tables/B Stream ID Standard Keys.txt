@@ -1,0 +1,8 @@
+diagram table
+Key : Name : Meaning
+u : User Name : which password the listener should use
+r : Resource Name : which stream or file is wanted
+h : Host Name : the host part of the requested URI
+s : Session ID : a one-shot identifier negotiated elsewhere
+t : Type : stream, the default, or file or auth
+m : Mode : request, the default, or publish or bidirectional

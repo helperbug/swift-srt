@@ -1,0 +1,17 @@
+diagram flow
+start conn: Connection configuration
+decision mode: Which layout?
+process caller: The caller is the Initiator
+process listener: The listener is the Responder
+process contest: Cookie contest during the handshake
+process winner: The greater cookie becomes the Initiator
+process loser: The other peer becomes the Responder
+end ext: Initiator sends HSREQ and KMREQ, Responder answers HSRSP and KMRSP
+conn -> mode
+mode -> caller: caller-listener
+caller -> listener
+mode -> contest: rendezvous
+contest -> winner
+winner -> loser
+listener -> ext
+loser -> ext

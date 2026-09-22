@@ -1,0 +1,11 @@
+diagram state
+acting Init: Computed at the second handshake request
+state Tracking: Time base held steady
+acting Wrapping: Wrapping period open
+acting Drifting: Drift tracer has its samples
+[*] -A> Init: connection established
+Init -+> Tracking: base is about half the handshake round-trip time
+Tracking -A> Wrapping: 30 s before the timestamp reaches 0xFFFFFFFF
+Wrapping -+> Tracking: base advances by MAX_TIMESTAMP plus one
+Tracking -A> Drifting: enough samples, counted in packets not seconds
+Drifting -+> Tracking: base adjusted by the correction factor

@@ -1,0 +1,6 @@
+diagram packet
+bits 32
+SRT Version: 32 blue
+SRT Flags: 32 orange
+Receiver TSBPD Delay: 16 green
+Sender TSBPD Delay: 16 green

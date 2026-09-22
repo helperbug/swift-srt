@@ -1,0 +1,6 @@
+diagram packet
+bits 32
+One: 1 orange
+Sequence Number a (first): 31 blue
+Zero: 1 orange
+Sequence Number b (last): 31 teal

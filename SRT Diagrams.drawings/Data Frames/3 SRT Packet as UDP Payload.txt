@@ -1,0 +1,7 @@
+diagram packet
+bits 32
+SrcPort: 16 gray
+DstPort: 16 gray
+Len: 16 gray
+ChkSum: 16 gray
+SRT Packet: 96 teal

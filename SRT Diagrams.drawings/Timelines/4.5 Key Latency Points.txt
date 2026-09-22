@@ -1,0 +1,8 @@
+diagram timeline
+era Sending Delay orange
+Scheduled: Committed by the sending application and stamped
+era One-Way Delay blue
+Sent: Handed to the UDP socket
+era SRT Latency green
+Received: Read back off the UDP socket
+Delivered: Scheduled for delivery, ready for the application

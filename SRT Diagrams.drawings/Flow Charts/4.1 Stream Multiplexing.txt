@@ -1,0 +1,14 @@
+diagram flow
+start udp: UDP datagram on the bound port
+decision zero: Destination Socket ID is 0?
+process listener: A connection request, hand it to the listener
+process lookup: Look up the SRT socket by its ID
+decision known: Is that socket ID ours?
+process drop: Ignore the packet
+end deliver: Dispatch to that socket
+udp -> zero
+zero -> listener: yes
+zero -> lookup: no
+lookup -> known
+known -> deliver: yes
+known -> drop: no

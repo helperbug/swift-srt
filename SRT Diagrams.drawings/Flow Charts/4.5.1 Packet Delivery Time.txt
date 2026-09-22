@@ -1,0 +1,12 @@
+diagram flow
+start arrive: Data packet arrives
+process base: TsbpdTimeBase, fixed at the handshake as T_NOW minus the HSREQ timestamp
+process stamp: PKT_TIMESTAMP, the packet's own microsecond stamp
+process delay: TsbpdDelay, the negotiated receiver latency
+process drift: Drift, the tracked clock correction
+end play: PktTsbpdTime is the sum of all four
+arrive -> base
+base -> stamp
+stamp -> delay
+delay -> drift
+drift -> play

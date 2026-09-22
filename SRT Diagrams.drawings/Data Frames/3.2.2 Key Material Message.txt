@@ -1,0 +1,18 @@
+diagram packet
+bits 32
+S: 1 red
+V: 3 orange
+PT: 4 orange
+Sign: 16 yellow
+Resv1: 6 gray
+KK: 2 red
+KEKI: 32 blue
+Cipher: 8 teal
+Auth: 8 teal
+SE: 8 teal
+Resv2: 8 gray
+Resv3: 16 gray
+SLen div 4: 8 green
+KLen div 4: 8 green
+Salt: 128 mint
+Wrapped Key: 96 purple

@@ -1,0 +1,8 @@
+diagram grammar
+streamid = "#!" ":" content ;
+content = ":" pairs | "{" pairs "}" ;
+pairs = pair { "," pair } ;
+pair = key "=" value ;
+key = standard | custom ;
+standard = "u" | "r" | "h" | "s" | "t" | "m" ;
+custom = "user_" name | "companyname_" name ;

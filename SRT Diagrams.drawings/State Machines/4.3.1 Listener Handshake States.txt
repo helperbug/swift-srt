@@ -1,0 +1,15 @@
+diagram state
+final @ 865,906
+state Listening: Bound and waiting @ 288,24
+acting Responding: Induction responding @ 539,189
+state Inducted: Cookie issued @ 202,369
+acting Concluding: Conclusion responding @ 517,538
+state Active: Connected @ 655,728
+state Failed @ 24,696
+[*] -A> Listening: BIND
+Listening -A> Responding: INDUCTION arrives
+Responding -+> Inducted: cookie returned, nothing allocated
+Inducted -A> Concluding: CONCLUSION arrives with a matching cookie
+Concluding -+> Active: CONCLUSION with HSRSP sent @ -18,36
+Concluding --> Failed: bad cookie, bad password or unacceptable parameters
+Active -x> [*]: SHUTDOWN

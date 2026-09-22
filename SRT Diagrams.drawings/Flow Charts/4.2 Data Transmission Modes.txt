@@ -1,0 +1,24 @@
+diagram flow
+start hs: STREAM flag in the Handshake Extension Message
+decision stream: Flag set?
+process buffer: Buffer mode, one continuous stream read in any size
+process message: Message mode, packets grouped by Message Number
+decision pp: Packet Position flags
+box first: 10b, first packet of the message
+box mid: 00b, a middle packet
+box last: 01b, the last packet
+box solo: 11b, the whole message in one packet
+decision order: Order Flag set?
+process inorder: Messages are read in sequence
+process anyorder: A complete message may be read before an earlier one
+hs -> stream
+stream -> buffer: yes
+stream -> message: no
+message -> pp
+pp -> first
+pp -> mid
+pp -> last
+pp -> solo
+message -> order
+order -> inorder: 1
+order -> anyorder: 0

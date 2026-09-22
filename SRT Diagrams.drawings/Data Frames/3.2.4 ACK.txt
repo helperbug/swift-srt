@@ -1,0 +1,15 @@
+diagram packet
+bits 32
+F: 1 red
+Control Type: 15 indigo
+Reserved: 16 gray
+Acknowledgement Number: 32 yellow
+Timestamp: 32 green
+Destination Socket ID: 32 purple
+Last Acknowledged Packet Sequence Number: 32 blue
+RTT: 32 teal
+RTT Variance: 32 teal
+Available Buffer Size: 32 mint
+Packets Receiving Rate: 32 mint
+Estimated Link Capacity: 32 mint
+Receiving Rate: 32 mint

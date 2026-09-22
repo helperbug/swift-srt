@@ -1,0 +1,16 @@
+diagram flow
+start km: KM message arrives
+process read: Read the salt and the key length from it
+process kek: Derive the KEK with PBKDF2 over the passphrase and the low 64 bits of the salt
+decision icv: Does the integrity check vector match?
+process bad: Wrong passphrase, discard the keys, every packet stays unreadable
+process sek: Unwrap the SEK
+process iv: Rebuild the IV from the salt and the packet sequence number
+end out: Payload decrypted with AES-CTR
+km -> read
+read -> kek
+kek -> icv
+icv -> bad: no
+icv -> sek: yes
+sek -> iv
+iv -> out

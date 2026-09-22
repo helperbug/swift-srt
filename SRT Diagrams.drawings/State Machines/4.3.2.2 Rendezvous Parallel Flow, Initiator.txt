@@ -1,0 +1,11 @@
+diagram state
+state Waving
+state Attention
+state Initiated
+state Connected
+[*] -A> Waving: connect
+Waving -A> Attention: WAVEAHAND received, send CONCLUSION with HSREQ
+Attention -A> Initiated: CONCLUSION with no extensions, keep sending HSREQ
+Attention -+> Connected: CONCLUSION with HSRSP, send AGREEMENT
+Initiated -A> Initiated: CONCLUSION with no extensions, stay and resend
+Initiated -+> Connected: CONCLUSION with HSRSP, send AGREEMENT

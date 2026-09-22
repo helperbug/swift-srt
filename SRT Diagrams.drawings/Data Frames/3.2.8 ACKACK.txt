@@ -1,0 +1,8 @@
+diagram packet
+bits 32
+F: 1 red
+Control Type: 15 indigo
+Reserved: 16 gray
+Acknowledgement Number: 32 yellow
+Timestamp: 32 green
+Destination Socket ID: 32 purple

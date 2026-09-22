@@ -1,0 +1,9 @@
+diagram state
+acting SlowStart: Slow start, sending period 1 us, window 16 packets
+state Avoidance: Congestion avoidance
+[*] -A> SlowStart: connection established
+SlowStart -A> SlowStart: ACK, window grows by the acknowledged span
+SlowStart -+> Avoidance: window reaches its maximum
+SlowStart --> Avoidance: a loss report or a retransmission timeout
+Avoidance -A> Avoidance: ACK with no loss, the sending period shortens
+Avoidance --> Avoidance: loss report, the sending period grows by three percent

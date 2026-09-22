@@ -1,0 +1,16 @@
+diagram state
+final @ 143,663
+acting Requesting: Induction requesting
+state Inducted: Cookie in hand
+acting Concluding: Conclusion requesting
+state Active: Connected
+state Failed
+[*] -A> Requesting: CONNECT
+Requesting -+> Inducted: INDUCTION reply, Version 5 and the magic code
+Requesting --> Requesting: no reply, resend INDUCTION
+Requesting --> Failed: magic code missing
+Inducted -A> Concluding: send CONCLUSION with the cookie and HSREQ
+Concluding -+> Active: CONCLUSION reply with HSRSP
+Concluding --> Concluding: no reply, resend CONCLUSION
+Concluding --> Failed: rejection code in the Handshake Type field
+Active -x> [*]: SHUTDOWN

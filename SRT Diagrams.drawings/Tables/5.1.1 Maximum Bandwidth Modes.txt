@@ -1,0 +1,5 @@
+diagram table
+Mode : MAX_BW : INPUT_BW : OVERHEAD : Notes
+MAXBW_SET : set : ignored : ignored : static, 1 Gbps is the recommended default
+INPUTBW_SET : derived : set : set : ceiling is the input rate plus the overhead
+INPUTBW_ESTIMATED : derived : measured : set : follows a moving average of the input

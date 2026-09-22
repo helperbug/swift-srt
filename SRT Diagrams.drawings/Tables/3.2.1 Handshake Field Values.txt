@@ -1,0 +1,25 @@
+diagram table
+Field : Value : Meaning
+Version : 4 : legacy, sent by the caller in induction
+Version : 5 : the current handshake
+Encryption Field : 0 : no encryption advertised
+Encryption Field : 2 : AES-128
+Encryption Field : 3 : AES-192
+Encryption Field : 4 : AES-256
+Extension Field : 0x00000001 : HSREQ
+Extension Field : 0x00000002 : KMREQ
+Extension Field : 0x00000004 : CONFIG
+Extension Field : 0x4A17 : the magic code a listener returns in induction
+Handshake Type : 0xFFFFFFFD : DONE
+Handshake Type : 0xFFFFFFFE : AGREEMENT
+Handshake Type : 0xFFFFFFFF : CONCLUSION
+Handshake Type : 0x00000000 : WAVEAHAND
+Handshake Type : 0x00000001 : INDUCTION
+Extension Type : 1 : SRT_CMD_HSREQ, under the HSREQ flag
+Extension Type : 2 : SRT_CMD_HSRSP, under the HSREQ flag
+Extension Type : 3 : SRT_CMD_KMREQ, under the KMREQ flag
+Extension Type : 4 : SRT_CMD_KMRSP, under the KMREQ flag
+Extension Type : 5 : SRT_CMD_SID, under the CONFIG flag
+Extension Type : 6 : SRT_CMD_CONGESTION, under the CONFIG flag
+Extension Type : 7 : SRT_CMD_FILTER, under the CONFIG flag
+Extension Type : 8 : SRT_CMD_GROUP, under the CONFIG flag

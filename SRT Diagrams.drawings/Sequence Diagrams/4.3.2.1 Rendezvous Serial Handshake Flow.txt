@@ -1,0 +1,11 @@
+diagram sequence
+participant A: Alice, the first to be heard
+participant B: Bob, who missed the waves
+A ->> B: WAVEAHAND, Version 5, Alice's cookie
+note trailing B: waving to attention, the contest settles the roles
+B -> A: CONCLUSION, extension flags if Initiator, otherwise none
+note leading A: waving to fine
+A -> B: CONCLUSION, HSREQ if Initiator, HSRSP if Responder
+B -> A: CONCLUSION with HSRSP if Responder, AGREEMENT if Initiator
+A ->> B: AGREEMENT, sent by whichever peer is the Initiator
+note span A B: connected

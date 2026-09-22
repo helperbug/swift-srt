@@ -1,0 +1,10 @@
+diagram table
+Bitmask : Flag : Meaning
+0x00000001 : TSBPDSND : TSBPD is used for sending
+0x00000002 : TSBPDRCV : TSBPD is used for receiving
+0x00000004 : CRYPT : must be set, the peer understands KK
+0x00000008 : TLPKTDROP : too-late packet drop is in force
+0x00000010 : PERIODICNAK : the peer sends periodic NAK reports
+0x00000020 : REXMITFLG : must be set, the peer understands R
+0x00000040 : STREAM : set for buffer mode, clear for message mode
+0x00000080 : PACKET_FILTER : the peer supports a packet filter

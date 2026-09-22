@@ -1,0 +1,15 @@
+diagram packet
+bits 32
+Version: 32 blue
+Encryption Field: 16 orange
+Extension Field: 16 orange
+Initial Packet Sequence Number: 32 teal
+Maximum Transmission Unit Size: 32 gray
+Maximum Flow Window Size: 32 gray
+Handshake Type: 32 indigo
+SRT Socket ID: 32 purple
+SYN Cookie: 32 red
+Peer IP Address: 128 mint
+Extension Type: 16 yellow
+Extension Length: 16 yellow
+Extension Contents: 64 green

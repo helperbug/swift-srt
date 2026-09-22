@@ -1,0 +1,15 @@
+diagram flow
+start pass: Pre-shared passphrase
+process salt: Salt is 128 random bits, carried in the KM message
+process kek: KEK is PBKDF2 over the passphrase, the low 64 bits of the salt, 2048 rounds
+process sek: SEK is fresh random bits of the configured length
+process wrap: Wrap the SEK with the KEK and put it in the KM message
+process iv: IV is the top 112 bits of the salt, exclusive-ored with the sequence number
+end out: Payload encrypted with AES-CTR, header left readable
+pass -> kek
+salt -> kek
+kek -> wrap
+sek -> wrap
+salt -> iv
+iv -> out
+sek -> out
