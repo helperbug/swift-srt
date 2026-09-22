@@ -34,7 +34,7 @@ struct StrListenerInducedState: SrtListenerState {
             initialPacketSequenceNumber: context.initialPacketSequenceNumber,
             synCookie: context.synCookie,
             peerIpAddress: context.peerIpAddress,
-            encrypted: context.encrypted
+            encryptionField: context.passphrase == nil ? 0 : 2
         )
 
         /// The response is addressed to the caller's socket, while the handshake body

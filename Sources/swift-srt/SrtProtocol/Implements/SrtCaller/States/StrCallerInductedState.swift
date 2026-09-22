@@ -28,19 +28,44 @@ struct StrCallerInductedState: SrtCallerState {
 
     func auto(_ context: SrtCallerContext) {
         
+        var extensions = makeExtensions(streamId: context.streamId)
+        var encryptionField: UInt16 = 0
+
+        /// A passphrase means we make the stream key and offer it wrapped.
+        if let passphrase = context.passphrase {
+            do {
+                let encryption = try SrtEncryption(passphrase: passphrase)
+                context.install(encryption: encryption)
+                extensions[.keyMaterialRequest] = encryption.keyMaterial
+                encryptionField = encryption.encryptionField
+            } catch let error as SrtEncryptionError {
+                context.fail(encryption: error)
+                context.set(newState: .shutdown)
+                return
+            } catch {
+                context.set(newState: .shutdown)
+                return
+            }
+        }
+
         let conclusionRequest = SrtHandshake.makeConclusionRequest(
             srtSocketID: context.srtSocketID,
             initialPacketSequenceNumber: context.initialPacketSequenceNumber,
             synCookie: context.synCookie,
             peerIpAddress: context.peerIpAddress,
-            extensions: makeExtensions(streamId: context.streamId)
+            extensions: extensions,
+            encryptionField: encryptionField
         )
 
-        /// Past induction every packet is addressed to the listener's socket ID,
-        /// which arrived in the induction response.
+        /// The conclusion request is still addressed to socket 0. The draft reads
+        /// as if it should carry the listener's ID from the induction response,
+        /// but libsrt's own caller sends 0, and libsrt's listener only routes a
+        /// dst-0 handshake to its accept path -- anything else is silently
+        /// dropped. The listener's ID is used for everything after the socket
+        /// exists.
         let packet = SrtPacket(
             field1: ControlTypes.handshake.asField,
-            socketID: context.peerSocketID,
+            socketID: 0,
             contents: Data()
         )
 

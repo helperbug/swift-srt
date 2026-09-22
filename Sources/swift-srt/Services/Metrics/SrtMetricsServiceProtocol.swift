@@ -25,16 +25,34 @@ import Combine
 import Foundation
 import Network
 
-public protocol SrtMetricsServiceProtocol: ServiceProtocol {
-    
-    var uptime: AnyPublisher<Int, Never> { get }
-    var listenerMetrics: AnyPublisher<(port: NWEndpoint.Port, receive: SrtMetricsModel, send: SrtMetricsModel), Never> { get }
-    var connectionMetrics: AnyPublisher<(header: UdpHeader, receive: SrtMetricsModel, send: SrtMetricsModel), Never> { get }
-    var socketMetrics: AnyPublisher<(header: UdpHeader, socketId: UInt32, receive: SrtMetricsModel, send: SrtMetricsModel), Never> { get }
-    var frameMetrics: AnyPublisher<(header: UdpHeader, socketId: UInt32, frameId: UInt32, receive: SrtMetricsModel, send: SrtMetricsModel), Never> { get }
+public struct ListenerMetrics: Sendable {
+    public let port: NWEndpoint.Port
+    public let receive: SrtMetricsModel
+    public let send: SrtMetricsModel
+}
 
-    func storeConnectionMetric(header: UdpHeader, receive: SrtMetricsModel?, send: SrtMetricsModel?) -> Void
-    func storeSocketMetric(header: UdpHeader, socketId: UInt32, receive: SrtMetricsModel?, send: SrtMetricsModel?) -> Void
-    func storeFrameMetric(header: UdpHeader, socketId: UInt32, frameId: UInt32, receive: SrtMetricsModel?, send: SrtMetricsModel?) -> Void
+public struct ConnectionMetrics: Sendable {
+    public let header: UdpHeader
+    public let receive: SrtMetricsModel
+    public let send: SrtMetricsModel
+}
+
+public struct SocketMetrics: Sendable {
+    public let header: UdpHeader
+    public let socketId: UInt32
+    public let receive: SrtMetricsModel
+    public let send: SrtMetricsModel
+}
+
+public protocol SrtMetricsServiceProtocol: ServiceProtocol {
+
+    var listenerMetrics: AsyncStream<ListenerMetrics> { get }
+    var connectionMetrics: AsyncStream<ConnectionMetrics> { get }
+    var socketMetrics: AsyncStream<SocketMetrics> { get }
+
+    /// Hot path: called per packet from inside the connection actor, so these
+    /// must be cheap and must not hop isolation.
+    func storeConnectionMetric(header: UdpHeader, receive: SrtMetricsModel?, send: SrtMetricsModel?)
+    func storeSocketMetric(header: UdpHeader, socketId: UInt32, receive: SrtMetricsModel?, send: SrtMetricsModel?)
 
 }

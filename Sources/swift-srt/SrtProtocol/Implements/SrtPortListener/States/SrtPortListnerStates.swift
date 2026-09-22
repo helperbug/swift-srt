@@ -23,7 +23,7 @@
 
 import Foundation
 
-public enum SrtPortListnerStates {
+public enum SrtPortListnerStates: Sendable {
     case none
     case ready
     case error

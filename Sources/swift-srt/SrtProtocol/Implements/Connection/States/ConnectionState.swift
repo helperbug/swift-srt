@@ -26,72 +26,61 @@ import Network
 
 // MARK: Protocol
 
+/// States run with the connection's lock held and mutate its confined state
+/// through the inout parameter. They may call the connection's lock-free
+/// methods (`send`, `cancel`, `receiveNextMessage`, `log`) and nothing else.
+///
+/// A state that completes a handshake returns the new socket, and the caller
+/// hands it to the subscriber after the lock is released.
 protocol ConnectionState {
     var name: ConnectionStates { get }
-    func onStateChanged(_ context: ConnectionContext, state: NWConnection.State)
-    func primary(_ context: ConnectionContext) -> Void
-    func auto(_ context: ConnectionContext) -> Void
-    func fail(_ context: ConnectionContext) -> Void
-    func send(_ context: ConnectionContext, _ data: Data) -> Void
+    func onStateChanged(_ confined: inout ConnectionContext.Confined, _ context: ConnectionContext, state: NWConnection.State) -> SrtSocket?
+    func auto(_ confined: inout ConnectionContext.Confined, _ context: ConnectionContext) -> SrtSocket?
 }
 
 extension ConnectionState {
-    
-    func primary(_ context: ConnectionContext) {
-        fatalError(name.label)
+
+    /// Network events arriving in a state that has no use for them are dropped,
+    /// never trapped on.
+    func onStateChanged(_ confined: inout ConnectionContext.Confined, _ context: ConnectionContext, state: NWConnection.State) -> SrtSocket? {
+        context.log("Ignoring \(state) in connection state \(name.label)")
+        return nil
     }
 
-    func auto(_ context: ConnectionContext) {
-        fatalError(name.label)
-    }
-
-    func fail(_ context: ConnectionContext) {
-        fatalError(name.label)
-    }
-    
-    func send(_ context: ConnectionContext, _ data: Data) {
-        fatalError(name.label)
-    }
-    
-    func onStateChanged(_ context: ConnectionContext, state: NWConnection.State) {
-        fatalError(name.label)
-    }
+    func auto(_ confined: inout ConnectionContext.Confined, _ context: ConnectionContext) -> SrtSocket? { nil }
 }
-
 
 // MARK: Waiting State
 
-class ConnectionWaitingState: ConnectionState {
-
+struct ConnectionWaitingState: ConnectionState {
     let name: ConnectionStates = .waiting
-    
 }
 
 // MARK: Preparing State
 
-class ConnectionPreparingState: ConnectionState {
+struct ConnectionPreparingState: ConnectionState {
     let name: ConnectionStates = .preparing
 }
 
-
 // MARK: Failed State
 
-class ConnectionFailedState: ConnectionState {
+struct ConnectionFailedState: ConnectionState {
     let name: ConnectionStates = .failed
-    
-    func auto(_ context: ConnectionContext) {
+
+    func auto(_ confined: inout ConnectionContext.Confined, _ context: ConnectionContext) -> SrtSocket? {
         context.cancel()
+        context.notifyClosed(&confined)
+        return nil
     }
-    
 }
 
 // MARK: Cancelled State
 
-class ConnectionCancelledState: ConnectionState {
+struct ConnectionCancelledState: ConnectionState {
     let name: ConnectionStates = .cancelled
 
-    func auto(_ context: ConnectionContext) {
-        context.cancel()
+    func auto(_ confined: inout ConnectionContext.Confined, _ context: ConnectionContext) -> SrtSocket? {
+        context.notifyClosed(&confined)
+        return nil
     }
-    
 }

@@ -23,7 +23,7 @@
 
 import Foundation
 
-public enum HandshakeExtensionTypes: UInt16 {
+public enum HandshakeExtensionTypes: UInt16, Sendable {
     case none
     case handshakeRequest = 1
     case handshakeResponse = 2

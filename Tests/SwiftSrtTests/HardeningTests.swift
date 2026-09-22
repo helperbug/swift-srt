@@ -13,9 +13,6 @@ final class HardeningTests: XCTestCase {
     /// A duplicate or replayed conclusion request must not crash an established
     /// listener, and must not roll it back out of the active state.
     func testLateConclusionRequestDoesNotDisturbActiveListener() throws {
-        var sockets: [SrtSocketProtocol] = []
-        var sent = 0
-
         let synCookie: UInt32 = 0x1A2B3C4D
 
         let listener = SrtListenerContext(
@@ -24,12 +21,10 @@ final class HardeningTests: XCTestCase {
             initialPacketSequenceNumber: 0,
             synCookie: synCookie,
             peerIpAddress: peerIp.ipStringToData!,
-            encrypted: false,
-            send: { _, _ in sent += 1 },
-            onSocketCreated: { sockets.append($0) }
+            encrypted: false
         )
 
-        listener.start()
+        _ = listener.start()
 
         let conclusion = SrtHandshake.makeConclusionRequest(
             srtSocketID: 0x11223344,
@@ -39,22 +34,20 @@ final class HardeningTests: XCTestCase {
             extensions: [.handshakeRequest: hsreq()]
         )
 
-        listener.handleHandshake(handshake: conclusion)
+        let first = listener.handleHandshake(handshake: conclusion)
         XCTAssertEqual(listener.state, .active)
-        XCTAssertEqual(sockets.count, 1)
+        XCTAssertEqual(first.sockets.count, 1)
 
         // A replay of the same packet must be absorbed, not acted on twice.
-        listener.handleHandshake(handshake: conclusion)
-        listener.handleHandshake(handshake: conclusion)
+        let replay = listener.handleHandshake(handshake: conclusion) + listener.handleHandshake(handshake: conclusion)
 
         XCTAssertEqual(listener.state, .active, "an established listener must not roll back")
-        XCTAssertEqual(sockets.count, 1, "a replayed conclusion must not create a second socket")
+        XCTAssertTrue(replay.sockets.isEmpty, "a replayed conclusion must not create a second socket")
     }
 
     /// A late induction request arriving after the connection is up must not
     /// restart the handshake.
     func testLateInductionRequestDoesNotRollBackListener() throws {
-        var sockets: [SrtSocketProtocol] = []
         let synCookie: UInt32 = 0x1A2B3C4D
 
         let listener = SrtListenerContext(
@@ -63,13 +56,11 @@ final class HardeningTests: XCTestCase {
             initialPacketSequenceNumber: 0,
             synCookie: synCookie,
             peerIpAddress: peerIp.ipStringToData!,
-            encrypted: false,
-            send: { _, _ in },
-            onSocketCreated: { sockets.append($0) }
+            encrypted: false
         )
 
-        listener.start()
-        listener.handleHandshake(handshake: SrtHandshake.makeConclusionRequest(
+        _ = listener.start()
+        let established = listener.handleHandshake(handshake: SrtHandshake.makeConclusionRequest(
             srtSocketID: 0x11223344,
             initialPacketSequenceNumber: 0,
             synCookie: synCookie,
@@ -78,38 +69,34 @@ final class HardeningTests: XCTestCase {
         ))
 
         XCTAssertEqual(listener.state, .active)
+        XCTAssertEqual(established.sockets.count, 1)
 
-        listener.handleHandshake(handshake: SrtHandshake.makeInductionRequest(
+        let late = listener.handleHandshake(handshake: SrtHandshake.makeInductionRequest(
             srtSocketID: 0x11223344,
             serverIpAddress: peerIp.ipStringToData!
         ))
 
         XCTAssertEqual(listener.state, .active, "a late induction must not reopen the handshake")
-        XCTAssertEqual(sockets.count, 1)
+        XCTAssertTrue(late.sockets.isEmpty)
     }
 
     /// The caller must likewise absorb a duplicated conclusion response.
     func testLateConclusionResponseDoesNotDisturbActiveCaller() throws {
-        var sockets: [SrtSocketProtocol] = []
-
         let caller = SrtCallerContext(
             srtSocketID: 0x11223344,
             initialPacketSequenceNumber: 0,
             synCookie: 0,
             peerIpAddress: "10.0.0.1".ipStringToData!,
-            encrypted: false,
-            send: { _, _ in },
-            onSocketCreated: { sockets.append($0) }
+            encrypted: false
         )
 
-        caller.start()
+        _ = caller.start()
 
-        caller.handleHandshake(handshake: SrtHandshake.makeInductionResponse(
+        _ = caller.handleHandshake(handshake: SrtHandshake.makeInductionResponse(
             srtSocketID: 0x0A0B0C0D,
             initialPacketSequenceNumber: 0,
             synCookie: 0x1A2B3C4D,
-            peerIpAddress: "10.0.0.1".ipStringToData!,
-            encrypted: false
+            peerIpAddress: "10.0.0.1".ipStringToData!
         ))
 
         let response = SrtHandshake.makeConclusionResponse(
@@ -119,14 +106,47 @@ final class HardeningTests: XCTestCase {
             peerIpAddress: "10.0.0.1".ipStringToData!
         )
 
-        caller.handleHandshake(handshake: response)
+        let first = caller.handleHandshake(handshake: response)
         XCTAssertEqual(caller.state, .active)
-        XCTAssertEqual(sockets.count, 1)
+        XCTAssertEqual(first.sockets.count, 1)
 
-        caller.handleHandshake(handshake: response)
+        let replay = caller.handleHandshake(handshake: response)
 
         XCTAssertEqual(caller.state, .active, "an established caller must not roll back")
-        XCTAssertEqual(sockets.count, 1, "a replayed response must not create a second socket")
+        XCTAssertTrue(replay.sockets.isEmpty, "a replayed response must not create a second socket")
+    }
+
+    /// libsrt's induction response carries the caller's own ID in the SRT Socket
+    /// ID field; the listener's real ID arrives with the conclusion response and
+    /// must be the one the socket addresses.
+    func testCallerTakesPeerIdFromConclusionResponse() throws {
+        let caller = SrtCallerContext(
+            srtSocketID: 0x11223344,
+            initialPacketSequenceNumber: 0,
+            synCookie: 0,
+            peerIpAddress: "10.0.0.1".ipStringToData!,
+            encrypted: false
+        )
+
+        _ = caller.start()
+
+        _ = caller.handleHandshake(handshake: SrtHandshake.makeInductionResponse(
+            srtSocketID: 0x11223344, // libsrt echoes the caller's ID here
+            initialPacketSequenceNumber: 0,
+            synCookie: 0x1A2B3C4D,
+            peerIpAddress: "10.0.0.1".ipStringToData!
+        ))
+
+        let established = caller.handleHandshake(handshake: SrtHandshake.makeConclusionResponse(
+            srtSocketID: 0x0A0B0C0D, // the accepted socket's real ID
+            initialPacketSequenceNumber: 0,
+            synCookie: 0,
+            peerIpAddress: "10.0.0.1".ipStringToData!
+        ))
+
+        let socket = try XCTUnwrap(established.sockets.first)
+        XCTAssertEqual(socket.socketId, 0x11223344)
+        XCTAssertEqual(socket.peerSocketId, 0x0A0B0C0D, "replies must go to the accepted socket, not to ourselves")
     }
 
     // MARK: Minimum MSS
@@ -169,7 +189,6 @@ final class HardeningTests: XCTestCase {
 
     /// A listener must not establish a connection on an unusable MTU.
     func testListenerRejectsUndersizedMtu() throws {
-        var sockets: [SrtSocketProtocol] = []
         let synCookie: UInt32 = 0x1A2B3C4D
 
         let listener = SrtListenerContext(
@@ -178,14 +197,12 @@ final class HardeningTests: XCTestCase {
             initialPacketSequenceNumber: 0,
             synCookie: synCookie,
             peerIpAddress: peerIp.ipStringToData!,
-            encrypted: false,
-            send: { _, _ in },
-            onSocketCreated: { sockets.append($0) }
+            encrypted: false
         )
 
-        listener.start()
+        _ = listener.start()
 
-        listener.handleHandshake(handshake: SrtHandshake(
+        let outcome = listener.handleHandshake(handshake: SrtHandshake(
             hsVersion: .version5,
             encryptionField: 0,
             extensionField: 1,
@@ -202,7 +219,7 @@ final class HardeningTests: XCTestCase {
             extensions: [.handshakeRequest: hsreq()]
         ))
 
-        XCTAssertTrue(sockets.isEmpty, "an unusable MTU must not establish a connection")
+        XCTAssertTrue(outcome.sockets.isEmpty, "an unusable MTU must not establish a connection")
     }
 
     // MARK: Key material length validation

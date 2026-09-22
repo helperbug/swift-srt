@@ -104,23 +104,6 @@ public struct SrtHandshake {
         return data
     }
     
-    func toData() -> Data {
-        var data = Data()
-        data.append(BinaryEncoder.encode(hsVersion.rawValue))
-        data.append(BinaryEncoder.encode(encryptionField))
-        data.append(BinaryEncoder.encode(extensionField))
-        data.append(BinaryEncoder.encode(initialPacketSequenceNumber))
-        data.append(BinaryEncoder.encode(maximumTransmissionUnitSize))
-        data.append(BinaryEncoder.encode(maximumFlowWindowSize))
-        data.append(contentsOf: handshakeType.rawValue.bigEndian.bytes)
-        data.append(BinaryEncoder.encode(srtSocketID))
-        data.append(BinaryEncoder.encode(synCookie))
-        data.append(peerIPAddress)
-        data.append(BinaryEncoder.encode(extensionType.rawValue))
-        data.append(BinaryEncoder.encode(extensionLength))
-        return data
-    }
-    
     /// Initializes a new instance from data.
     public init?(data: Data) {
         var offset = 0
@@ -181,7 +164,6 @@ public struct SrtHandshake {
     
     var isInductionResponse: Bool {
         hsVersion == .version5 &&
-        encryptionField == 0 &&
         extensionField == 0x4A17 &&
         handshakeType == .induction &&
         srtSocketID != 0 &&
@@ -244,70 +226,34 @@ public extension SrtHandshake {
         self.extensions = extensions
     }
     
+    /// The listener's answer to an induction request: version 5, the magic
+    /// extension value, the cookie, and the key size it will require (0 for
+    /// none). Key material itself only travels in the conclusion exchange.
     static func makeInductionResponse(
         srtSocketID: UInt32,
         initialPacketSequenceNumber: UInt32,
         synCookie: UInt32,
         peerIpAddress: Data,
-        encrypted: Bool
+        encryptionField: UInt16 = 0
     ) -> SrtHandshake {
-        let keyMaterial = IntegrityCheckVectorFrame.makeWrapper()
-        
-        let keyMaterialFrame = KeyMaterialFrame(
-            version: 1,
-            packetType: 2,
-            sign: 0x4841, // HAI signature
-            keyEncryption: 0b11, // Both even and odd keys are provided
-            keki: 0,
-            cipher: 2, // AES-CTR
-            auth: 0, // None
-            streamEncapsulation: 2, // MPEG-TS/SRT
-            saltLength: 16 / 4,
-            keyLength: 32 / 4,
-            salt: Data.random(16),
-            wrappedKey: keyMaterial.data
+
+        return SrtHandshake(
+            hsVersion: .version5,
+            encryptionField: encryptionField,
+            extensionField: 0x4A17, // SRT Magic Value
+            initialPacketSequenceNumber: initialPacketSequenceNumber,
+            maximumTransmissionUnitSize: 1500,
+            maximumFlowWindowSize: 8192,
+            handshakeType: .induction,
+            srtSocketID: srtSocketID,
+            synCookie: synCookie,
+            peerIPAddress: peerIpAddress,
+            extensionType: .none,
+            extensionLength: 0,
+            extensionContents: Data()
         )
-
-        if encrypted {
-
-            return SrtHandshake(
-                hsVersion: .version5,
-                encryptionField: 0x0004, // AES-256
-                extensionField: 0x4A17, // SRT Magic Value
-                initialPacketSequenceNumber: initialPacketSequenceNumber,
-                maximumTransmissionUnitSize: 1500,
-                maximumFlowWindowSize: 8192,
-                handshakeType: .induction,
-                srtSocketID: srtSocketID,
-                synCookie: synCookie,
-                peerIPAddress: peerIpAddress,
-                extensionType: .keyMaterialResponse,
-                extensionLength: UInt16(keyMaterialFrame.data.count / 4),
-                extensionContents: keyMaterialFrame.data
-            )
-
-        } else {
-
-            return SrtHandshake(
-                hsVersion: .version5,
-                encryptionField: 0x0000, // None
-                extensionField: 0x4A17, // SRT Magic Value
-                initialPacketSequenceNumber: initialPacketSequenceNumber,
-                maximumTransmissionUnitSize: 1500,
-                maximumFlowWindowSize: 8192,
-                handshakeType: .induction,
-                srtSocketID: srtSocketID,
-                synCookie: synCookie,
-                peerIPAddress: peerIpAddress,
-                extensionType: .none,
-                extensionLength: 0,
-                extensionContents: Data()
-            )
-
-        }
-        
     }
-    
+
     /// Smallest MTU that still leaves room for an SRT header on top of UDP/IPv4.
     /// A peer advertising less than this would size payload buffers to nothing.
     static let minimumTransmissionUnitSize: UInt32 = 76
@@ -366,12 +312,13 @@ public extension SrtHandshake {
         initialPacketSequenceNumber: UInt32,
         synCookie: UInt32,
         peerIpAddress: Data,
-        extensions: [HandshakeExtensionTypes: Data]
+        extensions: [HandshakeExtensionTypes: Data],
+        encryptionField: UInt16 = 0
     ) -> SrtHandshake {
 
         return SrtHandshake(
             hsVersion: .version5,
-            encryptionField: 0, // No encryption
+            encryptionField: encryptionField,
             extensionField: extensionField(for: extensions),
             initialPacketSequenceNumber: initialPacketSequenceNumber,
             maximumTransmissionUnitSize: 1500,
@@ -393,7 +340,9 @@ public extension SrtHandshake {
         srtSocketID: UInt32,
         initialPacketSequenceNumber: UInt32,
         synCookie: UInt32,
-        peerIpAddress: Data
+        peerIpAddress: Data,
+        keyMaterialResponse: Data? = nil,
+        encryptionField: UInt16 = 0
     ) -> SrtHandshake {
 
         let hsrsp = HandshakeExtensionMessage(
@@ -403,11 +352,14 @@ public extension SrtHandshake {
             senderTsbpdDelay: Self.defaultTsbpdDelay
         )
 
-        let extensions: [HandshakeExtensionTypes: Data] = [.handshakeResponse: hsrsp.data]
+        var extensions: [HandshakeExtensionTypes: Data] = [.handshakeResponse: hsrsp.data]
+        if let keyMaterialResponse {
+            extensions[.keyMaterialResponse] = keyMaterialResponse
+        }
 
         return SrtHandshake(
             hsVersion: .version5,
-            encryptionField: 0, // No encryption
+            encryptionField: encryptionField,
             extensionField: extensionField(for: extensions),
             initialPacketSequenceNumber: initialPacketSequenceNumber,
             maximumTransmissionUnitSize: 1500,
@@ -419,7 +371,7 @@ public extension SrtHandshake {
             extensionType: .none,
             extensionLength: 0,
             extensionContents: Data(),
-            extensions: [.handshakeResponse: hsrsp.data]
+            extensions: extensions
         )
     }
     
@@ -467,6 +419,43 @@ public extension SrtHandshake {
 extension SrtHandshake {
     
     
+    /// Rendezvous opener: HSv5, our advertised key size, no extension flags
+    /// (not the magic value -- libsrt does not parse a wave that carries it),
+    /// and our cookie for the contest.
+    static func makeWaveAHand(srtSocketID: UInt32, initialPacketSequenceNumber: UInt32, cookie: UInt32,
+                              peerIpAddress: Data, encryptionField: UInt16 = 0) -> SrtHandshake {
+        SrtHandshake(
+            hsVersion: .version5,
+            encryptionField: encryptionField,
+            extensionField: 0,
+            initialPacketSequenceNumber: initialPacketSequenceNumber,
+            maximumTransmissionUnitSize: 1500,
+            maximumFlowWindowSize: 8192,
+            handshakeType: .waveAHand,
+            srtSocketID: srtSocketID,
+            synCookie: cookie,
+            peerIPAddress: peerIpAddress,
+            extensionType: .none, extensionLength: 0, extensionContents: Data()
+        )
+    }
+
+    /// Rendezvous closer from the initiator: no extensions, nothing to negotiate.
+    static func makeAgreement(srtSocketID: UInt32, initialPacketSequenceNumber: UInt32, peerIpAddress: Data) -> SrtHandshake {
+        SrtHandshake(
+            hsVersion: .version5,
+            encryptionField: 0,
+            extensionField: 0,
+            initialPacketSequenceNumber: initialPacketSequenceNumber,
+            maximumTransmissionUnitSize: 1500,
+            maximumFlowWindowSize: 8192,
+            handshakeType: .agreement,
+            srtSocketID: srtSocketID,
+            synCookie: 0,
+            peerIPAddress: peerIpAddress,
+            extensionType: .none, extensionLength: 0, extensionContents: Data()
+        )
+    }
+
     static func makeInductionRequest(
         srtSocketID: UInt32,
         initialPacketSequenceNumber: UInt32 = 0,
@@ -573,6 +562,46 @@ extension SrtHandshake {
         return nil
     }
     
+    /// libsrt copies byte-array extensions (stream id, key material) through a
+    /// 32-bit host-to-network conversion, which on a little-endian host reverses
+    /// the bytes within every word. It is its own inverse.
+    static func wordReversed(_ data: Data) -> Data {
+        var out = Data(capacity: data.count)
+        let whole = data.count - data.count % 4
+        for start in stride(from: 0, to: whole, by: 4) {
+            out.append(contentsOf: data[data.startIndex + start ..< data.startIndex + start + 4].reversed())
+        }
+        out.append(data.suffix(from: data.startIndex + whole))
+        return out
+    }
+
+    /// Key material goes on the wire as haicrypt lays it out -- libsrt does not
+    /// word-reverse it the way it does the stream id. A message that only
+    /// parses word-reversed is accepted anyway and noted, so a peer that does
+    /// it the other way still connects and the difference is visible.
+    static func keyMaterial(_ raw: Data) -> Data? {
+        if raw.count == 4 { return raw }
+        if raw.count > 3, raw[raw.startIndex] == KeyMaterialFrame.version << 4 | KeyMaterialFrame.packetType,
+           raw[raw.startIndex + 1] == 0x20, raw[raw.startIndex + 2] == 0x29 {
+            return raw
+        }
+        let reversed = wordReversed(raw)
+        if reversed.count > 3, reversed[0] == KeyMaterialFrame.version << 4 | KeyMaterialFrame.packetType,
+           reversed[1] == 0x20, reversed[2] == 0x29 {
+            print("Handshake: key material arrived word-reversed; accepting")
+            return reversed
+        }
+        return raw
+    }
+
+    public var keyMaterialRequest: Data? {
+        extensions[.keyMaterialRequest].flatMap(Self.keyMaterial)
+    }
+
+    public var keyMaterialResponse: Data? {
+        extensions[.keyMaterialResponse].flatMap(Self.keyMaterial)
+    }
+
     /// StreamID is used to identify a path. libsrt stores it as 32-bit words with
     /// the bytes reversed inside each word, zero padded to a word boundary, so the
     /// reversal has to be undone before the bytes read as text.

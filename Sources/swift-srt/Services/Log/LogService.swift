@@ -24,36 +24,27 @@
 import Combine
 import Foundation
 
-public class LogService: LogServiceProtocol {
-    
-    public let icon: String = "🪵"
-    public let source: String = "Log"
+public final class LogService: LogServiceProtocol {
 
-    @Published private var _logs: (icon: String, source: String, message: String)
-    public var logs: AnyPublisher<(icon: String, source: String, message: String), Never> {
+    public let icon = "🪵"
+    public let source = "Log"
 
-        $_logs.eraseToAnyPublisher()
+    public let entries: AsyncStream<LogEntry>
+    private let continuation: AsyncStream<LogEntry>.Continuation
 
-    }
-    
     public init() {
-
-        _logs = (icon: "", source: "", message: "")
-
+        (entries, continuation) = AsyncStream.makeStream(bufferingPolicy: .bufferingNewest(256))
     }
-    
+
+    /// Safe to call from any isolation: it prints and yields to the stream,
+    /// both of which are thread-safe.
     public func log(_ icon: String, _ source: String, _ message: String) {
-
-        _logs = (icon: icon, source: source, message: message)
-
         print("\(icon) \(source): \(message)")
-        
+        continuation.yield(LogEntry(icon: icon, source: source, message: message))
     }
-    
+
     public func log(_ message: String) {
-
-        log(self.icon, self.source, message)
-
+        log(icon, source, message)
     }
-    
+
 }

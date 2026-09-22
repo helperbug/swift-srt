@@ -23,7 +23,7 @@
 
 import SwiftUI
 
-public enum ConnectionStates {
+public enum ConnectionStates: Sendable {
     case setup
     case waiting
     case preparing

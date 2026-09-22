@@ -24,6 +24,6 @@
 import Foundation
 
 /// Represents the metrics associated with SRT connections.
-public enum SrtConnectionMetrics {
+public enum SrtConnectionMetrics: Sendable {
     case start
 }

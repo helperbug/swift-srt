@@ -23,7 +23,8 @@
 
 import Foundation
 
-protocol ByteFrame {
+/// Every frame is a value over `Data`, so all of them cross tasks freely.
+protocol ByteFrame: Sendable {
     
     var data: Data { get }
     init?(_ bytes: Data)

@@ -24,7 +24,7 @@
 import CryptoKit
 import Foundation
 
-public struct UdpHeader {
+public struct UdpHeader: Sendable {
     public let sourceIp: String
     public let sourcePort: UInt16
     public let destinationIp: String

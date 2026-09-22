@@ -25,14 +25,12 @@ import Combine
 import Foundation
 import Network
 
-public protocol SrtPortListenerProtocol {
+public protocol SrtPortListenerProtocol: AnyObject, Sendable {
 
     var endpoint: IPv4Address { get }
     var port: NWEndpoint.Port { get }
-    
-    var listenerState: AnyPublisher<SrtPortListnerStates, Never> { get }
-    var metrics: AnyPublisher<(UdpHeader, SrtMetricsModel), Never> { get }
+    var states: AsyncStream<SrtPortListnerStates> { get }
 
-    func close() -> Void
+    func close()
 
 }

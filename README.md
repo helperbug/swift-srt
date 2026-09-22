@@ -1,283 +1,131 @@
+# swift-srt
+
+Secure Reliable Transport (SRT) in Swift, on Apple's Network framework. Swift 6
+language mode with full data-race safety, no `@unchecked Sendable`, no
+`nonisolated(unsafe)`. macOS, iOS, tvOS and watchOS 26 and later.
+
+The wire protocol follows the SRT specification and is verified against
+libsrt 1.5.7 in both roles. The API is Swift-native: sockets arrive as values
+you own, packets come through an `AsyncStream`, and the library spawns no
+tasks of its own for the data path.
+
+## Status
+
+Pre-alpha. Handshakes in all three modes, receive, send and encryption are
+complete and tested against libsrt 1.5.7.
+
+| | State |
+|---|---|
+| Caller-listener handshake, both roles | done, interoperates with libsrt 1.5.7 |
+| Receive: reorder buffer, ACK, NAK, RTT, TSBPD with drift tracing, too-late drop | done |
+| Send: sequencing, retransmission on NAK, DROPREQ, keep-alive, flow window | done |
+| Loss testing | byte-exact through 10% loss; through 20% at 1 s latency |
+| MPEG-TS demux, H.264 to `CMSampleBuffer`, SwiftUI player | done |
+| Encryption: AES-CTR, PBKDF2 key derivation, RFC 3394 key wrap, KMREQ/KMRSP | done, interoperates with libsrt; key refresh not yet |
+| Rendezvous handshake | done, interoperates with libsrt |
+| Bandwidth pacing | not yet: the application paces, retransmissions are not smoothed |
+| Bonding, FEC, file mode | out of scope |
+
+## Design
+
+One thread reads datagrams off the wire and routes each by destination socket
+ID into that socket's stream. Whoever subscribes to a socket owns it: their
+task pulls events and calls `process`, which runs the protocol -- ACKs, NAKs,
+retransmissions, keep-alives -- and hands back payload. Fan-out across
+cameras is the application's choice of tasks, not the library's.
+
+```swift
+let manager = SrtPortManagerService(logService: LogService(), metricsService: metrics)
+
+manager.onSocket { socket in
+    Task.detached {
+        for await event in socket.events {
+            for frame in socket.process(event) {
+                decode(frame.payload)      // MPEG-TS, 1316 bytes at a time
+            }
+        }
+    }
+}
+
+manager.addListener(endpoint: IPv4Address("0.0.0.0")!, port: 9000, passphrase: "correct-horse-battery")
+manager.connect(to: IPv4Address("10.0.0.5")!, port: 9000, streamId: nil, passphrase: "correct-horse-battery")
+```
+
+To send, hand `socket.outbound` to whatever produces data; it is safe to use
+from any thread, and payloads are packetized on the owner's task:
+
+```swift
+socket.outbound.send(transportStreamChunk)
+```
+
+Every socket exposes `statistics`: packets received, lost, retransmitted,
+dropped, RTT, latency, ACK and NAK counts, and the same for the send side.
+
+## Targets
+
+- `SwiftSrt` -- the transport.
+- `SwiftSrtMedia` -- `TsDemuxer`, `H264SampleBuilder`, `SrtVideoRenderer`,
+  `SrtVideoView` (SwiftUI, AppKit and UIKit), `SrtPlayer`.
+- `SrtNetem` -- a UDP proxy that drops and reorders on purpose, for tests.
+- `srt-receive`, `srt-send`, `srt-player`, `srt-netem`, `srt-testpattern` --
+  command-line tools built on the above.
+
+## Try it
+
+You need libsrt's tools as the other end: `brew install srt`. The player and
+`srt-receive` listen; `srt-live-transmit` calls them.
+
+```sh
+swift build
+
+# a 60 s test clip with a frame counter burned in
+.build/debug/srt-testpattern | ffmpeg -f rawvideo -pix_fmt bgra -s 1280x720 -r 30 -i - \
+  -c:v libx264 -tune zerolatency -g 30 -pix_fmt yuv420p -f mpegts clock.ts
+
+# 1. our player (add --passphrase on both ends for AES-128)
+.build/debug/srt-player --port 9000
+
+# 2. libsrt sends to it
+srt-live-transmit "udp://:1235" "srt://127.0.0.1:9000?mode=caller&latency=200" &
+ffmpeg -re -stream_loop -1 -i clock.ts -c copy -f mpegts "udp://127.0.0.1:1235?pkt_size=1316"
+```
+
+The other direction, with VLC as the receiver:
+
+```sh
+.build/debug/srt-send --from 1237 --listen 9100 &
+ffmpeg -re -stream_loop -1 -i clock.ts -c copy -f mpegts "udp://127.0.0.1:1237?pkt_size=1316" &
+open -a VLC srt://127.0.0.1:9100
+# encrypted: add --passphrase to srt-send and use srt://127.0.0.1:9100?passphrase=...
+```
+
+Rendezvous, for two peers behind NATs, each binding a local port and calling
+the other. On one machine the two sides need different ports; `port=` is
+what makes `srt-live-transmit` bind its own rather than the target's:
 
+```sh
+.build/debug/srt-receive --port 9300 --rendezvous 127.0.0.1:9301 &
+srt-live-transmit "udp://:1236" "srt://127.0.0.1:9300?mode=rendezvous&port=9301&latency=200"
+```
 
-# Swift SRT
+To see loss handling, put `srt-netem` in the path and compare the captured
+bytes with the source:
 
-Secure Reliable Transport (SRT) is now a first-class member of Apple's ecosystem! This Swift package is implemented using NWFramerProtocol and Apple’s native networking framework. Designed for modern standards, it excels in live streaming, video on demand, and two-way communication applications by providing reactive "hints" to automate peak quality based on network conditions. 
+```sh
+.build/debug/srt-receive --port 9100 --out capture.ts --seconds 20 &
+.build/debug/srt-netem --listen 9101 --to 127.0.0.1:9100 --loss 0.05 --seed 42 &
+srt-live-transmit "udp://:1236" "srt://127.0.0.1:9101?mode=caller&latency=200" &
+ffmpeg -re -i clock.ts -c copy -f mpegts "udp://127.0.0.1:1236?pkt_size=1316"
+cmp clock.ts capture.ts && echo identical
+```
 
-Easily integrate high-quality, low-latency streaming capabilities into SwiftUI applications and leverage the latest advancements in Apple’s networking and multimedia frameworks.  
+## Tests
 
-Key features include:
+`swift test` covers the wire format, the handshake exchange, the hardening
+libsrt 1.5.7 introduced, the receive and send buffers, sequence arithmetic,
+the demuxer, and the impairment proxy.
 
-- Seamless integration with Swift and Apple's frameworks
+## License
 
-- Compatibility with SwiftUI applications
-
-- Strict adherence to the SRT specification
-
-- Support for both delegate pattern and Combine publishers
-
-- DocC [Swift SRT Docs](https://helperbug.github.io/swift-srt/documentation/swiftsrt/)
-
-This open-source project is public-domain. The design emphasizes simplicity and utility, following the principles of Occam's Razor.
-
-# Connection
-
-The SRT Connection is implemented as a UDP NWConnection with a custom NWFramer. The frames, lifecycle and operations of SRT are managed internally. Connections can handle multiple streams identified by a SocketID. When the last socket is shut down, the connection ends.
-
-  
-
-## ListenerSession
-
-  
-
-The `ListenerSession` manages and accepts incoming connection requests. It is designed for servers that need to handle multiple connections, such as in meeting software where many participants connect to a central server. The listener waits for connection attempts, authenticates them, and establishes secure sessions for data reception.
-
-  
-
-## CallerSession
-
-  
-
-The `CallerSession` initiates connections to a listener. It is suitable for clients that need to connect to a specific server, like a meeting participant joining a session. The caller handles the handshake process, ensuring both parties agree on the connection parameters and establish a secure session for data transmission.
-
-  
-
-## Rendezvous
-
-  
-
-Rendezvous mode is useful when there are firewalls between two SRT endpoints. Both parties initiate the connection simultaneously, making it ideal for peer-to-peer scenarios where each endpoint may be behind NATs or firewalls. Firewalls see the two participants trying to connect and poke a temporary hole in the firewall, allowing a peer-to-peer connection. This mode facilitates dynamic connection establishment without requiring a predefined client-server relationship.
-
-  
-
-### Handshake and Induction
-
-  
-
-The handshake process is crucial for establishing a secure and reliable connection in SRT. It involves several steps to ensure both parties agree on the connection parameters and security settings.
-
-  
-
-#### Caller-Listener Handshake
-
-  
-
-**Induction Phase**:
-
-- **Caller**: Sends an induction request to the listener.
-
-- **Listener**: Responds with an induction response, including a cookie for security purposes.
-
-  
-
-**Conclusion Phase**:
-
-- **Caller**: Sends a conclusion request with the received cookie.
-
-- **Listener**: Confirms the connection by responding to the conclusion request.
-
-  
-
-#### Rendezvous Handshake
-
-  
-
-**Waving State**:
-
-- Both parties start by sending a waveband handshake packet, including their respective cookies.
-
-  
-
-**Conclusion**:
-
-- Each peer receives the other's cookie and performs the cookie contest to determine roles.
-
-- The initiator sends a conclusion request, and the responder replies, finalizing the connection.
-
-  
-
-If the handshakes fails the connection is closed and after a short delay the handshake process starts over. Upon success the connection is hosting a single SocketID that sends keep-alive packets along with any data packets. Additional streams may be created and once the last one is shutdown the connection is closed.
-
-  
-
----
-
-  
-
-## Encryption
-
-  
-
-Encryption in the swift-srt package is optional and employs AES-CTR (Advanced Encryption Standard in Counter mode) for securing data transmission. During the handshake process, the caller creates keys and sends them to the listener. This includes the wrapped stream encrypting key (SEK) and necessary cryptographic parameters. The responder decrypts the SEK to establish a secure connection.
-
-  
-
-In two-way communication scenarios, each endpoint uses its own Key Encrypting Key (KEK) to encrypt outgoing and decrypt incoming messages. This bidirectional encryption ensures both parties can securely exchange data. The encryption keys are periodically refreshed to maintain security throughout the connection, and this key management is handled automatically by the protocol.
-
-  
-
-## Sockets and Auto-Performance Tuning
-
-  
-
-Each socket is uniquely identified by its own SocketID and maintains its own cryptographic keys, so each stream is isolated and secure. Sockets are responsible for tracking their own metrics that enables fine-grained monitoring and optimization of data transmission. Sockets also manage ACKs, NACKs, KeepAlive and other SRT details to maintain the data flow, retransmission and metrics.
-
-  
-
-## Metrics
-
-  
-
-Metrics are a key part of SRT and monitor the performance of data transmission and auto-buffer based on target delay.
-
-  
-
-### Performance Metrics
-
-  
-
-1. **Bandwidth Usage**: The amount of data transmitted over the network per unit time.
-
-2. **Packet Loss Rate**: The percentage of packets lost during transmission.
-
-3. **Round-Trip Time (RTT)**: The time it takes for a packet to travel from the sender to the receiver and back. It is used to measure latency and network performance.
-
-  
-
-### Quality Metrics
-
-  
-
-1. **Jitter**: The variation in packet arrival times. Lower jitter indicates a more stable and consistent data stream, which is ideal for real-time streaming.
-
-2. **Latency**: The delay between sending and receiving data packets. Managing latency is one of the key benefits of SRT and this package.
-
-  
-
-### Reliability Metrics
-
-  
-
-1. **ACK Count**: The number of acknowledgments received. This metric helps in understanding the responsiveness of the receiver.
-
-2. **Retransmission Count**: The number of packets retransmitted due to loss or error. High retransmission counts can indicate network issues or instability.
-
-  
-
-### Connection Metrics
-
-  
-
-1. **Keep-Alive Messages**: Sent once per second per socket are an easy way to keep track of uptime.
-
-2. **Socket State**: The current state of the socket, which helps in diagnosing connection issues and understanding the lifecycle of the connection.
-
-  
-
-Each socket in tracks metrics independently for detailed monitoring and performance tuning of individual streams. These metrics are monitored internally and also published, so you can optimize and visualize current context.
-
-  
-
-## Common Uses, Flavors, and Hints
-
-  
-
-### Common Uses
-
-  
-
-SRT is versatile and can be used for various types of data transmission:
-
-- **Audio Streaming**: Transmitting audio data with peak quality, low latency and high reliability.
-
-- **Audio and Video Streaming**: Handling both audio and video streams simultaneously for live broadcasts, video conferencing, and video on demand.
-
-- **Screen Sharing**: Facilitating the real-time sharing of a user’s screen, useful for presentations, remote support, and collaborative work.
-
-- **Still Image Transmission**: Sending high-resolution still images, useful for applications like digital signage and remote photography.
-
-- **Data Broadcasting**: Broadcasting data to multiple endpoints efficiently, ideal for live events and real-time data feeds.
-
-- **Surveillance and Security Feeds**: Ensuring secure and reliable transmission of video feeds from security cameras.
-
-  
-
-### Flavors
-
-  
-
-SRT supports a range of configuration options, or "flavors," to optimize streaming quality based on the specific needs of the application:
-
-- **Audio Bitrate**: Adjusting the amount of data transmitted per second for audio, affecting quality and bandwidth usage.
-
-- **Compression Quality**: Modifying the level of compression applied to audio and video data, balancing between file size and quality.
-
-- **Bit-Depth**: Setting the number of bits used to represent audio samples, influencing sound quality.
-
-- **Framerate**: Configuring the number of video frames transmitted per second, impacting smoothness and realism of video playback.
-
-- **Frame Resolution**: Determining the dimensions of video frames, affecting clarity and detail.
-
-  
-
-### Hints
-
-  
-
-Hints in the swift-srt package provide insights beyond the standard SRT specifications, helping to optimize performance based on real-world usage:
-
-- **Supported Flavors**: Hints suggest which combinations of flavors (e.g., specific bitrates, resolutions) are viable based on current network conditions and empirical usage data.
-
-  
-
-#### Example of a Hint
-
-  
-
-**High Resolution Streaming**: When aiming for high-resolution streaming (e.g., 4K video), the hint system can analyze current network conditions and metrics to suggest the optimal bitrate and frame rate. Without hints, you would need to experiment manually, testing different bitrates and resolutions, and monitor for buffering, lag, or dropped frames. Hints streamline this process by providing empirically derived recommendations based on actual network performance data.
-
-  
-
-**High Bitrate Audio**: For applications focusing on high-fidelity audio streaming, hints can recommend appropriate bitrates and compression settings to maintain audio quality. Audio data is small and hints make it easy to use the highest quality coder available.
-
-  
-
-## How to Use
-
-  
-
-Hints in the swift-srt package provide real-time, data-driven insights to optimize performance based on current network conditions, making it easy to use advanced streaming features and technologies:
-
-  
-
-### 5K Screen Sharing
-
-Apple's VideoToolbox for high-quality screen sharing:
-
-- **Hint**: Metrics show 35 Mbps available bandwidth and low latency. Ideal for 5K resolution screen sharing.
-
-- **Action**: Use H.265 encoding for crystal-clear, high-resolution screen sharing.
-
-  
-
-### 96-bit Audio Streaming
-
-Deliver high-fidelity audio for music or communication:
-
-- **Hint**: Network conditions allow for high bitrate audio streaming.
-
-- **Action**: Configure audio settings for 96-bit depth to ensure rich, immersive sound.
-
-  
-
-### HDR 60-fps 10-bit Video
-
-Stream live video with stunning detail and smooth playback:
-
-- **Hint**: Stable network with 30 Mbps bandwidth and low latency detected.
-
-- **Action**: Use H.265 encoding at 60 fps with 10-bit color depth for vibrant, lifelike video.
-
-  
-
-Subscribe to the hint stream to reactively adjust encoder quality based on real-time network conditions. As the network degrades, the hints suggest stepping down the encoder quality to maintain stability. When conditions improve, it scales back to full quality automatically, showcasing Apple’s technology at its best without manual intervention. 
+MIT. Portions follow the SRT protocol specification, which is licensed under
+the Mozilla Public License 2.0.

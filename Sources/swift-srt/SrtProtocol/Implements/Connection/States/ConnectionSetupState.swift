@@ -24,46 +24,35 @@
 import Foundation
 import Network
 
-class ConnectionSetupState: ConnectionState {
-    
-    let name: ConnectionStates = .setup
-    
-    func onStateChanged(_ context: ConnectionContext, state: NWConnection.State) {
-        
-        if state == .preparing {
+struct ConnectionSetupState: ConnectionState {
 
+    let name: ConnectionStates = .setup
+
+    func onStateChanged(_ confined: inout ConnectionContext.Confined, _ context: ConnectionContext, state: NWConnection.State) -> SrtSocket? {
+
+        switch state {
+        case .preparing:
             /// Already started; calling start() again on a live NWConnection traps.
             context.log("Connection preparing")
+            return nil
 
-        } else if state == .ready {
-            
-            let state = context.set(newState: .ready)
-            state.state.auto(context)
+        case .ready:
+            return confined.set(.ready).auto(&confined, context)
 
-        }
-        
-        if let queue = context.connection.queue {
-            context.connection.requestEstablishmentReport(queue: queue) { report in
-                guard let report else {
-                    return
-                }
-                
-                let message = String(format: "Duration of establishment: %.0f microseconds", report.duration * 1000000)
-                context.log(message)
-            }
+        case .failed(let error):
+            context.log("Connection failed during setup: \(error)")
+            return confined.set(.failed).auto(&confined, context)
+
+        case .cancelled:
+            return confined.set(.cancelled).auto(&confined, context)
+
+        default:
+            return nil
         }
     }
-    
-    func auto(_ context: ConnectionContext) {
-        
-        context.connection.start(queue: .global(qos: .utility))
 
+    func auto(_ confined: inout ConnectionContext.Confined, _ context: ConnectionContext) -> SrtSocket? {
+        context.connection.start(queue: context.queue)
+        return nil
     }
-    
-    func fail(_ context: ConnectionContext) {
-
-        context.connection.cancel()
-
-    }
-    
 }

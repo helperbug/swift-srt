@@ -75,36 +75,10 @@ public struct DataPacketFrame: ByteFrame {
         return data.subdata(in: 12..<16).withUnsafeBytes { $0.load(as: UInt32.self) }.bigEndian
     }
 
-    /// Payload: variable length.
+    /// Payload: variable length. AES-CTR adds no tag, so encrypted and clear
+    /// packets carry data right to the end.
     public var payload: Data {
-        
-        if encryptionFlags == 1 || encryptionFlags == 2 {
-
-            let index = data.count - 16
-            
-            return data.subdata(in: 16..<index)
-
-        } else {
-
-            return data.subdata(in: 16..<data.count)
-
-        }
-
-    }
-
-    public var authenticationTag: Data? {
-        
-        guard encryptionFlags == 1 || encryptionFlags == 2 else {
-            return nil
-        }
-
-        guard data.count > 32 else {
-            return nil
-        }
-        
-        let index = data.count - 16
-
-        return data.subdata(in: index..<data.count)
+        data.subdata(in: 16..<data.count)
     }
 
     /// Constructor used by the receive network path

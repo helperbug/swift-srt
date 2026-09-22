@@ -21,28 +21,45 @@
 //  limitations under the License.
 //
 
-import Combine
 import Foundation
 import Network
 
+/// One received SRT payload, as delivered to the application.
+public struct SrtFrame: Sendable {
+    public let header: UdpHeader
+    public let socketId: UInt32
+    public let messageId: UInt32
+    public let payload: Data
+}
+
+@MainActor
 public protocol SrtPortManagerServiceProtocol: ServiceProtocol {
-    
-    var listeners: AnyPublisher<[NWEndpoint.Port: SrtPortListenerProtocol], Never> { get }
-    var connections: AnyPublisher<[UdpHeader: SrtConnectionProtocol], Never> { get }
-    var metrics: AnyPublisher<(UdpHeader, SrtMetricsModel), Never> { get }
-    var sockets: AnyPublisher<[UdpHeader: [UInt32: SrtSocketProtocol]], Never> { get }
-    var frames: AnyPublisher<(header: UdpHeader, socketId: UInt32, messageId: UInt32, frame: Data), Never> { get }
 
-    func addListener(endpoint: IPv4Address, port: NWEndpoint.Port) -> Void
-    func addConnection(header: UdpHeader, connection: SrtConnectionProtocol) -> Void
-    func addSocket(header: UdpHeader, socket: SrtSocketProtocol) -> Void
-    func addFrame(header: UdpHeader, socketId: UInt32, messageId: UInt32, frame: Data) -> Void
-    
-    func removeListener(port: NWEndpoint.Port) -> Void
-    func removeConnection(header: UdpHeader) -> Void
-    func removeSocket(header: UdpHeader, socketId: UInt32) -> Void
+    var listeners: [NWEndpoint.Port: any SrtPortListenerProtocol] { get }
+    var connections: [UdpHeader: any SrtConnectionProtocol] { get }
 
-    func shutdown(port: NWEndpoint.Port?) -> Void
-    func shutdownConnection(connection: UdpHeader) -> Void
-    
+    /// Registers the subscriber that owns every socket from here on. Called from
+    /// the connection's reader thread the instant a handshake completes, with
+    /// the socket transferred (`sending`) to it. The subscriber decides what
+    /// task pulls the socket's `packets`; the library spawns none.
+    nonisolated func onSocket(_ handler: @escaping @Sendable (sending SrtSocket) -> Void)
+
+    func addListener(endpoint: IPv4Address, port: NWEndpoint.Port, passphrase: String?)
+
+    /// Calls an SRT listener. The socket arrives through `onSocket` like any
+    /// other once the handshake completes.
+    func connect(to address: IPv4Address, port: NWEndpoint.Port, streamId: String?, passphrase: String?)
+
+    /// Meets a peer that is doing the same: both bind a local port and call
+    /// each other, which is what gets through a NAT on both ends.
+    func rendezvous(with address: IPv4Address, port: NWEndpoint.Port, localPort: NWEndpoint.Port, streamId: String?, passphrase: String?)
+    func addConnection(header: UdpHeader, connection: any SrtConnectionProtocol)
+    nonisolated func addSocket(_ socket: sending SrtSocket)
+
+    func removeListener(port: NWEndpoint.Port)
+    func removeConnection(header: UdpHeader)
+
+    func shutdown(port: NWEndpoint.Port?)
+    func shutdownConnection(header: UdpHeader)
+
 }

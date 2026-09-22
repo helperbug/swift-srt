@@ -21,7 +21,7 @@
 //  limitations under the License.
 //
 
-public enum ControlTypes: UInt16 {
+public enum ControlTypes: UInt16, Sendable {
     case handshake = 0x0000
     case keepAlive = 0x0001
     case acknowledgement = 0x0002

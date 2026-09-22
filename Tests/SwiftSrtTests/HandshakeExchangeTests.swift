@@ -1,155 +1,124 @@
 import XCTest
 @testable import SwiftSrt
 
-/// Drives a caller and a listener against each other, wiring each side's `send`
-/// closure straight into the other's `handleHandshake`. No sockets, no timing --
-/// just the four-packet caller/listener exchange.
+/// Drives a caller and a listener against each other by pumping each side's
+/// returned actions into the other. No sockets, no timing -- just the
+/// four-packet caller/listener exchange.
 final class HandshakeExchangeTests: XCTestCase {
-
-    /// One packet as it would go on the wire, decoded back into a handshake.
-    private struct Exchanged {
-        let destinationSocketID: UInt32
-        let handshake: SrtHandshake
-    }
 
     private let listenerIp = "10.0.0.1"
     private let callerIp = "10.0.0.9"
 
     func testCallerAndListenerCompleteHandshake() throws {
-        var callerToListener: [Exchanged] = []
-        var listenerToCaller: [Exchanged] = []
-
-        var listener: SrtListenerContext?
-        var caller: SrtCallerContext?
-
-        var callerSocket: SrtSocketProtocol?
-        var listenerSocket: SrtSocketProtocol?
-
         let listenerSocketID: UInt32 = 0x0A0B0C0D
         let synCookie: UInt32 = 0x1A2B3C4D
 
-        // The listener is created lazily, on the caller's induction request, exactly
-        // as ConnectionContext does it.
-        let callerSend: (SrtPacket, Data) -> Void = { packet, contents in
-            let handshake = SrtHandshake(data: contents)
-            XCTAssertNotNil(handshake, "caller emitted an unparseable handshake")
-            guard let handshake else { return }
-
-            callerToListener.append(
-                Exchanged(destinationSocketID: packet.destinationSocketID, handshake: handshake)
-            )
-
-            if let listener {
-                listener.handleHandshake(handshake: handshake)
-            } else {
-                XCTAssertTrue(handshake.isInductionRequest, "first packet must be an induction request")
-
-                listener = SrtListenerContext(
-                    srtSocketID: listenerSocketID,
-                    peerSocketID: handshake.srtSocketID,
-                    initialPacketSequenceNumber: handshake.initialPacketSequenceNumber,
-                    synCookie: synCookie,
-                    peerIpAddress: self.callerIp.ipStringToData!,
-                    encrypted: false,
-                    send: { packet, contents in
-                        let response = SrtHandshake(data: contents)
-                        XCTAssertNotNil(response, "listener emitted an unparseable handshake")
-                        guard let response else { return }
-
-                        listenerToCaller.append(
-                            Exchanged(destinationSocketID: packet.destinationSocketID, handshake: response)
-                        )
-
-                        caller?.handleHandshake(handshake: response)
-                    },
-                    onSocketCreated: { listenerSocket = $0 }
-                )
-                listener?.start()
-            }
-        }
-
-        // Creating the caller kicks off the exchange from its start state.
-        caller = SrtCallerContext(
+        let caller = SrtCallerContext(
             srtSocketID: 0x11223344,
             initialPacketSequenceNumber: 100,
             synCookie: 0,
             peerIpAddress: listenerIp.ipStringToData!,
             encrypted: false,
-            streamId: "input/live/test",
-            send: callerSend,
-            onSocketCreated: { callerSocket = $0 }
+            streamId: "input/live/test"
         )
 
-        let caller1 = try XCTUnwrap(caller)
-        caller1.start()
+        var callerSent: [Exchanged] = []
+        var listenerSent: [Exchanged] = []
+        var callerSockets: [SrtSocketContext] = []
+        var listenerSockets: [SrtSocketContext] = []
+
+        // The listener is created lazily, on the caller's induction request,
+        // exactly as ConnectionContext does it.
+        var listener: SrtListenerContext?
+
+        func pumpToListener(_ actions: [HandshakeAction]) {
+            callerSent += actions.sent
+            callerSockets += actions.sockets
+            for exchanged in actions.sent {
+                if let listener {
+                    pumpToCaller(listener.handleHandshake(handshake: exchanged.handshake))
+                } else {
+                    XCTAssertTrue(exchanged.handshake.isInductionRequest, "first packet must be an induction request")
+                    let created = SrtListenerContext(
+                        srtSocketID: listenerSocketID,
+                        peerSocketID: exchanged.handshake.srtSocketID,
+                        initialPacketSequenceNumber: exchanged.handshake.initialPacketSequenceNumber,
+                        synCookie: synCookie,
+                        peerIpAddress: callerIp.ipStringToData!,
+                        encrypted: false
+                    )
+                    listener = created
+                    pumpToCaller(created.start())
+                }
+            }
+        }
+
+        func pumpToCaller(_ actions: [HandshakeAction]) {
+            listenerSent += actions.sent
+            listenerSockets += actions.sockets
+            for exchanged in actions.sent {
+                pumpToListener(caller.handleHandshake(handshake: exchanged.handshake))
+            }
+        }
+
+        pumpToListener(caller.start())
 
         // Four packets: induction request/response, conclusion request/response.
-        XCTAssertEqual(callerToListener.count, 2, "caller should send induction then conclusion")
-        XCTAssertEqual(listenerToCaller.count, 2, "listener should answer both")
+        XCTAssertEqual(callerSent.count, 2, "caller should send induction then conclusion")
+        XCTAssertEqual(listenerSent.count, 2, "listener should answer both")
 
         // -- Induction request -------------------------------------------------
-        let inductionRequest = callerToListener[0]
+        let inductionRequest = callerSent[0]
         XCTAssertTrue(inductionRequest.handshake.isInductionRequest)
-        XCTAssertEqual(inductionRequest.destinationSocketID, 0,
-                       "an induction request is addressed to socket 0")
+        XCTAssertEqual(inductionRequest.destinationSocketID, 0, "an induction request is addressed to socket 0")
 
         // -- Induction response ------------------------------------------------
-        let inductionResponse = listenerToCaller[0]
+        let inductionResponse = listenerSent[0]
         XCTAssertTrue(inductionResponse.handshake.isInductionResponse)
-        XCTAssertEqual(inductionResponse.handshake.srtSocketID, listenerSocketID,
-                       "the listener advertises its own socket ID")
+        XCTAssertEqual(inductionResponse.handshake.srtSocketID, listenerSocketID, "the listener advertises its own socket ID")
         XCTAssertEqual(inductionResponse.handshake.synCookie, synCookie)
-        XCTAssertEqual(inductionResponse.destinationSocketID, caller1.srtSocketID,
-                       "the response is addressed to the caller's socket")
+        XCTAssertEqual(inductionResponse.destinationSocketID, caller.srtSocketID, "the response is addressed to the caller's socket")
 
         // -- Conclusion request ------------------------------------------------
-        let conclusionRequest = callerToListener[1]
-        XCTAssertTrue(conclusionRequest.handshake.isConclusionRequest(synCookie: synCookie),
-                      "the caller must echo the cookie it was given")
-        XCTAssertEqual(conclusionRequest.handshake.srtSocketID, caller1.srtSocketID)
-        XCTAssertEqual(conclusionRequest.destinationSocketID, listenerSocketID,
-                       "past induction the caller addresses the listener's socket")
+        let conclusionRequest = callerSent[1]
+        XCTAssertTrue(conclusionRequest.handshake.isConclusionRequest(synCookie: synCookie), "the caller must echo the cookie it was given")
+        XCTAssertEqual(conclusionRequest.handshake.srtSocketID, caller.srtSocketID)
+        XCTAssertEqual(conclusionRequest.destinationSocketID, 0,
+                       "libsrt's listener only accepts a conclusion request addressed to socket 0; its own caller sends 0")
         XCTAssertEqual(conclusionRequest.handshake.streamId, "input/live/test")
         XCTAssertEqual(conclusionRequest.handshake.srtVersion, SrtHandshake.srtLibraryVersion)
 
         // -- Conclusion response -----------------------------------------------
-        let conclusionResponse = listenerToCaller[1]
+        let conclusionResponse = listenerSent[1]
         XCTAssertTrue(conclusionResponse.handshake.isConclusionResponse)
-        XCTAssertEqual(conclusionResponse.destinationSocketID, caller1.srtSocketID)
+        XCTAssertEqual(conclusionResponse.destinationSocketID, caller.srtSocketID)
         XCTAssertEqual(conclusionResponse.handshake.srtVersion, SrtHandshake.srtLibraryVersion)
 
         // -- Both sides ended up connected -------------------------------------
-        XCTAssertNotNil(listenerSocket, "listener never created a socket")
-        XCTAssertNotNil(callerSocket, "caller never created a socket")
-        /// Each side keys its socket by its OWN ID, because that is what the peer
-        /// puts in the destination field of every packet it sends. Keying by the
-        /// peer's ID instead makes every inbound packet fail to match.
-        XCTAssertEqual(callerSocket?.socketId, caller1.srtSocketID)
-        XCTAssertEqual(callerSocket?.peerSocketId, listenerSocketID)
+        let listenerSocket = try XCTUnwrap(listenerSockets.first, "listener never created a socket")
+        let callerSocket = try XCTUnwrap(callerSockets.first, "caller never created a socket")
 
-        XCTAssertEqual(listenerSocket?.socketId, listenerSocketID)
-        XCTAssertEqual(listenerSocket?.peerSocketId, caller1.srtSocketID)
+        /// Each side keys its socket by its OWN ID, because that is what the peer
+        /// puts in the destination field of every packet it sends.
+        XCTAssertEqual(callerSocket.socketId, caller.srtSocketID)
+        XCTAssertEqual(callerSocket.peerSocketId, listenerSocketID)
+        XCTAssertEqual(listenerSocket.socketId, listenerSocketID)
+        XCTAssertEqual(listenerSocket.peerSocketId, caller.srtSocketID)
     }
 
     /// A conclusion request carrying someone else's cookie must not connect.
     func testListenerRejectsWrongCookie() throws {
-        var listenerSocket: SrtSocketProtocol?
-        var sent: [SrtHandshake] = []
-
         let listener = SrtListenerContext(
             srtSocketID: 0x0A0B0C0D,
             peerSocketID: 0x11223344,
             initialPacketSequenceNumber: 0,
             synCookie: 0x1A2B3C4D,
             peerIpAddress: callerIp.ipStringToData!,
-            encrypted: false,
-            send: { _, contents in
-                if let handshake = SrtHandshake(data: contents) { sent.append(handshake) }
-            },
-            onSocketCreated: { listenerSocket = $0 }
+            encrypted: false
         )
 
-        listener.start()
+        let induction = listener.start()
+        XCTAssertEqual(induction.sent.count, 1, "the induction response")
 
         let forged = SrtHandshake.makeConclusionRequest(
             srtSocketID: 0x11223344,
@@ -164,9 +133,9 @@ final class HandshakeExchangeTests: XCTestCase {
             ).data]
         )
 
-        listener.handleHandshake(handshake: forged)
+        let outcome = listener.handleHandshake(handshake: forged)
 
-        XCTAssertNil(listenerSocket, "a mismatched cookie must not establish a connection")
-        XCTAssertEqual(sent.count, 1, "only the induction response should have been sent")
+        XCTAssertTrue(outcome.sockets.isEmpty, "a mismatched cookie must not establish a connection")
+        XCTAssertTrue(outcome.sent.isEmpty, "nothing should be sent in reply")
     }
 }

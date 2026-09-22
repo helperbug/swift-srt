@@ -23,7 +23,7 @@
 
 import Foundation
 
-public class SrtListenerContext: SrtPacketSender {
+public class SrtListenerContext {
     
     /// This listener's own socket ID, which it advertises to the caller.
     let srtSocketID: UInt32
@@ -36,8 +36,17 @@ public class SrtListenerContext: SrtPacketSender {
     let synCookie: UInt32
     let peerIpAddress: Data
     let encrypted: Bool
-    let send: (SrtPacket, Data) -> Void
-    let onSocketCreated: (SrtSocketProtocol) -> Void
+
+    /// Shared secret, if this side requires encryption.
+    let passphrase: String?
+
+    /// The stream's keys once the exchange has succeeded.
+    private(set) var encryption: SrtEncryption?
+
+    /// Why the exchange failed, if it did.
+    private(set) var encryptionError: SrtEncryptionError?
+    /// Accumulated by the states while an event is handled, then returned.
+    private var actions: [HandshakeAction] = []
 
     /// The current handshake phase, observable so callers and tests can tell an
     /// established connection from one still negotiating.
@@ -52,8 +61,7 @@ public class SrtListenerContext: SrtPacketSender {
         synCookie: UInt32,
         peerIpAddress: Data,
         encrypted: Bool,
-        send: @escaping (SrtPacket, Data) -> Void,
-        onSocketCreated: @escaping (SrtSocketProtocol) -> Void
+        passphrase: String? = nil
     ) {
         self.srtSocketID = srtSocketID
         self.peerSocketID = peerSocketID
@@ -61,22 +69,22 @@ public class SrtListenerContext: SrtPacketSender {
         self.synCookie = synCookie
         self.peerIpAddress = peerIpAddress
         self.encrypted = encrypted
+        self.passphrase = passphrase
         self._state = StrListenerInducedState()
-        self.send = send
-        self.onSocketCreated = onSocketCreated
         
     }
 
     /// Sending from `init` meant the reply could arrive before the caller had a
     /// reference to hand it to. Starting is now a separate, explicit step.
-    func start() {
-
-        self._state.auto(self)
-
+    func start() -> [HandshakeAction] {
+        _state.auto(self)
+        return drain()
     }
 
     /// Parameters the caller asked for in its conclusion request.
     private(set) var streamId: String?
+    /// The peer's initial packet sequence number, from its conclusion message.
+    private(set) var peerInitialSequence: UInt32?
     private(set) var srtVersion: UInt32?
     private(set) var srtFlags: UInt32?
     private(set) var receiverTsbpdDelay: UInt16?
@@ -86,6 +94,7 @@ public class SrtListenerContext: SrtPacketSender {
     func apply(handshake: SrtHandshake) {
 
         self.streamId = handshake.streamId
+        self.peerInitialSequence = handshake.initialPacketSequenceNumber
         self.srtVersion = handshake.srtVersion
         self.srtFlags = handshake.srtFlags
         self.receiverTsbpdDelay = handshake.receiverTsbpdDelay
@@ -93,16 +102,35 @@ public class SrtListenerContext: SrtPacketSender {
 
     }
 
-    func handleHandshake(handshake: SrtHandshake) {
-        
-        self._state.handleHandshake(self, handshake: handshake)
-        
+    func handleHandshake(handshake: SrtHandshake) -> [HandshakeAction] {
+        _state.handleHandshake(self, handshake: handshake)
+        return drain()
+    }
+
+    func install(encryption: SrtEncryption?) {
+        self.encryption = encryption
+    }
+
+    func fail(encryption error: SrtEncryptionError) {
+        self.encryptionError = error
+    }
+
+    func send(_ packet: SrtPacket, _ contents: Data) {
+        actions.append(.send(packet, contents))
+    }
+
+    func socketCreated(_ engine: SrtSocketContext) {
+        actions.append(.socketCreated(engine))
+    }
+
+    private func drain() -> [HandshakeAction] {
+        defer { actions.removeAll() }
+        return actions
     }
     
     @discardableResult
     func set(newState: SrtListenerStates) -> SrtListenerState {
         
-        print("setting listener state to \(newState.label)")
         self._state = newState.instance
         return self._state
         

@@ -24,10 +24,17 @@
 import Combine
 import Foundation
 
-public protocol LogServiceProtocol: ServiceProtocol {
-    
-    var logs: AnyPublisher<(icon: String, source: String, message: String), Never> { get }
+public struct LogEntry: Sendable {
+    public let icon: String
+    public let source: String
+    public let message: String
+}
 
-    func log(_ icon: String, _ source: String, _ message: String) -> Void
-    
+public protocol LogServiceProtocol: ServiceProtocol {
+
+    /// Every log line, for anything that wants to observe them.
+    var entries: AsyncStream<LogEntry> { get }
+
+    func log(_ icon: String, _ source: String, _ message: String)
+
 }

@@ -23,7 +23,7 @@
 
 import Foundation
 
-public struct SrtMetricsModel: Identifiable {
+public struct SrtMetricsModel: Identifiable, Sendable {
     
     public let id: UUID = .init()
     public let ackAckCount: Int

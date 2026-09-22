@@ -24,7 +24,7 @@
 import Foundation
 
 /// Represents the hints associated with an SRT socket.
-public enum SrtSocketHints {
+public enum SrtSocketHints: Sendable {
     
     /// How many frames at 4k60fps using h.265 encoder.
     case hd4k265f60

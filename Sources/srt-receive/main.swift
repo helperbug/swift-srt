@@ -8,7 +8,6 @@
 //    srt-receive [--port 9000] [--out capture.ts] [--relay 127.0.0.1:1234]
 //
 
-import Combine
 import Foundation
 import Network
 import SwiftSrt
@@ -21,6 +20,9 @@ struct Options {
     var relayHost: String?
     var relayPort: UInt16?
     var seconds: Double = 30
+    var passphrase: String?
+    var rendezvousHost: String?
+    var rendezvousPort: UInt16?
 
     static func parse(_ arguments: [String]) -> Options {
         var options = Options()
@@ -48,6 +50,15 @@ struct Options {
                 index += 1
             case "--seconds":
                 if let next, let value = Double(next) { options.seconds = value }
+                index += 1
+            case "--passphrase":
+                options.passphrase = next
+                index += 1
+            case "--rendezvous":
+                if let next {
+                    let parts = next.split(separator: ":")
+                    if parts.count == 2, let value = UInt16(parts[1]) { options.rendezvousHost = String(parts[0]); options.rendezvousPort = value }
+                }
                 index += 1
             default:
                 break
@@ -126,42 +137,66 @@ let logService = LogService()
 let metricsService = SrtMetricsService(logService: logService, interval: 5)
 let manager = SrtPortManagerService(logService: logService, metricsService: metricsService)
 
-var cancellables: Set<AnyCancellable> = []
 var totalBytes = 0
 var frameCount = 0
 var firstFrameAt: Date?
 
-manager.frames
-    .sink { header, socketId, messageId, frame in
+/// Each accepted socket gets its own task. That task pulls raw packets and
+/// runs the engine; the library spawns nothing. Taking the socket as `sending`
+/// is what lets a main-actor loop hand it to a detached task.
+/// Top-level functions in main.swift are implicitly main-actor; this one must not
+/// be, or `sending` the socket into it is not a transfer out of the region.
+nonisolated func consume(_ socket: sending SrtSocket) {
+    Task.detached(priority: .userInitiated) {
+        var lastReport = ContinuousClock.now
 
-        guard !frame.isEmpty else { return }
+        for await event in socket.events {
 
-        if firstFrameAt == nil {
-            firstFrameAt = Date()
-            print("▶︎ first payload from socket \(socketId), \(frame.count) bytes")
-            /// MPEG-TS packets are 188 bytes and start with 0x47. Report what we see
-            /// rather than assuming, so a mismatch is obvious immediately.
-            if let first = frame.first {
-                let looksLikeTs = first == 0x47 && frame.count % 188 == 0
-                print("  first byte 0x\(String(first, radix: 16)), \(frame.count % 188 == 0 ? "" : "not ")a multiple of 188 — \(looksLikeTs ? "looks like MPEG-TS" : "NOT MPEG-TS shaped")")
+            for frame in socket.process(event) {
+                let payload = frame.payload
+                guard !payload.isEmpty else { continue }
+
+                await MainActor.run {
+                    if firstFrameAt == nil {
+                        firstFrameAt = Date()
+                        print("▶︎ first payload from socket \(frame.socketId), \(payload.count) bytes")
+                        /// MPEG-TS packets are 188 bytes and start with 0x47. Report what we
+                        /// see rather than assuming, so a mismatch is obvious immediately.
+                        if let first = payload.first {
+                            let looksLikeTs = first == 0x47 && payload.count % 188 == 0
+                            print("  first byte 0x\(String(first, radix: 16)), \(payload.count % 188 == 0 ? "" : "not ")a multiple of 188 — \(looksLikeTs ? "looks like MPEG-TS" : "NOT MPEG-TS shaped")")
+                        }
+                    }
+
+                    totalBytes += payload.count
+                    frameCount += 1
+
+                    fileSink?.write(payload)
+                    relay?.send(payload)
+                }
+            }
+
+            if ContinuousClock.now - lastReport > .seconds(5) {
+                lastReport = ContinuousClock.now
+                report(socket)
             }
         }
-
-        totalBytes += frame.count
-        frameCount += 1
-
-        fileSink?.write(frame)
-        relay?.send(frame)
+        report(socket, final: true)
     }
-    .store(in: &cancellables)
+}
 
-manager.connections
-    .sink { connections in
-        for (header, connection) in connections {
-            print("⇄ connection \(header.sourceIp):\(header.sourcePort) state \(connection.connectionState.label) sockets \(connection.sockets.count)")
-        }
-    }
-    .store(in: &cancellables)
+nonisolated func report(_ socket: SrtSocket, final: Bool = false) {
+    let s = socket.statistics
+    print(String(format: "%@ socket %u  recv %d  lost %d  retrans %d  dropped %d  belated %d  dup %d  delivered %d  acks %d/%d  naks %d  ackacks %d  rtt %.1fms  latency %dms  ticks %d (%d idle)  drift %dµs/%d  decrypted %d  undecryptable %d",
+                 final ? "──" : "  ", socket.socketId, s.buffer.received, s.buffer.lost, s.buffer.retransmitted, s.buffer.dropped, s.buffer.belated, s.buffer.duplicates, s.buffer.delivered,
+                 s.acksSent, s.lightAcksSent, s.naksSent, s.ackAcksReceived, Double(s.rttMicroseconds) / 1000, Int(s.latencyMicroseconds / 1000), s.ticks, s.ticksWithNothingToAck, Int(s.driftMicroseconds), s.driftCorrections, s.decryptedPackets, s.undecryptablePackets))
+}
+
+manager.onSocket { socket in
+    print("⇄ socket \(socket.socketId) accepted, streamId \(socket.streamId ?? "-")")
+    consume(socket)
+}
+
 
 guard let endpoint = IPv4Address("0.0.0.0"), let port = NWEndpoint.Port(rawValue: options.port) else {
     print("Invalid listen address")
@@ -174,7 +209,12 @@ if let host = options.relayHost, let relayPort = options.relayPort {
     print("  relaying payload to udp://\(host):\(relayPort)")
 }
 
-manager.addListener(endpoint: endpoint, port: port)
+if let host = options.rendezvousHost, let remote = options.rendezvousPort, let address = IPv4Address(host) {
+    print("  rendezvous with \(host):\(remote) from local port \(options.port)")
+    manager.rendezvous(with: address, port: NWEndpoint.Port(integerLiteral: remote), localPort: port, streamId: nil, passphrase: options.passphrase)
+} else {
+    manager.addListener(endpoint: endpoint, port: port, passphrase: options.passphrase)
+}
 
 // MARK: Run
 
@@ -188,6 +228,7 @@ relay?.close()
 
 print()
 print("── summary ──")
+print("connections    : \(manager.connections.count)")
 print("payload frames : \(frameCount)")
 print("payload bytes  : \(totalBytes)")
 if let fileSink { print("written to file: \(fileSink.bytesWritten) bytes") }

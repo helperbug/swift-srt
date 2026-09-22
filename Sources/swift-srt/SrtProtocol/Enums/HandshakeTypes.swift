@@ -24,7 +24,7 @@
 import Foundation
 
 /// Enumerates the possible types of handshakes in the SRT protocol.
-public enum HandshakeTypes: UInt32, CaseIterable {
+public enum HandshakeTypes: UInt32, CaseIterable, Sendable {
     case done = 0xFFFFFFFD
     case agreement = 0xFFFFFFFE
     case conclusion = 0xFFFFFFFF

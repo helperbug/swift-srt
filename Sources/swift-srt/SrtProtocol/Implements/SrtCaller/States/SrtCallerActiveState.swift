@@ -38,7 +38,11 @@ struct SrtCallerActiveState: SrtCallerState {
             synCookie: context.synCookie
         )
 
-        socket.initialPacketSequenceNumber = context.initialPacketSequenceNumber
+        /// The receive buffer starts where the peer said its first data packet
+        /// will; our first data packet starts where we told the peer.
+        socket.initialPacketSequenceNumber = context.peerInitialSequence ?? context.initialPacketSequenceNumber
+        socket.ownInitialSequenceNumber = context.initialPacketSequenceNumber
+        socket.encryption = context.encryption
 
         /// Carry across what the listener agreed to in its conclusion response.
         socket.srtVersion = context.srtVersion
@@ -47,7 +51,7 @@ struct SrtCallerActiveState: SrtCallerState {
         socket.senderTsbpdDelay = context.senderTsbpdDelay
         socket.streamId = context.streamId
 
-        context.onSocketCreated(socket)
+        context.socketCreated(socket)
 
     }
 

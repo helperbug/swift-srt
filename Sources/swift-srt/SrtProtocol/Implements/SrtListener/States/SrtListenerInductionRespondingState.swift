@@ -55,6 +55,27 @@ struct SrtListenerInductionRespondingState: SrtListenerState {
         }
 
         context.apply(handshake: handshake)
+
+        /// Key exchange. A caller that offers keys gets them back if our
+        /// passphrase unwraps them; one that offers none while we require them
+        /// is refused, as libsrt's enforced encryption does.
+        if let request = handshake.keyMaterialRequest {
+            switch SrtEncryption.respond(toKeyMaterial: request, passphrase: context.passphrase) {
+            case .success(let encryption):
+                context.install(encryption: encryption)
+            case .failure(let error):
+                print("Listener: key exchange failed: \(error)")
+                context.fail(encryption: error)
+                context.set(newState: .inducted).auto(context)   // answers with the refusal, then stops
+                return
+            }
+        } else if context.passphrase != nil {
+            print("Listener: caller offered no key material; refusing to run in the clear")
+            context.fail(encryption: .noSecret)
+            context.set(newState: .shutdown)
+            return
+        }
+
         context.set(newState: .inducted).auto(context)
         
     }

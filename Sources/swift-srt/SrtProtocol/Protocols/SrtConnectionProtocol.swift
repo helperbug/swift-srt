@@ -25,22 +25,14 @@ import Combine
 import Foundation
 import Network
 
-public protocol SrtConnectionProtocol {
+/// One UDP flow carrying one or more SRT sockets.
+public protocol SrtConnectionProtocol: AnyObject, Sendable {
 
     var udpHeader: UdpHeader { get }
-    var sockets: [UInt32: SrtSocketProtocol] { get }
     var connectionState: ConnectionStates { get }
+    var socketIds: [UInt32] { get }
 
-    init(updHeader: UdpHeader,
-         connection: NWConnection,
-         logService: LogServiceProtocol,
-         managerService: SrtPortManagerServiceProtocol,
-         metricsService: SrtMetricsServiceProtocol
-    )
-
-    func cancel() -> Void
-    func removeSocket(id: UInt32) -> Void
-    func sendFrame(frame: Data) -> Void
-    func shutdown() -> Void
+    func cancel()
+    func shutdown()
 
 }

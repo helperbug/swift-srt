@@ -27,7 +27,7 @@ import Network
 class SrtProtocolFramer: NWProtocolFramerImplementation {
     required public init(framer: NWProtocolFramer.Instance) { }
     
-    static var label: String = "SrtProtocolFramer"
+    static let label: String = "SrtProtocolFramer"
     static let definition = NWProtocolFramer.Definition(implementation: SrtProtocolFramer.self)
     
     func wakeup(framer: NWProtocolFramer.Instance) { }

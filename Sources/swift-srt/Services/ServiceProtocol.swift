@@ -23,11 +23,11 @@
 
 import Foundation
 
-public protocol ServiceProtocol {
+public protocol ServiceProtocol: Sendable {
 
     var icon: String { get }
     var source: String { get }
 
     func log(_ message: String)
-    
+
 }

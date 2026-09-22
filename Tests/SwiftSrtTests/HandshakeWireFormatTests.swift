@@ -165,8 +165,7 @@ final class HandshakeWireFormatTests: XCTestCase {
             srtSocketID: 0x11223344,
             initialPacketSequenceNumber: 0,
             synCookie: 0x0BADF00D,
-            peerIpAddress: "10.0.0.1".ipStringToData!,
-            encrypted: false
+            peerIpAddress: "10.0.0.1".ipStringToData!
         )
 
         let decoded = try XCTUnwrap(SrtHandshake(data: response.data))

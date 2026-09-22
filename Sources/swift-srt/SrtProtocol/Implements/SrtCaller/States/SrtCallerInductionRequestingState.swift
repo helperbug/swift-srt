@@ -29,10 +29,11 @@ struct SrtCallerInductionRequestingState: SrtCallerState {
     func handleHandshake(_ context: SrtCallerContext, handshake: SrtHandshake) {
         
         guard handshake.isInductionResponse else {
-            
+
+            print("Caller: not an induction response (type \(handshake.handshakeType), v\(handshake.hsVersion.rawValue), ext 0x\(String(handshake.extensionField, radix: 16)), cookie \(handshake.synCookie)); giving up")
             context.set(newState: .shutdown)
             return
-            
+
         }
 
         guard handshake.hasUsableTransmissionParameters else {

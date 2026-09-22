@@ -23,7 +23,7 @@
 
 import Foundation
 
-public enum HandshakeVersions: UInt32 {
+public enum HandshakeVersions: UInt32, Sendable {
     
     case none = 0
     case version4 = 4

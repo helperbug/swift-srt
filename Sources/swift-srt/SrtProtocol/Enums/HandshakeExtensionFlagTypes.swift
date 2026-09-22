@@ -23,7 +23,7 @@
 
 import Foundation
 
-enum HandshakeExtensionFlagTypes: UInt32 {
+enum HandshakeExtensionFlagTypes: UInt32, Sendable {
     case none = 0x00
     case handshakeRequest = 0x00000001
     case keyMaterialRequest = 0x00000002

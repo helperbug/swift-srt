@@ -27,20 +27,13 @@ import Network
 // MARK: Error State
 
 struct SrtPortListenerErrorState: SrtPortListenerState {
-    
+
     let name: SrtPortListnerStates = .error
-    
-    func auto(_ context: SrtPortListenerContext) {
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
 
-            /// Re-arm the listener; set() alone only installs the state.
-            context.set(state: .none).auto(context)
-
+    /// Wait, then re-arm the listener. The retry takes the lock fresh.
+    func auto(_ confined: inout SrtPortListenerContext.Confined, _ context: SrtPortListenerContext) {
+        context.queue.asyncAfter(deadline: .now() + 5) { [weak context] in
+            context?.restart()
         }
-        
     }
-    
-    func onStateChanged(_ context: SrtPortListenerContext, state: NWListener.State) { }
-    
 }

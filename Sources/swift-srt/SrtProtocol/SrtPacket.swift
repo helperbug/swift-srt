@@ -23,7 +23,7 @@
 
 import Foundation
 
-public struct SrtPacket {
+public struct SrtPacket: Sendable {
     
     let data: Data
     
@@ -110,6 +110,16 @@ public struct SrtPacket {
     
     init(data: Data) {
         self.data = data
+    }
+
+    /// The same packet with its timestamp field rewritten. Packets are built
+    /// where the protocol logic lives and stamped where they hit the wire.
+    func stamped(_ timestamp: UInt32) -> SrtPacket {
+        guard data.count >= 16 else { return self }
+        var copy = data
+        var bigEndian = timestamp.bigEndian
+        withUnsafeBytes(of: &bigEndian) { copy.replaceSubrange(8..<12, with: $0) }
+        return SrtPacket(data: copy)
     }
     
     public static var blank: SrtPacket {

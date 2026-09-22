@@ -24,7 +24,7 @@
 import Foundation
 
 /// Represents the metrics associated with an SRT socket.
-public enum SrtSocketMetrics {
+public enum SrtSocketMetrics: Sendable {
     
     /// Bandwidth usage in Mbps over the last second
     case bandwidth(Double)

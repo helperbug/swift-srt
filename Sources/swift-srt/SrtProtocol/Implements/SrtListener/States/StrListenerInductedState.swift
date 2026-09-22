@@ -29,11 +29,23 @@ struct StrListenerInductedState: SrtListenerState {
     
     func auto(_ context: SrtListenerContext) {
         
+        /// Echo the key material we accepted, or the four-byte reason we did not.
+        let keyMaterialResponse: Data?
+        if let encryption = context.encryption {
+            keyMaterialResponse = encryption.keyMaterial
+        } else if let error = context.encryptionError {
+            keyMaterialResponse = SrtEncryption.refusal(error)
+        } else {
+            keyMaterialResponse = nil
+        }
+
         let conclusionResponse = SrtHandshake.makeConclusionResponse(
             srtSocketID: context.srtSocketID,
             initialPacketSequenceNumber: context.initialPacketSequenceNumber,
             synCookie: context.synCookie,
-            peerIpAddress: context.peerIpAddress
+            peerIpAddress: context.peerIpAddress,
+            keyMaterialResponse: keyMaterialResponse,
+            encryptionField: context.encryption?.encryptionField ?? (context.passphrase == nil ? 0 : 2)
         )
 
         /// Addressed to the caller, advertising this listener's own socket ID.
@@ -42,6 +54,13 @@ struct StrListenerInductedState: SrtListenerState {
             socketID: context.peerSocketID,
             contents: Data()
         )
+
+        /// A refused exchange still gets its answer, but no socket.
+        if context.encryptionError != nil {
+            context.set(newState: .shutdown)
+            context.send(packet, conclusionResponse.data)
+            return
+        }
 
         /// The socket is keyed by this listener's own ID: that is what the caller
         /// puts in the destination field of everything it sends. Register it, and
@@ -54,7 +73,11 @@ struct StrListenerInductedState: SrtListenerState {
             synCookie: context.synCookie
         )
 
-        socket.initialPacketSequenceNumber = context.initialPacketSequenceNumber
+        /// The receive buffer starts where the peer said its first data packet
+        /// will; our first data packet starts where we told the peer.
+        socket.initialPacketSequenceNumber = context.peerInitialSequence ?? context.initialPacketSequenceNumber
+        socket.ownInitialSequenceNumber = context.initialPacketSequenceNumber
+        socket.encryption = context.encryption
 
         /// Carry across what the caller asked for in its conclusion request.
         socket.srtVersion = context.srtVersion
@@ -64,7 +87,7 @@ struct StrListenerInductedState: SrtListenerState {
         socket.streamId = context.streamId
 
         context.set(newState: .active)
-        context.onSocketCreated(socket)
+        context.socketCreated(socket)
         context.send(packet, conclusionResponse.data)
         
     }

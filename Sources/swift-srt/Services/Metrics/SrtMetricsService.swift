@@ -24,225 +24,97 @@
 import Combine
 import Foundation
 import Network
+import Synchronization
 
-public class SrtMetricsService: SrtMetricsServiceProtocol {
-    
-    public let icon: String = "⏱️"
-    public let source: String = "Metrics"
-    
+/// Accumulates counters under a lock on the hot path and publishes a snapshot
+/// on a timer. Nothing here hops isolation per packet.
+public final class SrtMetricsService: SrtMetricsServiceProtocol {
+
+    public let icon = "⏱️"
+    public let source = "Metrics"
+
     private let logService: LogServiceProtocol
-    private var timer: AnyCancellable? = nil
-    private let metricsWorker: DispatchQueue = .init(label: "Metrics Worker", qos: .background)
 
-    private var listenerStore: [NWEndpoint.Port: SrtMetrics] = [:]
-    private var connectionStore: [UdpHeader: SrtMetrics] = [:]
-    private var socketStore: [SocketKey: SrtMetrics] = [:]
-    private var frameStore: [FrameKey: SrtMetrics] = [:]
-
-    @Published private var _uptime: Int = 0
-    public var uptime: AnyPublisher<Int, Never> {
-        $_uptime.eraseToAnyPublisher()
+    private struct Stores {
+        var listeners: [NWEndpoint.Port: SrtMetrics] = [:]
+        var connections: [UdpHeader: SrtMetrics] = [:]
+        var sockets: [SocketKey: SrtMetrics] = [:]
     }
-    
-    @Published private var _listenerMetrics: (port: NWEndpoint.Port, receive: SrtMetricsModel, send: SrtMetricsModel)
-    public var listenerMetrics: AnyPublisher<(port: NWEndpoint.Port, receive: SrtMetricsModel, send: SrtMetricsModel), Never> {
 
-        $_listenerMetrics.eraseToAnyPublisher()
+    private let stores = Mutex(Stores())
 
-    }
-    
-    @Published private var _connectionMetrics: (header: UdpHeader, receive: SrtMetricsModel, send: SrtMetricsModel)
-    public var connectionMetrics: AnyPublisher<(header: UdpHeader, receive: SrtMetricsModel, send: SrtMetricsModel), Never> {
+    public let listenerMetrics: AsyncStream<ListenerMetrics>
+    public let connectionMetrics: AsyncStream<ConnectionMetrics>
+    public let socketMetrics: AsyncStream<SocketMetrics>
 
-        $_connectionMetrics.eraseToAnyPublisher()
+    private let listenerContinuation: AsyncStream<ListenerMetrics>.Continuation
+    private let connectionContinuation: AsyncStream<ConnectionMetrics>.Continuation
+    private let socketContinuation: AsyncStream<SocketMetrics>.Continuation
 
-    }
-    
-    @Published private var _socketMetrics: (header: UdpHeader, socketId: UInt32, receive: SrtMetricsModel, send: SrtMetricsModel)
-    public var socketMetrics: AnyPublisher<(header: UdpHeader, socketId: UInt32, receive: SrtMetricsModel, send: SrtMetricsModel), Never> {
-        
-        $_socketMetrics.eraseToAnyPublisher()
-
-    }
-    
-    @Published private var _frameMetrics: (header: UdpHeader, socketId: UInt32, frameId: UInt32, receive: SrtMetricsModel, send: SrtMetricsModel)
-    public var frameMetrics: AnyPublisher<(header: UdpHeader, socketId: UInt32, frameId: UInt32, receive: SrtMetricsModel, send: SrtMetricsModel), Never> {
-        
-        $_frameMetrics.eraseToAnyPublisher()
-
-    }
+    private let flushTask: Mutex<Task<Void, Never>?> = Mutex(nil)
 
     public init(logService: LogServiceProtocol, interval: TimeInterval) {
-        
         self.logService = logService
-        
-        _listenerMetrics = (port: .any, receive: .blank, send: .blank)
-        _connectionMetrics = (header: .blank, receive: .blank, send: .blank)
-        _socketMetrics = (header: .blank, socketId: 0, receive: .blank, send: .blank)
-        _frameMetrics = (header: .blank, socketId: 0, frameId: 0, receive: .blank, send: .blank)
-        
-        self.timer = Timer.publish(every: interval, on: .main, in: .common)
-            .autoconnect()
-            .sink { _ in
 
-                self.flushMetrics()
+        (listenerMetrics, listenerContinuation) = AsyncStream.makeStream(bufferingPolicy: .bufferingNewest(64))
+        (connectionMetrics, connectionContinuation) = AsyncStream.makeStream(bufferingPolicy: .bufferingNewest(64))
+        (socketMetrics, socketContinuation) = AsyncStream.makeStream(bufferingPolicy: .bufferingNewest(64))
 
+        let task = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(interval))
+                self?.flushMetrics()
             }
-    }
-    
-    public func storeListenerMetric(port: NWEndpoint.Port, receive: SrtMetricsModel?, send: SrtMetricsModel?) {
-        
-        metricsWorker.async {
-            
-            if let existing = self.listenerStore[port] {
-                existing.delta(receive: receive, send: send)
-            } else {
-                let new = SrtMetrics()
-                new.delta(receive: receive, send: send)
-                self.listenerStore[port] = new
-            }
-
         }
-        
+        flushTask.withLock { $0 = task }
+    }
+
+    deinit {
+        flushTask.withLock { $0?.cancel() }
     }
 
     public func storeConnectionMetric(header: UdpHeader, receive: SrtMetricsModel?, send: SrtMetricsModel?) {
-        
-        metricsWorker.async {
-            
-            if let existing = self.connectionStore[header] {
-                existing.delta(receive: receive, send: send)
-            } else {
-                let new = SrtMetrics()
-                new.delta(receive: receive, send: send)
-                self.connectionStore[header] = new
-            }
-            
-            self.storeListenerMetric(port: NWEndpoint.Port(integerLiteral: header.destinationPort), receive: receive, send: send)
-            
+        stores.withLock { stores in
+            stores.connections[header, default: SrtMetrics()].delta(receive: receive, send: send)
+            let port = NWEndpoint.Port(integerLiteral: header.destinationPort)
+            stores.listeners[port, default: SrtMetrics()].delta(receive: receive, send: send)
         }
-
     }
-    
+
     public func storeSocketMetric(header: UdpHeader, socketId: UInt32, receive: SrtMetricsModel?, send: SrtMetricsModel?) {
-        
-        metricsWorker.async {
-            
-            let socketKey = SocketKey(header: header, socketId: socketId)
-            
-            if let existing = self.socketStore[socketKey] {
-                existing.delta(receive: receive, send: send)
-            } else {
-                let new = SrtMetrics()
-                new.delta(receive: receive, send: send)
-                self.socketStore[socketKey] = new
-            }
-            
+        stores.withLock { stores in
+            stores.sockets[SocketKey(header: header, socketId: socketId), default: SrtMetrics()]
+                .delta(receive: receive, send: send)
         }
-
     }
-    
-    public func storeFrameMetric(header: UdpHeader, socketId: UInt32, frameId: UInt32, receive: SrtMetricsModel?, send: SrtMetricsModel?) {
-        
-        metricsWorker.async {
-            
-            let frameKey = FrameKey(header: header, socketId: socketId, frameId: frameId)
-            
-            if let existing = self.frameStore[frameKey] {
-                existing.delta(receive: receive, send: send)
-            } else {
-                let new = SrtMetrics()
-                new.delta(receive: receive, send: send)
-                self.frameStore[frameKey] = new
-            }
-            
-        }
 
-    }
-    
     public func log(_ message: String) {
-        
-        logService.log(self.icon, self.source, message)
-
+        logService.log(icon, source, message)
     }
-    
+
     public func flushMetrics() {
-        
-        metricsWorker.async {
-   
-            self._uptime += 1
-
-            usleep(1000)
-            
-            let listenerStore = self.listenerStore
-            self.listenerStore = [:]
-            
-            let connectionStore = self.connectionStore
-            self.connectionStore = [:]
-            
-            let socketStore = self.socketStore
-            self.socketStore = [:]
-            
-            let frameStore = self.frameStore
-            self.frameStore = [:]
-
-            listenerStore.forEach { pair in
-                
-                let (receive, send) = pair.value.capture()
-                self._listenerMetrics = (port: pair.key, receive: receive, send: send)
-                
-            }
-            
-            connectionStore.forEach { pair in
-                
-                let (receive, send) = pair.value.capture()
-                self._connectionMetrics = (header: pair.key, receive: receive, send: send)
-
-            }
-            
-            socketStore.forEach { pair in
-                
-                let (receive, send) = pair.value.capture()
-                self._socketMetrics = (header: pair.key.header, socketId: pair.key.socketId, receive: receive, send: send)
-                
-            }
-            
-            frameStore.forEach { pair in
-                
-                let (receive, send) = pair.value.capture()
-                self._socketMetrics = (header: pair.key.header, socketId: pair.key.socketId, receive: receive, send: send)
-                
-            }
-            
+        let snapshot = stores.withLock { stores -> Stores in
+            let copy = stores
+            stores = Stores()
+            return copy
         }
 
+        for (port, metrics) in snapshot.listeners {
+            let (receive, send) = metrics.capture()
+            listenerContinuation.yield(ListenerMetrics(port: port, receive: receive, send: send))
+        }
+        for (header, metrics) in snapshot.connections {
+            let (receive, send) = metrics.capture()
+            connectionContinuation.yield(ConnectionMetrics(header: header, receive: receive, send: send))
+        }
+        for (key, metrics) in snapshot.sockets {
+            let (receive, send) = metrics.capture()
+            socketContinuation.yield(SocketMetrics(header: key.header, socketId: key.socketId, receive: receive, send: send))
+        }
     }
-    
+
     private struct SocketKey: Hashable {
-        
         let header: UdpHeader
         let socketId: UInt32
-
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(header)
-            hasher.combine(socketId)
-        }
-        
-    }
-    
-    private struct FrameKey: Hashable {
-        
-        let header: UdpHeader
-        let socketId: UInt32
-        let frameId: UInt32
-
-        func hash(into hasher: inout Hasher) {
-
-            hasher.combine(header)
-            hasher.combine(socketId)
-            hasher.combine(frameId)
-
-        }
-        
     }
 }

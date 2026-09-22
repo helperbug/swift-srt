@@ -27,27 +27,19 @@ import Network
 // MARK: Ready State
 
 struct SrtPortListenerReadyState: SrtPortListenerState {
-    
+
     let name: SrtPortListnerStates = .ready
-    
-    func onStateChanged(_ context: SrtPortListenerContext, state: NWListener.State) {
-        
+
+    func onStateChanged(_ confined: inout SrtPortListenerContext.Confined, _ context: SrtPortListenerContext, state: NWListener.State) {
+
         switch state {
-            
         case .cancelled:
-            
-            context.set(state: .none)
-            
-        case .failed(_):
-            
-            context.set(state: .error)
-            
+            context.transition(&confined, to: .none)
+        case .failed(let error):
+            context.log("Listener failed: \(error)")
+            context.transition(&confined, to: .error)
         default:
-            
             break
-            
         }
-        
     }
-    
 }

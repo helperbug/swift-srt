@@ -24,7 +24,7 @@
 import Foundation
 
 /// An enumeration representing the possible states of an SRT socket.
-public enum SrtSocketStates {
+public enum SrtSocketStates: Sendable {
     
     /// The initial state of the SRT socket
     case active

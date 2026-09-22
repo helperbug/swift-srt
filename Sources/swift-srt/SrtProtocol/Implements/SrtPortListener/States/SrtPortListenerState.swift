@@ -26,38 +26,25 @@ import Network
 
 // MARK: Listener State Protocol
 
+/// States run with the listener's lock held and mutate its confined state
+/// through the inout parameter.
 protocol SrtPortListenerState {
-    
+
     var name: SrtPortListnerStates { get }
-    
-    func onStateChanged(_ context: SrtPortListenerContext, state: NWListener.State) -> Void
-    func primary(_ context: SrtPortListenerContext) -> Void
-    func auto(_ context: SrtPortListenerContext) -> Void
-    func fail(_ context: SrtPortListenerContext) -> Void
-    
+
+    func onStateChanged(_ confined: inout SrtPortListenerContext.Confined, _ context: SrtPortListenerContext, state: NWListener.State)
+    func auto(_ confined: inout SrtPortListenerContext.Confined, _ context: SrtPortListenerContext)
+
 }
 
 // MARK: Defaults
 
 extension SrtPortListenerState {
-    
-    func primary(_ context: SrtPortListenerContext) {
-        
-        fatalError(name.label)
-        
-    }
-    
-    func auto(_ context: SrtPortListenerContext) {
-        
-        fatalError(name.label)
-        
-    }
-    
-    func fail(_ context: SrtPortListenerContext) {
-        
-        fatalError(name.label)
-        
-    }
-    
-}
 
+    func onStateChanged(_ confined: inout SrtPortListenerContext.Confined, _ context: SrtPortListenerContext, state: NWListener.State) {
+        context.log("Ignoring \(state) in listener state \(name.label)")
+    }
+
+    func auto(_ confined: inout SrtPortListenerContext.Confined, _ context: SrtPortListenerContext) { }
+
+}

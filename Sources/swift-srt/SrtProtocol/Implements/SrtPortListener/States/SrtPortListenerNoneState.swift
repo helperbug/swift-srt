@@ -27,47 +27,42 @@ import Network
 // MARK: None State
 
 struct SrtPortListenerNoneState: SrtPortListenerState {
+
     let name: SrtPortListnerStates = .none
-    
-    func onStateChanged(_ context: SrtPortListenerContext, state: NWListener.State) {
-        
+
+    func onStateChanged(_ confined: inout SrtPortListenerContext.Confined, _ context: SrtPortListenerContext, state: NWListener.State) {
+
         switch state {
-            
         case .ready:
-            
-            context.set(state: .ready)
-            
-        case .failed(_):
-            
-            context.set(state: .error)
-            
+            context.transition(&confined, to: .ready)
+        case .failed(let error):
+            context.log("Listener failed: \(error)")
+            context.transition(&confined, to: .error)
         default:
-            
             break
-            
         }
     }
-    
-    func auto(_ context: SrtPortListenerContext) {
-        
-        do {
-            
-            let listener = try NWListener(
-                using: SrtPortListenerContext.parameters,
-                on: context.port
-            )
-            
-            listener.newConnectionHandler = context.newConnectionHandler
-            listener.stateUpdateHandler = context.onStateChanged(_ :)
-            // listener.service = NWListener.Service(name: "SrtListener", type: "_service._udp")
 
-            context.listener = listener
-            listener.start(queue: .global(qos: .utility))
+    func auto(_ confined: inout SrtPortListenerContext.Confined, _ context: SrtPortListenerContext) {
+
+        do {
+            let listener = try NWListener(using: SrtPortListenerContext.parameters, on: context.port)
+
+            /// Both handlers are delivered on `context.queue`.
+            listener.newConnectionHandler = { [weak context] connection in
+                context?.accept(connection)
+            }
+
+            listener.stateUpdateHandler = { [weak context] state in
+                context?.onStateChanged(state)
+            }
+
+            confined.listener = listener
+            listener.start(queue: context.queue)
 
         } catch {
-            
-            context.set(state: .error)
-            
+            context.log("Could not bind port \(context.port): \(error)")
+            context.transition(&confined, to: .error)
         }
     }
 }
